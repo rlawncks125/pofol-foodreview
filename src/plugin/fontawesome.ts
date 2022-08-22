@@ -20,6 +20,7 @@ import {
   faSun,
   faMoon,
 } from "@fortawesome/free-solid-svg-icons";
+import { App } from "vue";
 
 library.add(
   faCoffee,
@@ -41,15 +42,19 @@ library.add(
   faMoon
 );
 
-export { FontAwesomeIcon };
+export default {
+  install: (app: App, options: any) => {
+    app.component("font-awesome", FontAwesomeIcon);
+  },
+};
 
 export enum FaIconName {
   "coffee",
   "house",
-  "magnifyingGlass",
+  "magnifying-glass",
   "users",
   "xmark",
-  "alignJustify",
+  "align-justify",
   "plus",
   "gear",
   "ban",

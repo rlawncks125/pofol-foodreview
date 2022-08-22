@@ -1,4 +1,16 @@
-import { Ref } from "vue";
+import { App, Ref } from "vue";
+
+export default {
+  install: (app: App, options: any) => {
+    app.mixin({
+      methods: {
+        naverMaps: () => {
+          return "navermaps";
+        },
+      },
+    });
+  },
+};
 
 export class CustomNaverMaps {
   map: naver.maps.Map;

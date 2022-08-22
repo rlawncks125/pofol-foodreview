@@ -7,10 +7,10 @@ import "@/assets/tailwind.css";
 import { createPinia } from "pinia";
 import piniaPersist from "pinia-plugin-persist";
 
-import { FontAwesomeIcon } from "@/plugin/fontawesome";
+import fontawesome from "@/plugin/fontawesome";
 
 createApp(App)
   .use(createPinia().use(piniaPersist))
   .use(router)
-  .component("font-awesome", FontAwesomeIcon)
+  .use(fontawesome)
   .mount("#app");

@@ -1,4 +1,5 @@
 <template>
+  <navigation />
   <div>main</div>
   {{ count }}
   <button @click="countPlugs">증가</button>
@@ -10,9 +11,14 @@
 import { storeToRefs } from "pinia";
 import { userCount } from "./store";
 import FaIcon from "./components/fa-icon.vue";
+import Navigation from "./components/navigation.vue";
 
 const { count } = storeToRefs(userCount());
 const { countPlugs } = userCount();
 </script>
 
-<style scoped></style>
+<style>
+body {
+  /* @apply bg-blue-400; */
+}
+</style>
