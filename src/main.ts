@@ -2,6 +2,15 @@ import { createApp } from "vue";
 import App from "./App.vue";
 import "./registerServiceWorker";
 import router from "./router";
-import store from "./store";
+import "@/plugin/naverMaps";
+import "@/assets/tailwind.css";
+import { createPinia } from "pinia";
+import piniaPersist from "pinia-plugin-persist";
 
-createApp(App).use(store).use(router).mount("#app");
+import { FontAwesomeIcon } from "@/plugin/fontawesome";
+
+createApp(App)
+  .use(createPinia().use(piniaPersist))
+  .use(router)
+  .component("font-awesome", FontAwesomeIcon)
+  .mount("#app");

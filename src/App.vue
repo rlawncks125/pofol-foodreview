@@ -1,30 +1,18 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
+  <div>main</div>
+  {{ count }}
+  <button @click="countPlugs">증가</button>
+  <fa-icon icon="moon" size="2xl" />
   <router-view />
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script setup lang="ts">
+import { storeToRefs } from "pinia";
+import { userCount } from "./store";
+import FaIcon from "./components/fa-icon.vue";
 
-nav {
-  padding: 30px;
+const { count } = storeToRefs(userCount());
+const { countPlugs } = userCount();
+</script>
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
-}
-</style>
+<style scoped></style>
