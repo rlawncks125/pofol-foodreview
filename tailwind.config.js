@@ -4,7 +4,11 @@ module.exports = {
   content: ["./src/**/*.{html,js,vue}"],
   darkMode: "class", // or 'media' or 'class'
   theme: {
-    extend: {},
+    extend: {
+      screens: {
+        mo: "375px",
+      },
+    },
   },
   plugins: [],
 };
