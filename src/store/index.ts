@@ -14,41 +14,8 @@ export const userCount = defineStore(
   },
   {
     persist: {
-      enabled: true,
-      strategies: [
-        {
-          storage: localStorage,
-          paths: ["count"],
-        },
-      ],
-    },
-  }
-);
-
-export const useToken = defineStore(
-  "token",
-  () => {
-    const token = ref("");
-
-    const setToken = (_token: string) => {
-      token.value = _token;
-    };
-
-    const clearToken = () => {
-      token.value = "";
-    };
-
-    return { token, setToken, clearToken };
-  },
-  {
-    persist: {
-      enabled: true,
-      strategies: [
-        {
-          storage: localStorage,
-          paths: ["token"],
-        },
-      ],
+      storage: localStorage,
+      paths: ["count"],
     },
   }
 );

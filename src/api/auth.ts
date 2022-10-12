@@ -1,5 +1,5 @@
 import { LoginOutPutDto, userCreateOutPutDto } from "@/assets/swagger";
-import { useToken } from "@/store/index";
+
 import axios, { AxiosRequestConfig } from "axios";
 import { storeToRefs } from "pinia";
 
@@ -9,7 +9,8 @@ import { computed, ref, watch } from "vue";
 // 처음 호출되는곳에서 init
 // console.log("auth 로드");
 
-const parseToken = JSON.parse(localStorage.getItem("token") as string).token;
+const parseToken =
+  JSON.parse(localStorage.getItem("token") as string)?.token || null;
 
 export const token = ref<string | null>(parseToken);
 

@@ -22,10 +22,14 @@
       <p class="mt-[60px]"></p>
       <ul class="menu-list p-2">
         <li>
-          <router-link to="/login"> 로그인 </router-link>
+          <router-link to="/login" @click="isChecked = false">
+            로그인
+          </router-link>
         </li>
         <li>
-          <router-link to="/join"> 회원가입 </router-link>
+          <router-link to="/join" @click="isChecked = false">
+            회원가입
+          </router-link>
         </li>
 
         <li @click="changeDarkmode" class="flex items-center">
@@ -58,7 +62,7 @@
         <ul class="item-list flex gap-1">
           <li v-show="!token" @click="router.push('login')">로그인</li>
           <li v-show="!token" @click="router.push('join')">회원가입</li>
-          <li v-show="token" @click="userLogOut">로그아웃</li>
+          <li v-show="token" @click="onLogOut">로그아웃</li>
           <li @click="testUser">test</li>
           <li @click="changeDarkmode" class="!px-[1rem]">
             <fa-icon
@@ -79,18 +83,23 @@
 import { ref } from "vue";
 import { useDarkmode } from "@/common/darkmode";
 import FaIcon from "./fa-icon.vue";
-import { useRoute, useRouter } from "vue-router";
+import { useRouter } from "vue-router";
 import { useUser } from "@/store/user";
-import { createUser, testUser } from "@/api/auth";
+import { testUser } from "@/api/auth";
 import { storeToRefs } from "pinia";
 
 const isChecked = ref(false);
 const router = useRouter();
 
 const { token } = storeToRefs(useUser());
-const { userLogin, userLogOut } = useUser();
+const { userLogOut } = useUser();
 
 const { isDarkMode, changeDarkmode } = useDarkmode();
+
+const onLogOut = () => {
+  userLogOut();
+  router.push("/");
+};
 </script>
 
 <style scoped lang="scss">

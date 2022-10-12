@@ -1,5 +1,5 @@
-import { computed } from "vue";
-import { useToken } from "@/store/index";
+import { computed, ref } from "vue";
+
 import { io, Socket } from "socket.io-client";
 import { Restaurant, RestaurantInfoDto } from "@/assets/swagger";
 import { storeToRefs } from "pinia";
@@ -10,8 +10,13 @@ const wsUrl =
     : "wss://myapi.kimjuchan97.xyz";
 const nameSpace = "foodMapChat";
 
-const { token: sToken } = storeToRefs(useToken());
-const token = sToken;
+// const { token: sToken } = storeToRefs(useToken());
+// const token = sToken;
+
+const parseToken =
+  JSON.parse(localStorage.getItem("token") as string)?.token || null;
+
+export const token = ref<string | null>(parseToken);
 
 let socket: Socket;
 

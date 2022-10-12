@@ -17,7 +17,7 @@
     "core-js": "^3.8.3",
     "lottie-web": "^5.9.6",
     "pinia": "^2.0.20",
-    "pinia-plugin-persist": "^1.0.0",
+    "pinia-plugin-persistedstate": "^2.3.0",
     "register-service-worker": "^1.7.2",
     "socket.io-client": "^4.5.1",
     "swagger-axios-codegen": "^0.13.3",

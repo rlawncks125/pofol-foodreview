@@ -1,5 +1,5 @@
 import { logIn } from "@/api/auth";
-import { User, UserInfo } from "@/assets/swagger";
+import { LoginOutPutDto, User, UserInfo } from "@/assets/swagger";
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import { token as authToken } from "@/api/auth";
@@ -8,6 +8,7 @@ export const useUser = defineStore(
   "token",
   () => {
     const token = ref<string | null>(null);
+    const userInfo = ref<UserInfo | null>();
 
     const userLogin = async ({
       username,
@@ -15,7 +16,7 @@ export const useUser = defineStore(
     }: {
       username: string;
       password: string;
-    }) => {
+    }): Promise<LoginOutPutDto> => {
       console.log("로그인", username, password);
 
       const res = await logIn({
@@ -25,28 +26,26 @@ export const useUser = defineStore(
 
       if (res.ok) {
         console.log(res);
-        token.value = res.token || null;
-        authToken.value = res.token || null;
+        token.value = res.token!;
+        authToken.value = res.token!;
+        userInfo.value = res.user;
       }
+      return res;
     };
 
     const userLogOut = () => {
-      console.log("로그아웃");
       token.value = null;
+      userInfo.value = null;
       authToken.value = null;
+      console.log("로그아웃");
     };
 
-    return { token, userLogin, userLogOut };
+    return { token, userInfo, userLogin, userLogOut };
   },
   {
     persist: {
-      enabled: true,
-      strategies: [
-        {
-          storage: localStorage,
-          paths: ["token"],
-        },
-      ],
+      storage: localStorage,
+      paths: ["token", "userInfo"],
     },
   }
 );

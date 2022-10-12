@@ -65,7 +65,7 @@
           <router-link to="/chat/list"> 방목록 </router-link>
           <router-link to="/chat/search"> 방찾기 </router-link>
           <router-link to="/chat/mypage"> 내정보 </router-link>
-          <li class="!bg-red-500" @click="userLogOut">로그아웃</li>
+          <li class="!bg-red-500" @click="onLogOut">로그아웃</li>
           <li @click="changeDarkmode" class="!px-[1rem]">
             <fa-icon
               v-if="isDarkMode"
@@ -93,6 +93,11 @@ const router = useRouter();
 const { userLogOut } = useUser();
 
 const { isDarkMode, changeDarkmode } = useDarkmode();
+
+const onLogOut = () => {
+  userLogOut();
+  router.push("/");
+};
 </script>
 
 <style scoped lang="scss">

@@ -4,7 +4,7 @@
     <navigation v-if="layout.nav === 'home'" />
     <chat-navigation v-else-if="layout.nav === 'chat'" />
   </div>
-  <div>main</div>
+
   <router-view :key="route.fullPath" />
 </template>
 
