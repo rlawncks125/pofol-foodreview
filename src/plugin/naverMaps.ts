@@ -1,4 +1,4 @@
-import { App, Ref } from "vue";
+import { App, onMounted, onUnmounted, Ref } from "vue";
 
 export default {
   install: (app: App, options: any) => {
@@ -13,6 +13,7 @@ export default {
 };
 
 export class CustomNaverMaps {
+  mapEl: Ref<HTMLElement>;
   map: naver.maps.Map;
   mainMarker: naver.maps.Marker;
 
@@ -30,6 +31,7 @@ export class CustomNaverMaps {
     } as naver.maps.MapOptions;
 
     this.map = new naver.maps.Map(mapEl.value, mapOptions);
+    this.mapEl = mapEl;
   }
 
   renderMainMarker = (lating: { lat: number; lng: number }) => {
@@ -73,5 +75,11 @@ export class CustomNaverMaps {
       y: lating.y,
     });
     this.map.setZoom(zoomOptions.number, zoomOptions.effect || false);
+  };
+
+  HeigthFullByEndEl = (endELRef: HTMLElement) => {
+    const height = window.innerHeight - endELRef.getClientRects()[0].bottom;
+
+    this.mapEl.value.style.height = `${height}px`;
   };
 }

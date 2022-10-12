@@ -1,20 +1,28 @@
 <template>
-  <navigation />
+  <loading :is-show="isLoading" />
+  <div>
+    <navigation v-if="layout.nav === 'home'" />
+    <chat-navigation v-else-if="layout.nav === 'chat'" />
+  </div>
   <div>main</div>
-  {{ count }}
-  <button @click="countPlugs">증가</button>
-  <fa-icon icon="moon" size="2xl" />
-  <router-view />
+  <router-view :key="route.fullPath" />
 </template>
 
 <script setup lang="ts">
-import { storeToRefs } from "pinia";
-import { userCount } from "./store";
-import FaIcon from "./components/fa-icon.vue";
 import Navigation from "./components/navigation.vue";
+import { useRoute } from "vue-router";
 
-const { count } = storeToRefs(userCount());
-const { countPlugs } = userCount();
+import { useLayout } from "@/store/layout";
+import { useLoading } from "@/store/loading";
+import { storeToRefs } from "pinia";
+import ChatNavigation from "./components/ChatNavigation.vue";
+
+import "@/api/auth";
+import Loading from "./components/loading.vue";
+
+const route = useRoute();
+const { layout } = storeToRefs(useLayout());
+const { isLoading } = storeToRefs(useLoading());
 </script>
 
 <style>

@@ -1,5 +1,5 @@
 <template>
-  <button @click="onFinedAddress">주소 찾기</button>
+  <button @click="onFinedAddress"><slot /></button>
 </template>
 
 <script setup lang="ts">

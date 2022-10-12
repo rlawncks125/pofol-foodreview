@@ -23,6 +23,10 @@ import {
 import axios from "axios";
 import { AuthHeaders } from "./auth";
 
+/**
+ * 방만들기
+ *
+ */
 export const createRoom = async (
   data: CreateRoomInputDto
 ): Promise<CreateRoomOutPutDto> => {
@@ -31,6 +35,9 @@ export const createRoom = async (
   });
 };
 
+/**
+ * 방 리스트 얻기
+ */
 export const getRoomList = async (
   data: RoomListInputDto
 ): Promise<RoomListOutPutDto> => {
@@ -39,6 +46,9 @@ export const getRoomList = async (
   });
 };
 
+/**
+ * 방정보 얻기
+ */
 export const getRoomInfo = async ({
   uuid,
 }: RoomInfoInputDto): Promise<RoomInfoOutPutDto> => {

@@ -3,7 +3,7 @@
     <!-- 네비hanburger 토글 -->
     <label
       for="nav-toggle"
-      class="hamburger__toggle md:!hidden cursor-pointer z-[1001] scale-[80%] absolute top-0 left-0"
+      class="hamburger__toggle z-[1001] md:!hidden cursor-pointer scale-[80%] absolute top-0 left-0"
     >
       <input
         class="toggle-checked w-0 h-0"
@@ -22,12 +22,17 @@
       <p class="mt-[60px]"></p>
       <ul class="menu-list p-2">
         <li>
-          <router-link to="/login"> 로그인 </router-link>
+          <router-link to="/chat/list"> 방목록 </router-link>
         </li>
         <li>
-          <router-link to="/join"> 회원가입 </router-link>
+          <router-link to="/chat/search"> 방찾기 </router-link>
         </li>
-
+        <li>
+          <router-link to="/chat/mypage"> 내정보 </router-link>
+        </li>
+        <li>
+          <router-link to="/#"> 친구관리 </router-link>
+        </li>
         <li @click="changeDarkmode" class="flex items-center">
           <p>야간모드</p>
           <div
@@ -56,10 +61,11 @@
       </router-link>
       <div class="hidden md:block">
         <ul class="item-list flex gap-1">
-          <li v-show="!token" @click="router.push('login')">로그인</li>
-          <li v-show="!token" @click="router.push('join')">회원가입</li>
-          <li v-show="token" @click="userLogOut">로그아웃</li>
-          <li @click="testUser">test</li>
+          <router-link to="/chat"> 메인 </router-link>
+          <router-link to="/chat/list"> 방목록 </router-link>
+          <router-link to="/chat/search"> 방찾기 </router-link>
+          <router-link to="/chat/mypage"> 내정보 </router-link>
+          <li class="!bg-red-500" @click="userLogOut">로그아웃</li>
           <li @click="changeDarkmode" class="!px-[1rem]">
             <fa-icon
               v-if="isDarkMode"
@@ -81,14 +87,10 @@ import { useDarkmode } from "@/common/darkmode";
 import FaIcon from "./fa-icon.vue";
 import { useRoute, useRouter } from "vue-router";
 import { useUser } from "@/store/user";
-import { createUser, testUser } from "@/api/auth";
-import { storeToRefs } from "pinia";
 
 const isChecked = ref(false);
 const router = useRouter();
-
-const { token } = storeToRefs(useUser());
-const { userLogin, userLogOut } = useUser();
+const { userLogOut } = useUser();
 
 const { isDarkMode, changeDarkmode } = useDarkmode();
 </script>
@@ -111,6 +113,7 @@ const { isDarkMode, changeDarkmode } = useDarkmode();
 }
 
 .item-list {
+  a,
   li {
     @apply border p-2 rounded-full bg-blue-400 dark:bg-blue-700 text-white cursor-pointer;
 

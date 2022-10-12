@@ -1,21 +1,17 @@
-import {
-  LoginOutPutDto,
-  userCreateOutPutDto,
-  UserOutPut,
-} from "@/assets/swagger";
+import { LoginOutPutDto, userCreateOutPutDto } from "@/assets/swagger";
 import { useToken } from "@/store/index";
 import axios, { AxiosRequestConfig } from "axios";
 import { storeToRefs } from "pinia";
 
-import { computed, watch } from "vue";
+import { computed, ref, watch } from "vue";
 
 // main.ts에 import 안할시
 // 처음 호출되는곳에서 init
 // console.log("auth 로드");
 
-const { setToken } = useToken();
-const { token: sToken } = storeToRefs(useToken());
-const token = sToken;
+const parseToken = JSON.parse(localStorage.getItem("token") as string).token;
+
+export const token = ref<string | null>(parseToken);
 
 export const AuthHeaders: AxiosRequestConfig = {
   headers: {
@@ -43,7 +39,9 @@ export const logIn = async ({
   // error : Failed to execute 'btoa' on 'Window'
   // 해결 base 64로 인코딩하여 보내고
   // 백엔드에서 디코딩 하여 값얻기
-  const base64 = Buffer.from(username).toString("base64");
+
+  // const base64 = Buffer.from(username).toString("base64");
+  const base64 = window.btoa(unescape(encodeURIComponent(username)));
   console.log(base64);
   return axios
     .get(`/api/user`, {
@@ -54,16 +52,6 @@ export const logIn = async ({
     })
     .then((res: any) => {
       const result: LoginOutPutDto = res.data;
-
-      const { ok, token, err, user } = result;
-      console.log(result);
-
-      // 토큰 vuex에 저장 처리
-      if (ok) {
-        token && setToken(token);
-      } else {
-        console.log(err);
-      }
 
       return result;
     })
@@ -85,7 +73,8 @@ export const createUser = async ({
   // error : Failed to execute 'btoa' on 'Window'
   // 해결 base 64로 인코딩하여 보내고
   // 백엔드에서 디코딩 하여 값얻기
-  const base64 = Buffer.from(username).toString("base64");
+  // const base64 = Buffer.from(username).toString("base64");
+  const base64 = window.btoa(unescape(encodeURIComponent(username)));
 
   return axios
     .post(
@@ -109,10 +98,6 @@ export const editUser = async (dsc: string): Promise<any> => {
     .then((res: any) => {
       return res.data;
     });
-};
-
-export const logOut = () => {
-  setToken("");
 };
 
 // const triger = EnumEventTriggerTypes.LEAVEROOM;

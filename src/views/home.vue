@@ -1,7 +1,9 @@
 <template>
   <div>
     <p>home</p>
-    <SearchAddress @search-address="onSearchddress" />
+    <SearchAddress @search-address="onSearchddress">
+      <p>주소 검색</p>
+    </SearchAddress>
   </div>
 </template>
 

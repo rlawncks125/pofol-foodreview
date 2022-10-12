@@ -42,7 +42,7 @@ export const joinRoom = (uuid: string) => {
 };
 
 type FuncJoinRoom = (uuid: string) => void;
-export const catchJoinRoom = (catchWs: FuncJoinRoom) => {
+export const catchJoinRoom = (catchWs: (uuid: string) => void) => {
   socket.off("joinRoom");
   socket.on("joinRoom", (uuid: string) => {
     catchWs(uuid);
