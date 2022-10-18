@@ -96,6 +96,9 @@ const fileRender = (file: any) => {
   reader.readAsDataURL(file);
 };
 
+/**
+ * 변환된 URL 주소 반환
+ */
 const onUpload = async (): Promise<string> => {
   const url = fileData.value?.file.name || "urlStrig";
 

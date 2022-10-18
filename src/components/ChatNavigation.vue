@@ -3,7 +3,7 @@
     <!-- 네비hanburger 토글 -->
     <label
       for="nav-toggle"
-      class="hamburger__toggle z-[1001] md:!hidden cursor-pointer scale-[80%] absolute top-0 left-0"
+      class="hamburger__toggle z-[1101] md:!hidden cursor-pointer scale-[80%] absolute top-0 left-0"
     >
       <input
         class="toggle-checked w-0 h-0"
@@ -16,7 +16,7 @@
     </label>
 
     <div
-      class="md:hidden z-[1000] w-full absolute top-0 left-0 sm:w-[35vw] h-[100vh] bg-gray-300 transition-all duration-150"
+      class="md:hidden z-[1100] w-full absolute top-0 left-0 sm:w-[35vw] h-[100vh] bg-gray-300 transition-all duration-150"
       :class="isChecked ? 'translate-x-0' : 'translate-x-[-100%]'"
     >
       <p class="mt-[60px]"></p>

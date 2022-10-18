@@ -34,21 +34,35 @@ export class CustomNaverMaps {
     this.mapEl = mapEl;
   }
 
-  renderMainMarker = (lating: { lat: number; lng: number }) => {
+  /**
+   * 네이버 지도 초기화 (네이버 지도 짤림 버그)
+   */
+  naverMapsInit = () => {
+    // (네이버 지도 짤림 버그)
+    setTimeout(() => {
+      console.log("지도 짤짤");
+      window.dispatchEvent(new Event("resize"));
+    }, 1000);
+  };
+
+  renderMainMarker = (lating: { x: number; y: number }) => {
     this.mainMarker && this.mainMarker.onRemove();
 
     this.mainMarker = new naver.maps.Marker({
       position: {
-        x: lating.lng,
-        y: lating.lat,
+        x: lating.x,
+        y: lating.y,
       } as naver.maps.LatLng,
       map: this.map,
       icon: {
-        url: "https://res.cloudinary.com/dhdq4v4ar/image/upload/v1644527647/back-Portfolio/Company_building_free_icon_4_sd6q06.png",
-        size: new naver.maps.Size(30, 40),
-        scaledSize: new naver.maps.Size(30, 40),
+        url: "https://res.cloudinary.com/dhdq4v4ar/image/upload/v1665577145/kisspng-computer-icons-business-company-building-corporati-5ad84ac07f54b4.9263433115241243525216_mff7j1.jpg",
+        // size: new naver.maps.Size(30, 40),
+        size: new naver.maps.Size(30, 30),
+        // scaledSize: new naver.maps.Size(30, 40),
+        scaledSize: new naver.maps.Size(30, 30),
         origin: new naver.maps.Point(0, 0),
-        anchor: new naver.maps.Point(12, 40),
+        // anchor: new naver.maps.Point(12, 40),
+        anchor: new naver.maps.Point(15, 25),
       },
       clickable: false,
     });

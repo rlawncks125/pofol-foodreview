@@ -27,6 +27,12 @@ const routes: Array<RouteRecordRaw> = [
       import(/* webpackChunkName: "about" */ "../views/testView.vue"),
   },
   {
+    path: "/popup/address",
+    name: "naverMapsAdress",
+    component: () =>
+      import(/* webpackChunkName: "about" */ "../views/popup/naverAddress.vue"),
+  },
+  {
     path: "/chat",
     name: "chat",
     component: () =>
@@ -61,12 +67,10 @@ const routes: Array<RouteRecordRaw> = [
           import(/* webpackChunkName: "chat" */ "../views/foodchat/Mypage.vue"),
       },
       {
-        path: "restaurant/:uuid",
-        name: "restaurant",
+        path: "room/:uuid",
+        name: "room",
         component: () =>
-          import(
-            /* webpackChunkName: "chat" */ "../views/foodchat/Restaurnt.vue"
-          ),
+          import(/* webpackChunkName: "chat" */ "../views/foodchat/Room.vue"),
       },
     ],
   },

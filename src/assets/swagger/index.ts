@@ -391,9 +391,16 @@ export class RestaurantService {
   /**
    * 레스토랑 정보 조회 ( getRestaurantById )
    */
-  static restaurantControllerGetRestaurantById(options: IRequestOptions = {}): Promise<GetRestaurantByIdOutPutDto> {
+  static restaurantControllerGetRestaurantById(
+    params: {
+      /** id */
+      id: number;
+    } = {} as any,
+    options: IRequestOptions = {}
+  ): Promise<GetRestaurantByIdOutPutDto> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/restaurant/{id}';
+      url = url.replace('{id}', params['id'] + '');
 
       const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
 
@@ -405,9 +412,16 @@ export class RestaurantService {
   /**
    * 레스토랑 삭제 ( removeRestaurant )
    */
-  static restaurantControllerRemoveRestaurant(options: IRequestOptions = {}): Promise<any> {
+  static restaurantControllerRemoveRestaurant(
+    params: {
+      /** id */
+      id: number;
+    } = {} as any,
+    options: IRequestOptions = {}
+  ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/restaurant/{id}';
+      url = url.replace('{id}', params['id'] + '');
 
       const configs: IRequestConfig = getConfigs('delete', 'application/json', url, options);
 
@@ -531,9 +545,16 @@ export class RestaurantService {
   /**
    * 댓글 정보 얻기 ( addMessageById 없어도 될듯? )
    */
-  static restaurantControllerAddMessageById(options: IRequestOptions = {}): Promise<any> {
+  static restaurantControllerAddMessageById(
+    params: {
+      /** id */
+      id: number;
+    } = {} as any,
+    options: IRequestOptions = {}
+  ): Promise<any> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/restaurant/comment/{id}';
+      url = url.replace('{id}', params['id'] + '');
 
       const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
 
@@ -545,9 +566,16 @@ export class RestaurantService {
   /**
    * 댓글 삭제 ( removeMessageById )
    */
-  static restaurantControllerRemoveMessageById(options: IRequestOptions = {}): Promise<RemoveMessageByIdOutPutDto> {
+  static restaurantControllerRemoveMessageById(
+    params: {
+      /** id */
+      id: number;
+    } = {} as any,
+    options: IRequestOptions = {}
+  ): Promise<RemoveMessageByIdOutPutDto> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/restaurant/comment/{id}';
+      url = url.replace('{id}', params['id'] + '');
 
       const configs: IRequestConfig = getConfigs('delete', 'application/json', url, options);
 
@@ -1142,6 +1170,9 @@ export interface UserUpdateInputDto {
 
   /** 내용물 */
   dsc?: string;
+
+  /** 아바타 */
+  avatar?: string;
 }
 
 export interface Lating {
@@ -1170,6 +1201,9 @@ export interface User {
 
   /** 내용물 */
   dsc: string;
+
+  /** 아바타 */
+  avatar: string;
 
   /** 권한 있는 방들 */
   superRooms: string[];
@@ -1228,9 +1262,6 @@ export interface MyRoomsinfoDto {
 
   /** 방 이름입니다.. */
   roomName: string;
-
-  /** 방마크 입니다. */
-  markeImageUrl: string;
 
   /** 방 시작 좌표입니다. */
   lating: CombinedLatingTypes;
@@ -1301,9 +1332,6 @@ export interface roomInfoDto {
   /** 방 이름입니다.. */
   roomName: string;
 
-  /** 방마크 입니다. */
-  markeImageUrl: string;
-
   /** 방장 유저 정보 */
   superUserinfo: CombinedSuperUserinfoTypes;
 }
@@ -1323,9 +1351,6 @@ export interface CreateRoomInputDto {
   /** 방 이름입니다.. */
   roomName: string;
 
-  /** 방마크 입니다. */
-  markeImageUrl: string;
-
   /** 방 시작 좌표입니다. */
   lating: CombinedLatingTypes;
 }
@@ -1339,9 +1364,6 @@ export interface RoomOutPutDto {
 
   /** 방 이름입니다.. */
   roomName: string;
-
-  /** 방마크 입니다. */
-  markeImageUrl: string;
 
   /** 방 시작 좌표입니다. */
   lating: CombinedLatingTypes;
@@ -1375,112 +1397,6 @@ export interface MyCreateRoomsOutPutDto {
 export interface RoomInfoInputDto {
   /** 방고유아이디입니다. */
   uuid: string;
-}
-
-export interface RoomUsersDto {
-  /** id */
-  id: number;
-
-  /** 유저 이름입니다. */
-  username: string;
-}
-
-export interface RoominfoDto {
-  /** 방 이름입니다.. */
-  roomName: string;
-
-  /** 방마크 입니다. */
-  markeImageUrl: string;
-
-  /** 방 시작 좌표입니다. */
-  lating: CombinedLatingTypes;
-
-  /** 방장 정보 */
-  superUserInfo: CombinedSuperUserInfoTypes;
-}
-
-export interface ApprovalWaitUsersDto {
-  /** id */
-  id: number;
-
-  /** 유저 이름입니다. */
-  username: string;
-}
-
-export interface Room {
-  /** id */
-  id: number;
-
-  /** 생성한 날짜 */
-  createAt: Date;
-
-  /** 갱신한 날짜 */
-  updateAt: Date;
-
-  /** 방고유아이디입니다. */
-  uuid: string;
-
-  /** 방 이름입니다.. */
-  roomName: string;
-
-  /** 방마크 입니다. */
-  markeImageUrl: string;
-
-  /** 방 시작 좌표입니다. */
-  lating: CombinedLatingTypes;
-
-  /** 방장 입니다. */
-  superUser: CombinedSuperUserTypes;
-
-  /** 참가한 유저들입니다. */
-  joinUsers: User[];
-
-  /** 레스토랑 정보들 */
-  restaurants: Restaurant[];
-
-  /** 승인대기 유저들 */
-  approvalWaitUsers: User[];
-}
-
-export interface Restaurant {
-  /** id */
-  id: number;
-
-  /** 생성한 날짜 */
-  createAt: Date;
-
-  /** 갱신한 날짜 */
-  updateAt: Date;
-
-  /** 소유자 */
-  resturantSuperUser: CombinedResturantSuperUserTypes;
-
-  /** 음식점 이름입니다. */
-  restaurantName: string;
-
-  /** 음식점 이미지 url 입니다 */
-  restaurantImageUrl: string;
-
-  /** 위치한 지역입니다. */
-  location: string;
-
-  /** 댓글들 입니다. */
-  comments: Comment[];
-
-  /** 평균 별점 */
-  avgStar: number;
-
-  /** 좌표입니다. */
-  lating: CombinedLatingTypes;
-
-  /** 소속한 방정보입니다. */
-  parentRoom: CombinedParentRoomTypes;
-
-  /** 해시태그들 */
-  hashTags: string[];
-
-  /** 전문분야 */
-  specialization: string[];
 }
 
 export interface UserCommentInfo {
@@ -1525,9 +1441,15 @@ export interface Comment {
   childMessages: messageType[];
 }
 
-export interface RestaurantInfoDto {
+export interface Restaurant {
   /** id */
   id: number;
+
+  /** 생성한 날짜 */
+  createAt: Date;
+
+  /** 갱신한 날짜 */
+  updateAt: Date;
 
   /** 소유자 */
   resturantSuperUser: CombinedResturantSuperUserTypes;
@@ -1550,11 +1472,46 @@ export interface RestaurantInfoDto {
   /** 좌표입니다. */
   lating: CombinedLatingTypes;
 
+  /** 소속한 방정보입니다. */
+  parentRoom: CombinedParentRoomTypes;
+
   /** 해시태그들 */
   hashTags: string[];
 
   /** 전문분야 */
   specialization: string[];
+}
+
+export interface Room {
+  /** id */
+  id: number;
+
+  /** 생성한 날짜 */
+  createAt: Date;
+
+  /** 갱신한 날짜 */
+  updateAt: Date;
+
+  /** 방고유아이디입니다. */
+  uuid: string;
+
+  /** 방 이름입니다.. */
+  roomName: string;
+
+  /** 방 시작 좌표입니다. */
+  lating: CombinedLatingTypes;
+
+  /** 방장 입니다. */
+  superUser: CombinedSuperUserTypes;
+
+  /** 참가한 유저들입니다. */
+  joinUsers: User[];
+
+  /** 레스토랑 정보들 */
+  restaurants: Restaurant[];
+
+  /** 승인대기 유저들 */
+  approvalWaitUsers: User[];
 }
 
 export interface RoomInfoOutPutDto {
@@ -1565,16 +1522,7 @@ export interface RoomInfoOutPutDto {
   err?: string;
 
   /** 방 정보 */
-  roomInfo: CombinedRoomInfoTypes;
-
-  /** 방안에 유저들 */
-  users: RoomUsersDto[];
-
-  /** 승인 대기 중인 유저들 */
-  ApprovalWaitUsers: ApprovalWaitUsersDto[];
-
-  /** 레스토랑 정보들 */
-  RestaurantInfo: RestaurantInfoDto[];
+  room: CombinedRoomTypes;
 }
 
 export interface EditRoomInPutDto {
@@ -1583,9 +1531,6 @@ export interface EditRoomInPutDto {
 
   /** 방 이름입니다.. */
   roomName?: string;
-
-  /** 방마크 입니다. */
-  markeImageUrl?: string;
 
   /** 방 시작 좌표입니다. */
   lating?: CombinedLatingTypes;
@@ -1642,6 +1587,44 @@ export interface LeaveRoomOutPutDto {
 
   /** 에러 메세지입니다. */
   err?: string;
+}
+
+export interface RestaurantInfoDto {
+  /** id */
+  id: number;
+
+  /** 생성한 날짜 */
+  createAt: Date;
+
+  /** 갱신한 날짜 */
+  updateAt: Date;
+
+  /** 소유자 */
+  resturantSuperUser: CombinedResturantSuperUserTypes;
+
+  /** 음식점 이름입니다. */
+  restaurantName: string;
+
+  /** 음식점 이미지 url 입니다 */
+  restaurantImageUrl: string;
+
+  /** 위치한 지역입니다. */
+  location: string;
+
+  /** 댓글들 입니다. */
+  comments: Comment[];
+
+  /** 평균 별점 */
+  avgStar: number;
+
+  /** 좌표입니다. */
+  lating: CombinedLatingTypes;
+
+  /** 해시태그들 */
+  hashTags: string[];
+
+  /** 전문분야 */
+  specialization: string[];
 }
 
 export interface GetRestaurantByIdOutPutDto {
@@ -2582,9 +2565,7 @@ export enum EnumRoomListInputDtoSearchType {
   'SuperUser' = 'SuperUser'
 }
 export type CombinedSuperUserinfoTypes = superUserInfoDto;
-export type CombinedRoomTypes = RoomOutPutDto;
-export type CombinedSuperUserInfoTypes = RoomUsersDto;
-export type CombinedParentRoomTypes = Room;
+export type CombinedRoomTypes = Room;
 export enum EnumUserCommentInfoRole {
   'User' = 'User',
   'Anonymous' = 'Anonymous'
@@ -2592,7 +2573,7 @@ export enum EnumUserCommentInfoRole {
 export type CombinedUserInfoTypes = UserInfo;
 export type CombinedParentRestaurantTypes = Restaurant;
 export type CombinedMessageTypes = messageType;
-export type CombinedRoomInfoTypes = RoominfoDto;
+export type CombinedParentRoomTypes = Room;
 export type CombinedRestaurantTypes = Restaurant;
 export enum EnumAddRestaurantCommentByIdIdInputDtoRole {
   'User' = 'User',

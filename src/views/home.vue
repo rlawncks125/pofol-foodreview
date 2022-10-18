@@ -2,8 +2,9 @@
   <div>
     <p>home</p>
     <SearchAddress @search-address="onSearchddress">
-      <p>주소 검색</p>
+      <div class="border">주소 검색</div>
     </SearchAddress>
+    <RouterLink to="chat">푸드채팅</RouterLink>
   </div>
 </template>
 

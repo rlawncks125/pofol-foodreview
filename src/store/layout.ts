@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { onBeforeMount, ref } from "vue";
 
-type LayoutNav = "home" | "chat";
+type LayoutNav = "home" | "chat" | "null";
 
 export const useLayout = defineStore("layout", () => {
   const layout = ref<{ nav: LayoutNav }>({

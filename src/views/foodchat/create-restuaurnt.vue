@@ -4,7 +4,6 @@
       ref="fileUploadRef"
       class="h-[70vw] w-[auto] mx-auto mb-[2rem] p-4 mo:h-[15rem] mo:w-[20rem]"
     />
-    <button @click="postItem">보내기</button>
   </div>
 </template>
 
@@ -14,11 +13,15 @@ import { ref } from "vue";
 
 const fileUploadRef = ref<InstanceType<typeof fileUpload>>();
 
-const postItem = async () => {
+const getImageUrl = async () => {
   const url = await fileUploadRef.value?.onUpload();
 
-  console.log(url);
+  return url;
 };
+
+defineExpose({
+  getImageUrl,
+});
 </script>
 
 <style scoped></style>

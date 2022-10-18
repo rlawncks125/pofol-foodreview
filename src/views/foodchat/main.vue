@@ -11,6 +11,8 @@
 import { useUser } from "@/store/user";
 import { storeToRefs } from "pinia";
 import { onMounted, ref } from "vue";
+import { getJoinRoomList, getRoomList } from "@/api/Room";
+import CreateRoom from "@/components/CreateRoom.vue";
 
 const { token, userInfo } = storeToRefs(useUser());
 </script>
