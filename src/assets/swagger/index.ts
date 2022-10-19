@@ -521,6 +521,28 @@ export class RestaurantService {
     });
   }
   /**
+   * 레스토랑 댓글에 추가댓글 삭제 ( removeCommentChildMessage )
+   */
+  static restaurantControllerRemoveCommentChildMessage(
+    params: {
+      /** requestBody */
+      body?: RemoveChildMessageInputDto;
+    } = {} as any,
+    options: IRequestOptions = {}
+  ): Promise<RemoveChildMessageOutPutDto> {
+    return new Promise((resolve, reject) => {
+      let url = basePath + '/restaurant/comment/addMessage';
+
+      const configs: IRequestConfig = getConfigs('delete', 'application/json', url, options);
+
+      let data = params.body;
+
+      configs.data = data;
+
+      axios(configs, resolve, reject);
+    });
+  }
+  /**
    * 레스토랑 대댓글 변경 ( editCommentChildMessage )
    */
   static restaurantControllerEditCommentChildMessage(
@@ -1134,12 +1156,30 @@ export class ShopitemService {
   }
 }
 
-export interface UserInfo {
+export interface User {
+  /** id */
+  id: number;
+
+  /** 생성한 날짜 */
+  createAt: Date;
+
+  /** 갱신한 날짜 */
+  updateAt: Date;
+
+  /** password */
+  password: string;
+
   /** 유저 이름입니다. */
-  username?: string;
+  username: string;
 
   /** 내용물 */
-  dsc?: string;
+  dsc: string;
+
+  /** 아바타 */
+  avatar: string;
+
+  /** 권한 있는 방들 */
+  superRooms: string[];
 }
 
 export interface LoginOutPutDto {
@@ -1153,7 +1193,7 @@ export interface LoginOutPutDto {
   token?: string;
 
   /**  */
-  user: UserInfo;
+  user: User;
 }
 
 export interface userCreateOutPutDto {
@@ -1181,32 +1221,6 @@ export interface Lating {
 
   /** Lating_Y */
   y: number;
-}
-
-export interface User {
-  /** id */
-  id: number;
-
-  /** 생성한 날짜 */
-  createAt: Date;
-
-  /** 갱신한 날짜 */
-  updateAt: Date;
-
-  /** password */
-  password: string;
-
-  /** 유저 이름입니다. */
-  username: string;
-
-  /** 내용물 */
-  dsc: string;
-
-  /** 아바타 */
-  avatar: string;
-
-  /** 권한 있는 방들 */
-  superRooms: string[];
 }
 
 export interface SuperUserDto {
@@ -1729,6 +1743,22 @@ export interface AddMessageByCommentIdOutPutDto {
   err?: string;
 }
 
+export interface RemoveChildMessageInputDto {
+  /** 댓글 작성 시간 */
+  CreateTime: Date;
+
+  /** id */
+  id: number;
+}
+
+export interface RemoveChildMessageOutPutDto {
+  /** 성공 여부입니다. */
+  ok: boolean;
+
+  /** 에러 메세지입니다. */
+  err?: string;
+}
+
 export interface EditCommentChildMessageInPutDto {
   /** 댓글 아이디 */
   id: number;
@@ -2104,6 +2134,29 @@ export interface ShopUserSeller {
 
   /** 영수증 */
   soldItem: ShopSoldItem[];
+}
+
+export interface UserInfo {
+  /** 닉네임 입니다. */
+  nickName: string;
+
+  /** 이메일 주소입니다. */
+  email: string;
+
+  /** 역할 */
+  role: EnumUserInfoRole;
+
+  /** 도로명 주소 입니다. */
+  address: string;
+
+  /** 상세 주소 입니다. */
+  addressDetail: string;
+
+  /** 핸드폰 번호입니다. */
+  tel: string;
+
+  /** 우편전자 입니다. */
+  postcode: string;
 }
 
 export interface LoginShopUserOutPut {
@@ -2900,6 +2953,10 @@ export enum EnumShopSoldItemStatus {
   '배송중' = '배송중',
   '배송직전' = '배송직전',
   '배송완료' = '배송완료'
+}
+export enum EnumUserInfoRole {
+  'company' = 'company',
+  'customer' = 'customer'
 }
 export type CombinedBasketItemTypes = BasketItem;
 export type CombinedSoldItemTypes = ShopSoldItem;

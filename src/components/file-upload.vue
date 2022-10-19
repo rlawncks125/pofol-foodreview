@@ -100,6 +100,8 @@ const fileRender = (file: any) => {
  * 변환된 URL 주소 반환
  */
 const onUpload = async (): Promise<string> => {
+  console.log(fileData.value);
+
   const url = fileData.value?.file.name || "urlStrig";
 
   return new Promise((res, rej) => {

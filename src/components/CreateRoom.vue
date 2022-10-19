@@ -44,16 +44,17 @@ import { createRoom } from "@/api/Room";
 import FaIcon from "./fa-icon.vue";
 import { useLoading } from "@/store/loading";
 
+interface ILatlng {
+  x: number;
+  y: number;
+}
+
 const emits = defineEmits(["close", "create"]);
 
 const mapRef = ref();
 let naverMaps: CustomNaverMaps;
 // const compoFile = ref<InstanceType<typeof FileUpload>>();
 
-interface ILatlng {
-  x: number;
-  y: number;
-}
 const latlng = ref<ILatlng>();
 const roomName = ref();
 
@@ -130,7 +131,7 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .popup-style {
-  @apply absolute inset-0 bg-gray-400;
+  @apply absolute inset-0 bg-black bg-opacity-60;
 
   .content-wrap {
     @apply m-4 bg-white px-2 py-4 overflow-auto rounded-2xl;

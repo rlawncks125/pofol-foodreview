@@ -1,0 +1,10 @@
+// transition
+.ani-fade-enter-active,
+.ani-fade-leave-active {
+  transition: opacity 0.2s;
+}
+
+.ani-fade-enter-from,
+.ani-fade-leave-to {
+  opacity: 0;
+}

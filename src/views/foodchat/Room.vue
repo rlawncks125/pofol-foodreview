@@ -1,27 +1,30 @@
 <template>
-  <!-- <div>
-    {{ route.params }}
-  </div> -->
-  <CreateRestaurant
-    v-if="isCreateRoom"
-    @close="isCreateRoom = false"
-    @create="triggerCreateRestaurant"
-    :uuid="room && room.uuid"
-  />
-  <ViewRestaurant
-    ref="viewResturantCompo"
-    v-show="isViewRestaurant"
-    @close="isViewRestaurant = false"
-    @delete="triggerDeleteRestaurant"
-    :is-super-user="userInfo?.username === room?.superUser.username"
-  />
+  <transition name="ani-fade">
+    <CreateRestaurant
+      v-if="isCreateRoom"
+      @close="isCreateRoom = false"
+      @create="triggerCreateRestaurant"
+      :uuid="room && room.uuid"
+      :room-lating="room?.lating"
+    />
+  </transition>
+  <transition name="ani-fade">
+    <ViewRestaurant
+      ref="viewResturantCompo"
+      v-show="isViewRestaurant"
+      @close="isViewRestaurant = false"
+      @delete="triggerDeleteRestaurant"
+      @upate-comment="updateRestaurantById"
+      :is-super-user="userInfo?.id === room?.superUser.id"
+    />
+  </transition>
 
   <div ref="endELRef" class="bg-yellow-600 h-[5rem]">
     <div v-if="room">
       <p class="text-white text-[2rem] text-center">
         {{ room.roomName }}
       </p>
-      <button @click="isCreateRoom = true">방만들기</button>
+      <button @click="isCreateRoom = true">음식점 등록하기</button>
     </div>
   </div>
   <div ref="mapRef" class="w-full h-[100vh]"></div>
@@ -51,6 +54,8 @@ import CreateRestaurant from "@/components/CreateRestaurant.vue";
 import ViewRestaurant from "../../components/ViewRestaurant.vue";
 import { storeToRefs } from "pinia";
 import { useUser } from "@/store/user";
+import { getRestaurantById } from "@/api/Restaurant";
+import { useLoading } from "@/store/loading";
 
 const route = useRoute();
 const { userInfo } = storeToRefs(useUser());
@@ -87,7 +92,15 @@ const restaurantMarkerEvent = ({ marker, restaurant }: IRestaurantInfo) => {
   });
 };
 
-const activeMarkerInfoWindow = ({ marker, restaurant }: IRestaurantInfo) => {
+const activeMarkerInfoWindow = ({
+  marker,
+  restaurant: _restaurant,
+}: IRestaurantInfo) => {
+  const findIndex = restaurantList.value.findIndex(
+    (fv) => fv.restaurant.id === _restaurant.id
+  );
+  const restaurant = restaurantList.value[+findIndex].restaurant;
+
   const infoContent = `
           <p class="font-mono text-xs">레스토랑 id :${restaurant.id}</p>
           <p class="font-mono text-sm">${restaurant.restaurantName}</p>
@@ -149,6 +162,31 @@ const drawRestaurantMarker = (restaurantInfo: IRestaurantInfo) => {
   restaurantMarkerEvent(restaurantInfo);
 };
 
+const updateRestaurantById = async (id: any) => {
+  useLoading().on();
+  const { ok, restaurant } = await getRestaurantById(+id);
+
+  restaurantList.value = restaurantList.value.map((v) => {
+    if (v.restaurant.id === id) {
+      const newItem = {
+        marker: v.marker,
+        restaurant,
+      } as IRestaurantInfo;
+
+      // 업데이트 된 레스토랑이
+      // 보고 있는 레스토랑일경우 값 변경
+      if (selectResturant.value?.id === id) {
+        viewResturantCompo.value?.setInfo(newItem.restaurant);
+      }
+
+      return newItem;
+    }
+    return v;
+  });
+
+  useLoading().off();
+};
+
 onMounted(async () => {
   const { ok, room: _room } = await getRoomInfo({
     uuid: route.params.uuid + "",
@@ -161,6 +199,12 @@ onMounted(async () => {
     mapRef,
     new naver.maps.LatLng(126.6838396, 37.4592758)
   );
+
+  // 중심 마커
+  naverMaps.renderMainMarker(room.value.lating);
+  naverMaps.mapCenterZoom(room.value.lating, {
+    number: 16,
+  });
 
   // 레스토랑 정보 & 마커
   _room.restaurants.map((restaurant) => {

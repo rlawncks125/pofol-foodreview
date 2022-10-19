@@ -8,7 +8,7 @@ export const useUser = defineStore(
   "token",
   () => {
     const token = ref<string | null>(null);
-    const userInfo = ref<UserInfo | null>();
+    const userInfo = ref<User | null>();
 
     const userLogin = async ({
       username,

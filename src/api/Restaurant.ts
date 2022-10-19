@@ -10,6 +10,8 @@ import {
   EditCommentMessageInPutDto,
   EditCommentMessageOutPutDto,
   GetRestaurantByIdOutPutDto,
+  RemoveChildMessageInputDto,
+  RemoveChildMessageOutPutDto,
 } from "@/assets/swagger";
 import axios from "axios";
 import { AuthHeaders } from "./auth";
@@ -66,6 +68,14 @@ export const editCommentChildMessage = async (
   return axios
     .patch(`/api/restaurant/comment/addMessage`, data, AuthHeaders)
     .then((res: any) => res.data as EditCommentChildMessageOutPutDto);
+};
+
+export const deleteCommentChildMessage = async (
+  data: RemoveChildMessageInputDto
+) => {
+  return axios
+    .patch(`/api/restaurant/comment/removeMessage`, data, AuthHeaders)
+    .then((res: any) => res.data as RemoveChildMessageOutPutDto);
 };
 
 export const deleteComment = async (id: number) => {

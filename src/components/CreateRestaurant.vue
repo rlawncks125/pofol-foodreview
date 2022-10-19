@@ -57,8 +57,14 @@ import FaIcon from "./fa-icon.vue";
 import { createRestaurant } from "@/api/Restaurant";
 import { useLoading } from "@/store/loading";
 
+interface ILatlng {
+  x: number;
+  y: number;
+}
+
 const props = defineProps({
   uuid: String,
+  roomLating: Object as () => ILatlng,
 });
 
 const emits = defineEmits(["close", "create"]);
@@ -67,10 +73,6 @@ const mapRef = ref();
 let naverMaps: CustomNaverMaps;
 // const compoFile = ref<InstanceType<typeof FileUpload>>();
 
-interface ILatlng {
-  x: number;
-  y: number;
-}
 const latlng = ref<ILatlng>();
 const input = reactive({
   hashTags: [],
@@ -146,6 +148,12 @@ onMounted(() => {
     new naver.maps.LatLng(126.6838396, 37.4592758)
   );
 
+  // 중심 마커 랜더
+  naverMaps.renderMainMarker(props.roomLating!);
+  naverMaps.mapCenterZoom(props.roomLating!, {
+    number: 14,
+  });
+
   naver.maps.Event.addListener(naverMaps.map, "click", (e) => {
     console.log(e.coord);
 
@@ -163,7 +171,7 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .popup-style {
-  @apply absolute inset-0 bg-gray-400 z-[1000];
+  @apply absolute inset-0 bg-black bg-opacity-60 z-[1000];
 
   .content-wrap {
     @apply m-4 bg-white px-2 py-4 overflow-auto rounded-2xl;
