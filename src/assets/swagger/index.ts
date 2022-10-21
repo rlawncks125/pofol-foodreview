@@ -352,7 +352,51 @@ export class RoomService {
     options: IRequestOptions = {}
   ): Promise<AcceptUserOutPutDto> {
     return new Promise((resolve, reject) => {
-      let url = basePath + '/room/accept';
+      let url = basePath + '/room/joinAccept';
+
+      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
+
+      let data = params.body;
+
+      configs.data = data;
+
+      axios(configs, resolve, reject);
+    });
+  }
+  /**
+   * 유저 거절 ( rejectUser )
+   */
+  static roomControllerRejectUser(
+    params: {
+      /** requestBody */
+      body?: AcceptUserInPutDto;
+    } = {} as any,
+    options: IRequestOptions = {}
+  ): Promise<AcceptUserOutPutDto> {
+    return new Promise((resolve, reject) => {
+      let url = basePath + '/room/joinReject';
+
+      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
+
+      let data = params.body;
+
+      configs.data = data;
+
+      axios(configs, resolve, reject);
+    });
+  }
+  /**
+   * 유저 강퇴 ( kickUser )
+   */
+  static roomControllerKickUser(
+    params: {
+      /** requestBody */
+      body?: AcceptUserInPutDto;
+    } = {} as any,
+    options: IRequestOptions = {}
+  ): Promise<AcceptUserOutPutDto> {
+    return new Promise((resolve, reject) => {
+      let url = basePath + '/room/kickUser';
 
       const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
 
@@ -521,28 +565,6 @@ export class RestaurantService {
     });
   }
   /**
-   * 레스토랑 댓글에 추가댓글 삭제 ( removeCommentChildMessage )
-   */
-  static restaurantControllerRemoveCommentChildMessage(
-    params: {
-      /** requestBody */
-      body?: RemoveChildMessageInputDto;
-    } = {} as any,
-    options: IRequestOptions = {}
-  ): Promise<RemoveChildMessageOutPutDto> {
-    return new Promise((resolve, reject) => {
-      let url = basePath + '/restaurant/comment/addMessage';
-
-      const configs: IRequestConfig = getConfigs('delete', 'application/json', url, options);
-
-      let data = params.body;
-
-      configs.data = data;
-
-      axios(configs, resolve, reject);
-    });
-  }
-  /**
    * 레스토랑 대댓글 변경 ( editCommentChildMessage )
    */
   static restaurantControllerEditCommentChildMessage(
@@ -554,6 +576,28 @@ export class RestaurantService {
   ): Promise<EditCommentChildMessageOutPutDto> {
     return new Promise((resolve, reject) => {
       let url = basePath + '/restaurant/comment/addMessage';
+
+      const configs: IRequestConfig = getConfigs('patch', 'application/json', url, options);
+
+      let data = params.body;
+
+      configs.data = data;
+
+      axios(configs, resolve, reject);
+    });
+  }
+  /**
+   * 레스토랑 댓글에 추가댓글 삭제 ( removeCommentChildMessage )
+   */
+  static restaurantControllerRemoveCommentChildMessage(
+    params: {
+      /** requestBody */
+      body?: RemoveChildMessageInputDto;
+    } = {} as any,
+    options: IRequestOptions = {}
+  ): Promise<RemoveChildMessageOutPutDto> {
+    return new Promise((resolve, reject) => {
+      let url = basePath + '/restaurant/comment/removeMessage';
 
       const configs: IRequestConfig = getConfigs('patch', 'application/json', url, options);
 

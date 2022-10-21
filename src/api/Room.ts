@@ -68,12 +68,34 @@ export const getApprovalWaitRooms =
       });
   };
 
-export const postAccept = async (
+export const postJoinAccept = async (
   data: AcceptUserInPutDto
 ): Promise<AcceptUserOutPutDto> => {
-  return axios.post(`/api/room/accept`, data, AuthHeaders).then((res: any) => {
-    return res.data! as AcceptUserOutPutDto;
-  });
+  return axios
+    .post(`/api/room/joinAccept`, data, AuthHeaders)
+    .then((res: any) => {
+      return res.data! as AcceptUserOutPutDto;
+    });
+};
+
+export const postJoinReject = async (
+  data: AcceptUserInPutDto
+): Promise<AcceptUserOutPutDto> => {
+  return axios
+    .post(`/api/room/joinReject`, data, AuthHeaders)
+    .then((res: any) => {
+      return res.data! as AcceptUserOutPutDto;
+    });
+};
+
+export const postKickUser = async (
+  data: AcceptUserInPutDto
+): Promise<AcceptUserOutPutDto> => {
+  return axios
+    .post(`/api/room/kickUser`, data, AuthHeaders)
+    .then((res: any) => {
+      return res.data! as AcceptUserOutPutDto;
+    });
 };
 
 export const getMySuperRooms = async (): Promise<MyCreateRoomsOutPutDto> => {

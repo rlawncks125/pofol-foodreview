@@ -1,0 +1,96 @@
+<template>
+  <div class="popup-style">
+    <div class="content-wrap">
+      <FaIcon @click="onClose" class="close" icon="ban" size="2x" />
+      <div class="content">
+        <h2 class="text-[2rem] text-center">방설정</h2>
+        <div class="btn-list flex flex-col gap-2">
+          <button @click="onSearRestaurant">음식점 찾기</button>
+          <button @click="onApprovalWaitList">대기 유저 목록</button>
+          <button @click="onJoinUsers">참여중인 유저</button>
+          <button @click="onRoomLeave">방 나가기</button>
+        </div>
+        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { leaveRoom } from "@/api/Room";
+import { Room } from "@/assets/swagger";
+import { useRouter } from "vue-router";
+import FaIcon from "../fa-icon.vue";
+
+const props = defineProps({
+  room: Object as () => Room,
+});
+
+const emits = defineEmits([
+  "close",
+  "searchRestaurant",
+  "approvalWaitList",
+  "roomLeave",
+  "joinUsers",
+]);
+
+const router = useRouter();
+
+const onClose = () => {
+  emits("close");
+};
+
+const onSearRestaurant = () => {
+  emits("close");
+  emits("searchRestaurant");
+};
+const onApprovalWaitList = () => {
+  emits("close");
+  emits("approvalWaitList");
+};
+
+const onRoomLeave = async () => {
+  if (!props.room) return;
+
+  if (!confirm("정말로 나가실건가요??")) return;
+
+  const { ok } = await leaveRoom({
+    uuid: props.room.uuid,
+  });
+
+  if (ok) {
+    emits("close");
+    emits("roomLeave");
+    router.push("/chat");
+  }
+};
+const onJoinUsers = () => {
+  emits("close");
+  emits("joinUsers");
+};
+</script>
+
+<style scoped lang="scss">
+.popup-style {
+  @apply absolute inset-0 bg-black bg-opacity-60 z-[1000];
+
+  .content-wrap {
+    @apply m-4 bg-white px-2 py-4 overflow-auto rounded-2xl overflow-x-hidden;
+    max-height: calc(100vh - 2rem);
+    .close {
+      @apply cursor-pointer float-right mt-[1rem] mr-[1rem] hover:text-red-600;
+    }
+
+    .content {
+      @apply px-4  clear-both;
+    }
+  }
+}
+.btn-list {
+  button {
+    @apply border p-2 hover:bg-gray-200;
+  }
+}
+</style>

@@ -19,12 +19,43 @@
     />
   </transition>
 
+  <SettingRoom
+    v-show="roomSetting.isOpenSetting"
+    @close="roomSetting.isOpenSetting = false"
+    @search-restaurant="roomSetting.isSearchRestaurant = true"
+    @approval-wait-list="roomSetting.isApprovalWait = true"
+    @join-users="roomSetting.isJoinUsers = true"
+    :room="room"
+  />
+
+  <!-- 방설정 -->
+  <SearchRestaurant
+    v-show="roomSetting.isSearchRestaurant"
+    @close="roomSetting.isSearchRestaurant = false"
+    :restaurant-list="roomSetting.restaurantList"
+  />
+  <ApprovalWaitList
+    v-show="roomSetting.isApprovalWait"
+    @close="roomSetting.isApprovalWait = false"
+    @update-room="updateRoom"
+    :room="room"
+  />
+  <JoinUsers
+    v-show="roomSetting.isJoinUsers"
+    @close="roomSetting.isJoinUsers = false"
+    @update-users="updateRoom"
+    :room="room"
+  />
+
   <div ref="endELRef" class="bg-yellow-600 h-[5rem]">
     <div v-if="room">
       <p class="text-white text-[2rem] text-center">
         {{ room.roomName }}
       </p>
-      <button @click="isCreateRoom = true">음식점 등록하기</button>
+      <div class="flex justify-between">
+        <button @click="isCreateRoom = true">음식점 등록하기</button>
+        <button @click="roomSetting.isOpenSetting = true">설정</button>
+      </div>
     </div>
   </div>
   <div ref="mapRef" class="w-full h-[100vh]"></div>
@@ -46,9 +77,9 @@
 
 <script setup lang="ts">
 import { getRoomInfo } from "@/api/Room";
-import { Restaurant, Room } from "@/assets/swagger";
+import { Restaurant, Room, User } from "@/assets/swagger";
 import { CustomNaverMaps } from "@/plugin/naverMaps";
-import { onMounted, onUnmounted, ref } from "vue";
+import { onMounted, onUnmounted, reactive, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import CreateRestaurant from "@/components/CreateRestaurant.vue";
 import ViewRestaurant from "../../components/ViewRestaurant.vue";
@@ -56,6 +87,10 @@ import { storeToRefs } from "pinia";
 import { useUser } from "@/store/user";
 import { getRestaurantById } from "@/api/Restaurant";
 import { useLoading } from "@/store/loading";
+import SettingRoom from "@/components/Room-Setting/Setting-Room.vue";
+import SearchRestaurant from "@/components/Room-Setting/SearchRestaurant.vue";
+import ApprovalWaitList from "@/components/Room-Setting/ApprovalWaitList.vue";
+import JoinUsers from "@/components/Room-Setting/JoinUsers.vue";
 
 const route = useRoute();
 const { userInfo } = storeToRefs(useUser());
@@ -76,11 +111,23 @@ const isViewRestaurant = ref(false);
 const isSelectedRestaurant = ref(false);
 const selectResturant = ref<Restaurant>();
 
+const roomSetting = reactive({
+  isOpenSetting: false,
+  isApprovalWait: false,
+  isSearchRestaurant: false,
+  restaurantList: [] as Restaurant[],
+  isJoinUsers: false,
+});
+
 interface IRestaurantInfo {
   marker: naver.maps.Marker;
   restaurant: Restaurant;
 }
-let restaurantList = ref<IRestaurantInfo[]>([]);
+const restaurantList = ref<IRestaurantInfo[]>([]);
+
+watch(restaurantList, () => {
+  roomSetting.restaurantList = restaurantList.value.map((v) => v.restaurant);
+});
 
 const restaurantMarkerEvent = ({ marker, restaurant }: IRestaurantInfo) => {
   marker.addListener("click", () => {
@@ -130,12 +177,7 @@ const openViewRestaurant = () => {
 };
 
 const triggerCreateRestaurant = (restaurant: Restaurant) => {
-  const marker = naverMaps.renderMarker(restaurant.lating);
-  const restaurantInfo: IRestaurantInfo = {
-    marker,
-    restaurant,
-  };
-  drawRestaurantMarker(restaurantInfo);
+  drawRestaurantMarker(restaurant);
   isCreateRoom.value = false;
 };
 
@@ -157,7 +199,13 @@ const triggerDeleteRestaurant = (restaurant: Restaurant) => {
   disableMarkerInfoWindow();
 };
 
-const drawRestaurantMarker = (restaurantInfo: IRestaurantInfo) => {
+const drawRestaurantMarker = (restaurant: Restaurant) => {
+  const marker = naverMaps.renderMarker(restaurant.lating);
+  const restaurantInfo: IRestaurantInfo = {
+    marker,
+    restaurant,
+  };
+
   restaurantList.value = [...restaurantList.value, restaurantInfo];
   restaurantMarkerEvent(restaurantInfo);
 };
@@ -187,6 +235,17 @@ const updateRestaurantById = async (id: any) => {
   useLoading().off();
 };
 
+const updateRoom = async () => {
+  useLoading().on();
+  const { ok, room: _room } = await getRoomInfo({
+    uuid: route.params.uuid + "",
+  });
+  if (ok) {
+    room.value = _room;
+  }
+  useLoading().off();
+};
+
 onMounted(async () => {
   const { ok, room: _room } = await getRoomInfo({
     uuid: route.params.uuid + "",
@@ -208,13 +267,7 @@ onMounted(async () => {
 
   // 레스토랑 정보 & 마커
   _room.restaurants.map((restaurant) => {
-    const marker = naverMaps.renderMarker(restaurant.lating);
-    const restaurantInfo: IRestaurantInfo = {
-      marker,
-      restaurant,
-    };
-
-    drawRestaurantMarker(restaurantInfo);
+    drawRestaurantMarker(restaurant);
   });
   console.log(restaurantList.value);
 
