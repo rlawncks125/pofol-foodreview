@@ -1,6 +1,6 @@
 <template>
   <div class="popup-style">
-    <div class="content-wrap">
+    <div class="content-wrap max-w-form md:!mx-auto">
       <FaIcon @click="onClose" class="close" icon="ban" size="2x" />
       <div class="content">
         <div class="flex items-center">
@@ -8,7 +8,10 @@
         </div>
         <!-- <FileUpload ref="compoFile" /> -->
         <!-- 네이버 맵 -->
-        <div ref="mapRef" class="w-full mx-auto z-[101] h-[47vw]"></div>
+        <div
+          ref="mapRef"
+          class="w-full mx-auto z-[101] h-[47vw] max-h-[24rem]"
+        ></div>
         <SearchAddress
           @search-address="onMarkerAdress"
           class="border block mx-auto my-2"
@@ -18,6 +21,8 @@
         <p>
           {{ props.uuid! }}
         </p>
+        <!-- 이미지 -->
+        <FileUpload ref="fileRef" class="mb-[4rem]" />
         <p>
           {{ latlng }}
         </p>
@@ -41,7 +46,7 @@
         </div>
         <!-- 분야 -->
         <!-- 해시태그 -->
-        <button @click="onCreate">만들기</button>
+        <button class="btn-type-0 my-2" @click="onCreate">만들기</button>
         <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
         <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
       </div>
@@ -56,6 +61,7 @@ import SearchAddress from "./search-address.vue";
 import FaIcon from "./fa-icon.vue";
 import { createRestaurant } from "@/api/Restaurant";
 import { useLoading } from "@/store/loading";
+import FileUpload from "./file-upload.vue";
 
 interface ILatlng {
   x: number;
@@ -68,6 +74,8 @@ const props = defineProps({
 });
 
 const emits = defineEmits(["close", "create"]);
+
+const fileRef = ref<InstanceType<typeof FileUpload>>();
 
 const mapRef = ref();
 let naverMaps: CustomNaverMaps;
@@ -123,12 +131,16 @@ const onCreate = async () => {
   }
 
   useLoading().on();
+
+  const imageUrl = await fileRef.value?.onUpload();
+  console.log(imageUrl);
+
   const { ok, restaurant } = await createRestaurant({
     uuid: props.uuid!,
     lating: latlng.value!,
     location: input.location || "",
     // @ts-ignore
-    restaurantImageUrl: null,
+    restaurantImageUrl: imageUrl || null,
     restaurantName: input.restaurantName || "",
     hashTags: [],
     specialization: [],
@@ -169,20 +181,4 @@ onMounted(() => {
 });
 </script>
 
-<style scoped lang="scss">
-.popup-style {
-  @apply absolute inset-0 bg-black bg-opacity-60 z-[1000];
-
-  .content-wrap {
-    @apply m-4 bg-white px-2 py-4 overflow-auto rounded-2xl;
-    max-height: calc(100vh - 2rem);
-    .close {
-      @apply cursor-pointer float-right mt-[1rem] mr-[1rem] hover:text-red-600;
-    }
-
-    .content {
-      @apply px-4  clear-both;
-    }
-  }
-}
-</style>
+<style scoped lang="scss"></style>

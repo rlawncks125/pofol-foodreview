@@ -1,82 +1,107 @@
 <template>
-  <div v-if="restaurant" class="popup-style">
-    <div class="content-wrap max-w-container lg:!mx-auto">
-      <FaIcon @click="onClose" class="close" icon="ban" size="2x" />
-      <div class="clear-both text-center pt-4 pb-2 text-[1.8rem] font-bold">
-        {{ restaurant.restaurantName }}
+  <div v-if="restaurant" class="popup-style-view">
+    <div class="content-wrap max-w-form md:!mx-auto">
+      <div class="flex items-center bg-yellow-300 sticky top-0 z-[100]">
+        <div
+          class="text-center flex-1 pl-[32px] font-bold text-[1.8rem] xs:py-4"
+        >
+          {{ restaurant.restaurantName }}
+        </div>
+        <FaIcon
+          @click="onClose"
+          class="cursor-pointer mr-[1rem] hover:text-red-600"
+          icon="ban"
+          size="2x"
+        />
       </div>
       <!-- 레스토랑 이미지 -->
-      <div
-        class="h-[40vw] max-h-[25rem] translate-x-[-.5rem]"
-        :style="{ width: 'calc(100% + 1rem)' }"
-      >
+      <div class="translate-x-[-.5rem]" :style="{ width: 'calc(100% + 1rem)' }">
         <div
           v-if="!restaurant.restaurantImageUrl"
-          class="bg-yellow-100 h-full flex justify-center items-center flex-col"
+          class="h-[40vw] max-h-[25rem] bg-yellow-100 flex justify-center items-center flex-col"
         >
           <FaIcon icon="cloud-arrow-down" size="3x" />
           <p>이미지가 없습니다.</p>
+          <p>기본 이미지 추가하기</p>
         </div>
-        <div v-else>
-          <p>이미지 삽입</p>
+        <div class="overflow-hidden w-full h-full" v-else>
+          <img
+            :src="
+              restaurant.restaurantImageUrl.replace(
+                /upload\//g,
+                '$&w_350,h_200/'
+              )
+            "
+            alt="레스토랑 이미지"
+            class="w-full object-cover"
+          />
         </div>
       </div>
-      <!-- 삭제하기 버튼 -->
+      <!-- 음식점 삭제하기 버튼 -->
       <button
         v-if="props?.isSuperUser"
-        class="border p-2 my-2 bg-red-600 text-white"
+        class="btn-type-remove my-2 mx-2"
         @click="onDeleteRestaurant"
       >
         삭제 하기
       </button>
+      <!-- 평균 별점 -->
+      <StarFill :fill="restaurant.avgStar" :star-size="2" :star-num="5" />
       <!-- 콘텐츠 -->
-      <div class="content">
+      <div class="content px-2">
         <p>{{ restaurant.hashTags }}</p>
         <p>{{ restaurant.specialization }}</p>
         <p>{{ restaurant.location }}</p>
         <!-- 댓글 -->
         <div v-for="comment in restaurant.comments" :key="comment.id">
-          <div class="border">
+          <div class="border p-1">
             <div>
-              <div
-                class="cursor-pointer"
-                @click="openAdditionalComment(comment.id)"
-              >
-                <div class="flex gap-2">
-                  <span>
-                    {{ comment.message.userInfo.nickName }}
-                  </span>
+              <div class="flex justify-between px-2 flex-wrap">
+                <div
+                  class="cursor-pointer flex-0 w-full md:flex-1 md:w-auto"
+                  @click="openAdditionalComment(comment.id)"
+                >
+                  <div class="flex gap-2">
+                    <!-- 아바타 추가 -->
+                    <span>
+                      {{ comment.message.userInfo.nickName }}
+                    </span>
 
-                  <span>
-                    {{ new Date(comment.message.CreateTime).toLocaleString() }}
-                  </span>
+                    <span>
+                      {{
+                        new Date(comment.message.CreateTime).toLocaleString()
+                      }}
+                    </span>
+                  </div>
+                  <div>
+                    {{ comment.message.message }}
+                  </div>
                 </div>
-                <div>
-                  {{ comment.message.message }}
+                <!-- 댓글 수정 & 삭제 버튼  -->
+                <div
+                  v-if="
+                    comment.message.userInfo.nickName === userInfo?.username
+                  "
+                >
+                  <button
+                    @click="openEditCommnet(comment.id)"
+                    class="btn-type-edit p-2"
+                  >
+                    수정하기
+                  </button>
+                  <button
+                    @click="onDeleteCommnet(comment.id)"
+                    class="btn-type-remove p-2"
+                  >
+                    삭제 하기
+                  </button>
                 </div>
-              </div>
-              <!-- 댓글 수정 & 삭제 버튼  -->
-              <div
-                v-if="comment.message.userInfo.nickName === userInfo?.username"
-              >
-                <button
-                  @click="openEditCommnet(comment.id)"
-                  class="border bg-blue-600 text-white p-2"
-                >
-                  수정하기
-                </button>
-                <button
-                  @click="onDeleteCommnet(comment.id)"
-                  class="border bg-red-600 text-white p-2"
-                >
-                  삭제 하기
-                </button>
               </div>
 
               <!-- 추가 댓글 달기 -->
               <div
                 v-show="openAddCommentId === comment.id"
-                class="border mx-4 py-2"
+                class="border mx-4 p-2"
               >
                 <label for="additional-comments">추가 댓글</label>
                 <input
@@ -87,7 +112,7 @@
                   v-model="additionalComment"
                 />
                 <button
-                  class="mx-2 bg-blue-500 text-white p-2"
+                  class="mx-2 btn-type-add p-2"
                   @click="onAddAdditionalComment"
                 >
                   추가 댓글 달기
@@ -103,21 +128,19 @@
                   id="edit-commnet"
                   v-model="editCommnetText"
                 />
-                <button
-                  class="border bg-blue-400 text-white p-2"
-                  @click="onEditCommnet"
-                >
+                <button class="btn-type-edit p-2" @click="onEditCommnet">
                   수정하기
                 </button>
               </div>
               <!-- 추가 댓글 랜더 -->
               <div
-                class="border mx-4"
+                class="border mx-4 p-2"
                 v-for="childComment in comment.childMessages"
                 :key="childComment.CreateTime + ''"
               >
                 <div>
                   <div class="flex gap-2">
+                    <!-- 아바타 추가 -->
                     <span>
                       {{ childComment.userInfo.nickName }}
                     </span>
@@ -149,7 +172,7 @@
                   />
                   <button
                     @click="onEditAdditionalComment"
-                    class="border bg-blue-400 text-white p-2"
+                    class="btn-type-edit p-2"
                   >
                     수정하기
                   </button>
@@ -165,7 +188,7 @@
                         childComment.CreateTime
                       )
                     "
-                    class="p-2 text-white m-1 bg-blue-500"
+                    class="p-2 btn-type-edit"
                   >
                     수정 버튼
                   </button>
@@ -176,7 +199,7 @@
                         childComment.CreateTime
                       )
                     "
-                    class="p-2 text-white m-1 bg-red-500"
+                    class="p-2 btn-type-remove"
                   >
                     삭제 버튼
                   </button>
@@ -187,6 +210,13 @@
         </div>
         <!-- 별점 추가하기 -->
         <h2 class="my-2 text-[1.5rem]">답글</h2>
+        <StarDynamic
+          :fill="5"
+          :star-num="5"
+          :star-size="3"
+          @change-star="(star) => (coomentStar = star)"
+        />
+
         <textarea
           ref="textareaRef"
           class="border w-full"
@@ -194,7 +224,7 @@
           id=""
           @input="textareaAutoHieght"
         ></textarea>
-        <button class="bg-blue-400 text-white p-2" @click="onAddComment">
+        <button class="btn-type-add p-2" @click="onAddComment">
           답글 달기
         </button>
 
@@ -207,6 +237,7 @@
 </template>
 
 <script setup lang="ts">
+import { deleteFile } from "@/api/file";
 import {
   addMessageByCommentId,
   addRestaurantCommentById,
@@ -226,6 +257,8 @@ import { useUser } from "@/store/user";
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
 import FaIcon from "./fa-icon.vue";
+import StarDynamic from "./Star/star-dynamic.vue";
+import StarFill from "./Star/star-fill.vue";
 
 const props = defineProps({
   isSuperUser: Boolean,
@@ -237,6 +270,7 @@ const emits = defineEmits(["close", "delete", "upateComment"]);
 const restaurant = ref<Restaurant>();
 
 // 댓글 추가
+const coomentStar = ref(5);
 const textareaRef = ref<HTMLTextAreaElement>();
 
 const textareaAutoHieght = (e: any) => {
@@ -255,7 +289,7 @@ const onAddComment = async () => {
     message: textareaRef.value!.value,
     restaurantId: restaurant.value!.id,
     role: EnumAddRestaurantCommentByIdIdInputDtoRole.User,
-    star: 4,
+    star: coomentStar.value,
   });
 
   if (ok) {
@@ -411,6 +445,10 @@ const onDeleteRestaurant = async () => {
   if (!confirm("정말로 삭제하시겠습니까?")) return;
 
   useLoading().on();
+  if (restaurant.value.restaurantImageUrl) {
+    await deleteFile(restaurant.value.restaurantImageUrl);
+  }
+
   const { ok } = await deleteRestaurant(restaurant.value.id);
 
   if (ok) {
@@ -437,15 +475,13 @@ defineExpose({
 </script>
 
 <style scoped lang="scss">
-.popup-style {
+.popup-style-view {
   @apply absolute inset-0 bg-black bg-opacity-60 z-[1000];
 
   .content-wrap {
-    @apply m-4 bg-white px-2 py-4 overflow-auto rounded-2xl overflow-x-hidden;
-    max-height: calc(100vh - 2rem);
-    .close {
-      @apply cursor-pointer float-right mt-[1rem] mr-[1rem] hover:text-red-600;
-    }
+    @apply m-4 bg-white overflow-auto rounded-2xl overflow-x-hidden;
+
+    max-height: calc(var(--mobile--full) - 2rem);
 
     .content {
       @apply px-4  clear-both;

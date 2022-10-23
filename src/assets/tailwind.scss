@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --mobile--full: 100vh;
+}
+
+.btn-type-0 {
+  @apply bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow;
+}
+
+.btn-type-add {
+  @apply bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded;
+}
+
+.btn-type-remove {
+  @apply bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded;
+}
+
+.btn-type-edit {
+  @apply bg-transparent hover:bg-emerald-500 text-emerald-700 font-semibold hover:text-white py-2 px-4 border border-emerald-500 hover:border-transparent rounded;
+}
+
+.popup-style {
+  @apply absolute inset-0 bg-black bg-opacity-60 z-[1000];
+
+  .content-wrap {
+    @apply m-4 bg-white px-2 py-4 overflow-auto rounded-2xl overflow-x-hidden;
+    // max-height: calc(100vh - 2rem);
+    max-height: calc(var(--mobile--full) - 2rem);
+    .close {
+      @apply cursor-pointer float-right mt-[1rem] mr-[1rem] hover:text-red-600;
+    }
+
+    .content {
+      @apply px-4  clear-both;
+    }
+  }
+}

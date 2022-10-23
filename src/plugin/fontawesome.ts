@@ -21,6 +21,7 @@ import {
   faMoon,
   faCloudArrowDown,
   faCloudArrowUp,
+  faStar,
 } from "@fortawesome/free-solid-svg-icons";
 import { App } from "vue";
 
@@ -43,7 +44,8 @@ library.add(
   faSun,
   faMoon,
   faCloudArrowDown,
-  faCloudArrowUp
+  faCloudArrowUp,
+  faStar
 );
 
 export default {
@@ -72,6 +74,7 @@ export enum FaIconName {
   "sun",
   "cloud-arrow-down",
   "cloud-arrow-up",
+  "star",
 }
 
 export enum FaIconSize {

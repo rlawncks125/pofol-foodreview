@@ -47,14 +47,21 @@
     :room="room"
   />
 
-  <div ref="endELRef" class="bg-yellow-600 h-[5rem]">
+  <div ref="endELRef" class="bg-yellow-600">
     <div v-if="room">
       <p class="text-white text-[2rem] text-center">
         {{ room.roomName }}
       </p>
       <div class="flex justify-between">
-        <button @click="isCreateRoom = true">음식점 등록하기</button>
-        <button @click="roomSetting.isOpenSetting = true">설정</button>
+        <button class="btn-type-0 m-2" @click="isCreateRoom = true">
+          음식점 등록하기
+        </button>
+        <button
+          class="btn-type-0 m-2"
+          @click="roomSetting.isOpenSetting = true"
+        >
+          설정
+        </button>
       </div>
     </div>
   </div>
@@ -274,7 +281,10 @@ onMounted(async () => {
   // 지도 높이 조절
   mapFullFunc = () => naverMaps.HeigthFullByEndEl(endELRef.value!);
 
-  mapFullFunc();
+  setTimeout(() => {
+    mapFullFunc();
+  }, 1000);
+
   window.addEventListener("resize", mapFullFunc);
 });
 onUnmounted(() => {

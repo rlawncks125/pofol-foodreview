@@ -1,16 +1,17 @@
 <template>
-  <div class="w-full h-64">
+  <div class="w-full">
     <input
       id="dropzone-file"
       type="file"
       class="hidden"
+      accept="image/*"
       @change.prevent="onChangeFile"
     />
     <div class="flex justify-center items-center w-full h-full">
       <label
         v-if="!fileData"
         for="dropzone-file"
-        class="flex flex-col justify-center items-center w-full h-full bg-gray-50 rounded-lg border-2 border-gray-300 border-dashed cursor-pointer dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+        class="flex flex-col justify-center items-center py-[4rem] w-full h-full bg-gray-50 rounded-lg border-2 border-gray-300 border-dashed cursor-pointer dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
         @dragover="isDropzoneOver = true"
         @dragleave="isDropzoneOver = false"
         @drop="onDropFile"
@@ -18,6 +19,7 @@
         <div
           class="flex flex-col justify-center items-center pt-5 pb-6 text-center pointer-events-none"
         >
+          <p class="font-semibold text-gray-500">음식점 사진을 등록하세요.</p>
           <div v-show="isDropzoneOver">
             <fa-icon icon="cloud-arrow-down" size="2x" class="text-gray-400" />
             <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
@@ -59,6 +61,7 @@
 </template>
 
 <script setup lang="ts">
+import { getImageURLByFormData } from "@/api/file";
 import { onMounted, onUnmounted, ref } from "vue";
 import FaIcon from "./fa-icon.vue";
 
@@ -99,16 +102,17 @@ const fileRender = (file: any) => {
 /**
  * 변환된 URL 주소 반환
  */
-const onUpload = async (): Promise<string> => {
+const onUpload = async (): Promise<string | undefined> => {
+  if (!fileData.value?.file) return;
   console.log(fileData.value);
 
-  const url = fileData.value?.file.name || "urlStrig";
+  const form = new FormData();
+  const { file } = fileData.value!;
+  form.append("file", file, file.name);
 
-  return new Promise((res, rej) => {
-    setTimeout(() => {
-      res(url);
-    }, 1000);
-  });
+  const url = await getImageURLByFormData(form);
+
+  return url;
 };
 
 const preventDefaultDrag = (e: any) => {

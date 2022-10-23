@@ -19,14 +19,22 @@ import ChatNavigation from "./components/ChatNavigation.vue";
 
 import "@/api/auth";
 import Loading from "./components/loading.vue";
+import { onMounted } from "vue";
+import { mobileHeightSize } from "./common/mobileSize";
 
 const route = useRoute();
 const { layout } = storeToRefs(useLayout());
 const { isLoading } = storeToRefs(useLoading());
+
+onMounted(() => {
+  window.addEventListener("load", mobileHeightSize);
+  window.addEventListener("resize", mobileHeightSize);
+});
 </script>
 
 <style>
 body {
   /* @apply bg-blue-400; */
+  @apply text-[.8rem];
 }
 </style>

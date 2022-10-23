@@ -40,7 +40,6 @@ export class CustomNaverMaps {
   naverMapsInit = () => {
     // (네이버 지도 짤림 버그)
     setTimeout(() => {
-      console.log("지도 짤짤");
       window.dispatchEvent(new Event("resize"));
     }, 1000);
   };
@@ -92,6 +91,7 @@ export class CustomNaverMaps {
   };
 
   HeigthFullByEndEl = (endELRef: HTMLElement) => {
+    // const height = window.innerHeight - endELRef.getClientRects()[0].bottom;
     const height = window.innerHeight - endELRef.getClientRects()[0].bottom;
 
     this.mapEl.value.style.height = `${height}px`;

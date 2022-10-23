@@ -35,20 +35,4 @@ const onClose = () => {
 };
 </script>
 
-<style scoped lang="scss">
-.popup-style {
-  @apply absolute inset-0 bg-black bg-opacity-60 z-[1000];
-
-  .content-wrap {
-    @apply m-4 bg-white px-2 py-4 overflow-auto rounded-2xl overflow-x-hidden;
-    max-height: calc(100vh - 2rem);
-    .close {
-      @apply cursor-pointer float-right mt-[1rem] mr-[1rem] hover:text-red-600;
-    }
-
-    .content {
-      @apply px-4  clear-both;
-    }
-  }
-}
-</style>
+<style scoped lang="scss"></style>
