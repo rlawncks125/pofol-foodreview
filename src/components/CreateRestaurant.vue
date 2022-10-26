@@ -18,34 +18,108 @@
         >
           <div>주소 찾기</div>
         </SearchAddress>
-        <p>
-          {{ props.uuid! }}
-        </p>
+
         <!-- 이미지 -->
         <FileUpload ref="fileRef" class="mb-[4rem]" />
-        <p>
-          {{ latlng }}
-        </p>
+
         <div>
-          <label for="create-restaurnt-name">레스토랑 이름 :</label>
+          <label for="create-restaurnt-name" class="font-bold mb-2"
+            >레스토랑 이름
+          </label>
           <input
             type="text"
-            class="border"
+            class="block p-2 my-2 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             v-model="input.restaurantName"
             id="create-restaurnt-name"
           />
         </div>
         <div>
-          <label for="create-restaurnt-localtion">지역 :</label>
+          <label for="create-restaurnt-localtion" class="font-bold mb-2"
+            >지역</label
+          >
           <input
             type="text"
-            class="border"
+            class="block p-2 my-2 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             v-model="input.location"
             id="create-restaurnt-localtion"
           />
         </div>
-        <!-- 분야 -->
+        <!-- 전문 분야 -->
+        <div>
+          <div class="relative">
+            <label for="specialization" class="font-bold mb-2">전문 분야</label>
+
+            <input
+              type="specialization"
+              id="specialization"
+              class="block my-2 p-4 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="전문 분야"
+              v-model="input.specialization"
+              required
+              @keydown.prevent="onKeydownSpecializtion"
+            />
+            <button
+              class="text-white absolute right-2 bottom-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              @click="onAddSpecializtion"
+            >
+              추가
+            </button>
+          </div>
+          <div class="flex gap-2 flex-wrap">
+            <div
+              class="flex relative bg-blue-300 border rounded-full py-2 px-2 pr-8"
+              v-for="(specialization, index) in input.specializations"
+              :key="index"
+            >
+              <p>
+                {{ specialization }}
+              </p>
+              <button
+                class="absolute top-[.5rem] right-[.6rem] text-white"
+                @click="onDeleteSpecializtion(index)"
+              >
+                X
+              </button>
+            </div>
+          </div>
+        </div>
         <!-- 해시태그 -->
+        <div>
+          <div class="relative">
+            <label for="hashTags" class="font-bold mb-2">해시태그</label>
+
+            <input
+              type="hashTags"
+              id="hashTags"
+              class="block my-2 p-4 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="#해시태그"
+              v-model="input.hashTag"
+              required
+              @keydown.prevent="onKeydownHashTag"
+            />
+            <button
+              class="text-white absolute right-2 bottom-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              @click="onAddHashTag"
+            >
+              추가
+            </button>
+          </div>
+          <div class="flex gap-2 flex-wrap">
+            <div
+              class="flex relative bg-blue-300 border rounded-full py-2 px-2 pr-8"
+              v-for="(hashTag, index) in input.hashTags"
+              :key="index"
+            >
+              <p>#{{ hashTag }}</p>
+              <button
+                class="absolute top-[.5rem] right-[.6rem] text-white"
+                @click="onDeleteHashTag(index)"
+              >
+                X
+              </button>
+            </div>
+          </div>
+        </div>
         <button class="btn-type-0 my-2" @click="onCreate">만들기</button>
         <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
         <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
@@ -83,10 +157,12 @@ let naverMaps: CustomNaverMaps;
 
 const latlng = ref<ILatlng>();
 const input = reactive({
-  hashTags: [],
   location: "",
   restaurantName: "",
   specialization: "",
+  specializations: [] as string[],
+  hashTag: "",
+  hashTags: [] as string[],
 });
 
 let marker: naver.maps.Marker;
@@ -119,12 +195,58 @@ const onMarkerAdress = (_address: any) => {
   console.log(latlng);
 };
 
+const onAddHashTag = () => {
+  if (input.hashTag === "") return;
+
+  input.hashTags.push(input.hashTag);
+  input.hashTag = "";
+};
+
+const onKeydownHashTag = (e: KeyboardEvent) => {
+  if (e.key === "Enter") onAddHashTag();
+  else if (e.key === "Tab") {
+    const el = e.target as HTMLElement;
+    el.parentNode?.querySelector("button")?.focus();
+  }
+  return;
+};
+
+const onDeleteHashTag = (index: number) => {
+  input.hashTags = input.hashTags.filter((_, fIndex) => fIndex !== index);
+};
+
+const onAddSpecializtion = () => {
+  if (input.specialization === "") return;
+
+  input.specializations.push(input.specialization);
+  input.specialization = "";
+};
+
+const onKeydownSpecializtion = (e: KeyboardEvent) => {
+  if (e.key === "Enter") onAddSpecializtion();
+  else if (e.key === "Tab") {
+    const el = e.target as HTMLElement;
+    el.parentNode?.querySelector("button")?.focus();
+  }
+  return;
+};
+
+const onDeleteSpecializtion = (index: number) => {
+  input.specializations = input.specializations.filter(
+    (_, fIndex) => fIndex !== index
+  );
+};
+
 const onClose = () => {
   emits("close", true);
 };
 
 const onCreate = async () => {
   console.log("레스토랑 만들기");
+  if (input.restaurantName === "") {
+    alert("레스토랑 이름을 지정해 주세요");
+    return;
+  }
   if (!latlng.value) {
     alert("위치를 지정해주세요.");
     return;
@@ -142,8 +264,8 @@ const onCreate = async () => {
     // @ts-ignore
     restaurantImageUrl: imageUrl || null,
     restaurantName: input.restaurantName || "",
-    hashTags: [],
-    specialization: [],
+    hashTags: input.hashTags,
+    specialization: input.specializations,
   });
 
   console.log(restaurant);
