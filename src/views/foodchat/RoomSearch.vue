@@ -26,7 +26,7 @@
             placeholder="Search"
             required
             v-model="findText"
-            @keydown.prevent="
+            @keydown="
               (e) => {
                 if (e.key === 'Enter') onSearch();
 

@@ -32,6 +32,7 @@
   <SearchRestaurant
     v-show="roomSetting.isSearchRestaurant"
     @close="roomSetting.isSearchRestaurant = false"
+    @select="triggerFocusRestaurantById"
     :restaurant-list="roomSetting.restaurantList"
   />
   <ApprovalWaitList
@@ -204,6 +205,17 @@ const triggerDeleteRestaurant = (restaurant: Restaurant) => {
   deleteItem!.marker.onRemove();
   isViewRestaurant.value = false;
   disableMarkerInfoWindow();
+};
+
+const triggerFocusRestaurantById = (id: number) => {
+  const restaurant = restaurantList.value.find((v) => v.restaurant.id === id);
+
+  if (!restaurant) return;
+  activeMarkerInfoWindow(restaurant);
+  naverMaps.mapCenterZoom(restaurant.restaurant.lating, {
+    number: 16,
+    effect: true,
+  });
 };
 
 const drawRestaurantMarker = (restaurant: Restaurant) => {

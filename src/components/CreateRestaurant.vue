@@ -56,7 +56,12 @@
               placeholder="전문 분야"
               v-model="input.specialization"
               required
-              @keydown.prevent="onKeydownSpecializtion"
+              @keydown="
+                (e) => {
+                  if (e.key === 'Enter') onAddSpecializtion();
+                  return;
+                }
+              "
             />
             <button
               class="text-white absolute right-2 bottom-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
@@ -95,7 +100,12 @@
               placeholder="#해시태그"
               v-model="input.hashTag"
               required
-              @keydown.prevent="onKeydownHashTag"
+              @keydown="
+                (e) => {
+                  if (e.key === 'Enter') onAddHashTag();
+                  return;
+                }
+              "
             />
             <button
               class="text-white absolute right-2 bottom-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
@@ -202,15 +212,6 @@ const onAddHashTag = () => {
   input.hashTag = "";
 };
 
-const onKeydownHashTag = (e: KeyboardEvent) => {
-  if (e.key === "Enter") onAddHashTag();
-  else if (e.key === "Tab") {
-    const el = e.target as HTMLElement;
-    el.parentNode?.querySelector("button")?.focus();
-  }
-  return;
-};
-
 const onDeleteHashTag = (index: number) => {
   input.hashTags = input.hashTags.filter((_, fIndex) => fIndex !== index);
 };
@@ -220,15 +221,6 @@ const onAddSpecializtion = () => {
 
   input.specializations.push(input.specialization);
   input.specialization = "";
-};
-
-const onKeydownSpecializtion = (e: KeyboardEvent) => {
-  if (e.key === "Enter") onAddSpecializtion();
-  else if (e.key === "Tab") {
-    const el = e.target as HTMLElement;
-    el.parentNode?.querySelector("button")?.focus();
-  }
-  return;
 };
 
 const onDeleteSpecializtion = (index: number) => {
