@@ -1463,6 +1463,9 @@ export interface UserCommentInfo {
 
   /** 유저 or 익명 확인 */
   role: EnumUserCommentInfoRole;
+
+  /** 닉네임 */
+  avata: string;
 }
 
 export interface messageType {

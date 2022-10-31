@@ -91,6 +91,10 @@ export class CustomNaverMaps {
   };
 
   HeigthFullByEndEl = (endELRef: HTMLElement) => {
+    window.scrollTo({
+      top: 0,
+    });
+
     // const height = window.innerHeight - endELRef.getClientRects()[0].bottom;
     const height = window.innerHeight - endELRef.getClientRects()[0].bottom;
 

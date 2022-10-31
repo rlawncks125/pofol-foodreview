@@ -1,19 +1,15 @@
 <template>
   <div>
     <p>home</p>
-    <SearchAddress @search-address="onSearchddress">
-      <div class="border">주소 검색</div>
-    </SearchAddress>
-    <RouterLink to="chat">푸드채팅</RouterLink>
+
+    <RouterLink to="chat" class="border p-4 inline-block"
+      >푸드채팅 접근</RouterLink
+    >
+
+    <div>설명 불라 불라</div>
   </div>
 </template>
 
-<script setup lang="ts">
-import SearchAddress from "@/components/search-address.vue";
-
-const onSearchddress = (address: any) => {
-  console.log(address);
-};
-</script>
+<script setup lang="ts"></script>
 
 <style scoped></style>

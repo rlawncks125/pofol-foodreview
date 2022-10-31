@@ -21,15 +21,19 @@
     >
       <p class="mt-[60px]"></p>
       <ul class="menu-list p-2">
-        <li>
+        <li v-show="!token">
           <router-link to="/login" @click="isChecked = false">
             로그인
           </router-link>
         </li>
-        <li>
+        <li v-show="!token">
           <router-link to="/join" @click="isChecked = false">
             회원가입
           </router-link>
+        </li>
+
+        <li v-show="token" @click="onLogOut">
+          <p>로그아웃</p>
         </li>
 
         <li @click="changeDarkmode" class="flex items-center">

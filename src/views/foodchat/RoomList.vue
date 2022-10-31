@@ -1,7 +1,11 @@
 <template>
   <div>방목록</div>
   <button @click="isShowCreateRoom = true">방만들기</button>
-  <CreateRoom v-if="isShowCreateRoom" @close="isShowCreateRoom = false" />
+  <CreateRoom
+    v-if="isShowCreateRoom"
+    @close="isShowCreateRoom = false"
+    @create="onRoomListUpdate"
+  />
 
   <div v-if="myRoomsInfo">
     <div class="border" v-for="(room, index) in myRoomsInfo" :key="index">
@@ -33,6 +37,12 @@ const enterRoom = async (uuid: any) => {
   router.push({
     path: `/chat/room/${uuid}`,
   });
+};
+
+const onRoomListUpdate = async () => {
+  const { ok, myRooms } = await getJoinRoomList();
+
+  myRoomsInfo.value = myRooms;
 };
 
 onMounted(async () => {

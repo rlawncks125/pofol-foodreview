@@ -207,6 +207,7 @@ const triggerDeleteRestaurant = (restaurant: Restaurant) => {
   disableMarkerInfoWindow();
 };
 
+/** SearchRestaurant에서 선택한 레스토랑 정보 포커스 맞추기 */
 const triggerFocusRestaurantById = (id: number) => {
   const restaurant = restaurantList.value.find((v) => v.restaurant.id === id);
 

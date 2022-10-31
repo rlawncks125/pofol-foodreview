@@ -40,7 +40,11 @@ export const useUser = defineStore(
       console.log("로그아웃");
     };
 
-    return { token, userInfo, userLogin, userLogOut };
+    const updateInfo = (user: User) => {
+      userInfo.value = user;
+    };
+
+    return { token, userInfo, userLogin, userLogOut, updateInfo };
   },
   {
     persist: {

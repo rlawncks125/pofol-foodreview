@@ -49,9 +49,11 @@
       <StarFill :fill="restaurant.avgStar" :star-size="2" :star-num="5" />
       <!-- 콘텐츠 -->
       <div class="content px-2">
-        <p>{{ restaurant.hashTags }}</p>
-        <p>{{ restaurant.specialization }}</p>
-        <p>{{ restaurant.location }}</p>
+        <p v-if="restaurant.hashTags.length > 0">{{ restaurant.hashTags }}</p>
+        <p v-if="restaurant.specialization.length > 0">
+          {{ restaurant.specialization }}
+        </p>
+        <p class="mb-2">지역 :{{ restaurant.location }}</p>
         <!-- 댓글 -->
         <div v-for="comment in restaurant.comments" :key="comment.id">
           <div class="border p-1">
@@ -63,6 +65,16 @@
                 >
                   <div class="flex gap-2">
                     <!-- 아바타 추가 -->
+                    <img
+                      :src="
+                        // @ts-ignore
+                        comment.message.userInfo.avata // @ts-ignore
+                          ? comment.message.userInfo.avata
+                          : nullAvatar
+                      "
+                      alt=""
+                      class="w-[30px] h-[30px] object-cover object-center border rounded-full"
+                    />
                     <span>
                       {{ comment.message.userInfo.nickName }}
                     </span>
@@ -141,6 +153,16 @@
                 <div>
                   <div class="flex gap-2">
                     <!-- 아바타 추가 -->
+                    <img
+                      :src="
+                        // @ts-ignore
+                        comment.message.userInfo.avata // @ts-ignore
+                          ? comment.message.userInfo.avata
+                          : nullAvatar
+                      "
+                      alt=""
+                      class="w-[30px] h-[30px] object-cover object-center border rounded-full"
+                    />
                     <span>
                       {{ childComment.userInfo.nickName }}
                     </span>
@@ -259,6 +281,7 @@ import { ref } from "vue";
 import FaIcon from "./fa-icon.vue";
 import StarDynamic from "./Star/star-dynamic.vue";
 import StarFill from "./Star/star-fill.vue";
+import { nullAvatar } from "@/common/imageUrl";
 
 const props = defineProps({
   isSuperUser: Boolean,

@@ -1,4 +1,9 @@
-import { LoginOutPutDto, userCreateOutPutDto } from "@/assets/swagger";
+import {
+  LoginOutPutDto,
+  User,
+  userCreateOutPutDto,
+  UserUpdateInputDto,
+} from "@/assets/swagger";
 
 import axios, { AxiosRequestConfig } from "axios";
 import { storeToRefs } from "pinia";
@@ -93,11 +98,11 @@ export const createUser = async ({
     });
 };
 
-export const editUser = async (dsc: string): Promise<any> => {
+export const editUser = async (input: UserUpdateInputDto): Promise<any> => {
   return await axios
-    .patch(`/api/user`, { dsc }, AuthHeaders)
+    .patch(`/api/user`, { ...input }, AuthHeaders)
     .then((res: any) => {
-      return res.data;
+      return res.data as Promise<{ ok: boolean; user: User }>;
     });
 };
 
