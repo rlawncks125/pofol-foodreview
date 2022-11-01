@@ -11,13 +11,26 @@
           <div
             v-for="user in props.room.approvalWaitUsers"
             :key="user.id"
-            class="flex gap-2"
+            class="flex flex-col gap-2 my-4"
           >
-            <p>
-              {{ user.username }}
-            </p>
-            <button @click="onAccept(user.id)">수락</button>
-            <button @click="onReject(user.id)">거절</button>
+            <div class="flex gap-2 items-center">
+              <img
+                :src="user.avatar || nullAvatar"
+                alt=""
+                class="w-[30px] h-[30px] border rounded-full object-cover object-center"
+              />
+              <p>
+                {{ user.username }}
+              </p>
+            </div>
+            <div class="flex gap-2">
+              <button @click="onAccept(user.id)" class="btn-type-0">
+                수락
+              </button>
+              <button @click="onReject(user.id)" class="btn-type-0">
+                거절
+              </button>
+            </div>
           </div>
         </div>
 
@@ -34,6 +47,7 @@ import { Room } from "@/assets/swagger";
 import { postJoinAccept, postJoinReject } from "@/api/Room";
 import FaIcon from "../fa-icon.vue";
 import { useLoading } from "@/store/loading";
+import { nullAvatar } from "@/common/imageUrl";
 
 const props = defineProps({
   room: Object as () => Room,

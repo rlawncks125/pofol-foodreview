@@ -1378,6 +1378,9 @@ export interface RoomListInputDto {
 export interface superUserInfoDto {
   /** 유저 이름입니다. */
   username: string;
+
+  /** 아바타 */
+  avatar: string;
 }
 
 export interface roomInfoDto {

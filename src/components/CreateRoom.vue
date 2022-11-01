@@ -8,7 +8,10 @@
         </div>
         <!-- <FileUpload ref="compoFile" /> -->
         <!-- 네이버 맵 -->
-        <div ref="mapRef" class="w-full mx-auto z-[101] h-[47vw]"></div>
+        <div
+          ref="mapRef"
+          class="w-full mx-auto z-[101] h-[47vw] max-w-container max-h-[30rem]"
+        ></div>
         <SearchAddress
           @search-address="onMarkerAdress"
           class="border block mx-auto my-2"

@@ -1,18 +1,33 @@
 <template>
-  <div>방목록</div>
-  <button @click="isShowCreateRoom = true">방만들기</button>
+  <div class="text-center text-[1.2rem] font-bold">방목록</div>
+  <button @click="isShowCreateRoom = true" class="btn-type-0 my-2 mx-2">
+    방만들기
+  </button>
   <CreateRoom
     v-if="isShowCreateRoom"
     @close="isShowCreateRoom = false"
     @create="onRoomListUpdate"
   />
 
-  <div v-if="myRoomsInfo">
-    <div class="border" v-for="(room, index) in myRoomsInfo" :key="index">
-      <p>{{ room.roomName }}</p>
-      <p>방장 {{ room.superUser.username }}</p>
+  <div v-if="myRoomsInfo" class="px-2">
+    <div
+      class="border my-2 p-2 flex flex-col gap-2"
+      v-for="(room, index) in myRoomsInfo"
+      :key="index"
+    >
+      <h1 class="font-bold text-[1.2rem]">{{ room.roomName }}</h1>
+      <div class="flex gap-2 items-center">
+        <img
+          :src="room.superUser.avatar || nullAvatar"
+          alt=""
+          class="w-[30px] h-[30px] border rounded-full"
+        />
 
-      <button @click="enterRoom(room.uuid)">입장</button>
+        <p>👑{{ room.superUser.username }}</p>
+      </div>
+      <div>
+        <button @click="enterRoom(room.uuid)" class="btn-type-0">입장</button>
+      </div>
     </div>
   </div>
 </template>
@@ -23,6 +38,7 @@ import CreateRoom from "../../components/CreateRoom.vue";
 import { getJoinRoomList, getRoomInfo, joinRoom } from "@/api/Room";
 import { MyRoomsinfoDto } from "@/assets/swagger";
 import { useRouter } from "vue-router";
+import { nullAvatar } from "@/common/imageUrl";
 
 const router = useRouter();
 

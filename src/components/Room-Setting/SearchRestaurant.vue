@@ -1,9 +1,17 @@
 <template>
   <div class="popup-style">
-    <div class="content-wrap">
-      <FaIcon @click="onClose" class="close" icon="ban" size="2x" />
-      <div class="content">
-        <h2 class="text-[2rem] text-center">레스토랑 찾기</h2>
+    <div class="content-wrap max-w-container lg:!mx-auto !p-0 relative">
+      <div class="p-4 sticky top-0 bg-white z-[100] shadow">
+        <div class="flex justify-between">
+          <h2 class="flex-1 text-[2rem] text-center mb-2">레스토랑 찾기</h2>
+          <FaIcon
+            @click="onClose"
+            class="close !mt-[.5rem]"
+            icon="ban"
+            size="2x"
+          />
+        </div>
+        <!-- 서치바 -->
         <div class="flex">
           <select
             class="select-arrow text-left flex-shrink-0 z-10 cursor-pointer inline-flex items-center py-2.5 px-4 text-sm font-medium text-gray-900 bg-gray-100 border border-gray-300 dark:border-gray-700 dark:text-white rounded-l-lg hover:bg-gray-200 focus:ring-4 focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800 focus:outline-none"
@@ -53,25 +61,56 @@
             </button>
           </div>
         </div>
+      </div>
+      <div class="content">
         <!--  -->
 
-        <div v-if="restaurantList">
+        <!-- <div v-if="restaurantList">
           <div v-for="(restaurant, index) in restaurantList" :key="index">
             {{ restaurant.restaurantName }}
           </div>
         </div>
-        <h2 class="font-bold text-[2rem]">찾음</h2>
+        <h2 class="font-bold text-[2rem]">찾음</h2> -->
 
         <div
           v-for="restaurant in filterRestaurant"
           :key="restaurant.id"
-          class="border p-2 cursor-pointer"
+          class="border p-2 cursor-pointer flex flex-col gap-2 my-4 hover:scale-[1.02] transition"
           @click="onSelectRestaurantByid(restaurant.id)"
         >
-          <p>음식점 : {{ restaurant.restaurantName }}</p>
+          <img
+            :src="restaurant.restaurantImageUrl || nullRestaurant"
+            class="w-full h-[50vw] max-h-[490px]"
+            alt=""
+          />
+          <p class="font-bold text-[1.3rem]">
+            {{ restaurant.restaurantName }}
+          </p>
           <p>지역 : {{ restaurant.location }}</p>
-          <div>분야 : {{ restaurant.specialization }}</div>
-          <div>해시태그 : {{ restaurant.hashTags }}</div>
+          <div v-if="restaurant.specialization.length > 0">
+            <h1 class="font-bold text-[1.2rem]">분야</h1>
+            <div class="flex gap-2">
+              <div
+                v-for="(specialization, index) in restaurant.specialization"
+                :key="index"
+                class="rounded-full p-2 px-4 bg-yellow-500 text-white font-bold"
+              >
+                {{ specialization }}
+              </div>
+            </div>
+          </div>
+          <div v-if="restaurant.hashTags.length > 0">
+            <h1 class="font-bold text-[1.2rem]">해시태그</h1>
+            <div class="flex gap-2">
+              <div
+                v-for="(hashtag, index) in restaurant.hashTags"
+                :key="index"
+                class="rounded-full p-2 px-4 bg-blue-400 text-white font-bold"
+              >
+                #{{ hashtag }}
+              </div>
+            </div>
+          </div>
         </div>
         <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
         <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
@@ -84,6 +123,7 @@
 <script setup lang="ts">
 import { Restaurant } from "@/assets/swagger";
 import { ref } from "vue";
+import { nullRestaurant } from "@/common/imageUrl";
 
 import FaIcon from "../fa-icon.vue";
 

@@ -11,17 +11,28 @@
           <div
             v-for="user in props.room.joinUsers"
             :key="user.id"
-            class="flex gap-2"
+            class="flex gap-2 my-2 items-center"
           >
+            <img
+              :src="user.avatar || nullAvatar"
+              alt=""
+              class="w-[30px] h-[30px] object-cover object-center border rounded-full"
+            />
             <p>
               {{ user.username }}
             </p>
+
             <button
-              v-if="props.room.superUser.id !== user.id"
+              v-if="
+                props.room.superUser.id === userInfo?.id &&
+                props.room.superUser.id !== user.id
+              "
               @click="kickUsersById(user.id)"
+              class="border p-2 hover:bg-gray-200 transition"
             >
               강퇴
             </button>
+            <div v-if="props.room.superUser.id === user.id">방장👑</div>
           </div>
         </div>
         <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
@@ -38,12 +49,16 @@ import { postKickUser } from "@/api/Room";
 import FaIcon from "../fa-icon.vue";
 import { useLoading } from "@/store/loading";
 import { ref, watch } from "vue";
+import { nullAvatar } from "@/common/imageUrl";
+import { useUser } from "@/store/user";
+import { storeToRefs } from "pinia";
 
 const props = defineProps({
   room: Object as () => Room,
 });
 
 const list = ref<User[]>([]);
+const { userInfo } = storeToRefs(useUser());
 
 const emits = defineEmits(["close", "updateUsers"]);
 

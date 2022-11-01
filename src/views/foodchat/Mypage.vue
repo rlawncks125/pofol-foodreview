@@ -14,7 +14,7 @@
     <!-- 이미지 -->
     <div class="flex flex-col items-center">
       <img
-        class="border rounded-full w-[150px] h-[150px] object-cover object-center"
+        class="border rounded-full w-[150px] h-[150px] object-cover object-center mb-4"
         :src="input.avatarUrl ? input.avatarUrl : nullAvatar"
         alt=""
       />
@@ -33,13 +33,16 @@
           type="text"
           name=""
           id="user-nickname"
-          class="input-type-0"
+          class="input-type-0 disabled:cursor-not-allowed"
           v-model="input.username"
+          disabled
         />
       </div>
       <div class="my-1">
-        <label for="user-dsc" class="label-type-0">dsc</label>
-        <input
+        <label for="user-dsc" class="label-type-0">소개</label>
+        <textarea
+          ref="textareaRef"
+          @input="textareaAutoHieght"
           type="text"
           name=""
           id="user-dsc"
@@ -56,7 +59,7 @@
 <script setup lang="ts">
 import { useUser } from "@/store/user";
 import { storeToRefs } from "pinia";
-import { reactive, ref } from "vue";
+import { onMounted, reactive, ref } from "vue";
 import { nullAvatar } from "@/common/imageUrl";
 import { useLoading } from "@/store/loading";
 import { getImageURLByFormData } from "@/api/file";
@@ -72,6 +75,14 @@ const input = reactive({
 });
 
 const fileData = ref<File>();
+
+const textareaRef = ref<HTMLTextAreaElement>();
+
+const textareaAutoHieght = () => {
+  textareaRef.value!.style.height = "auto";
+  const scrollHeight = textareaRef.value!.scrollHeight + 4;
+  textareaRef.value!.style.height = scrollHeight + "px";
+};
 
 const onRandomImage = () => {
   const randomId = getRandomValue(0, 70);
@@ -131,6 +142,10 @@ function fileRender(file: any) {
 function getRandomValue(min: number, max: number) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
+
+onMounted(() => {
+  textareaAutoHieght();
+});
 </script>
 
 <style scoped></style>

@@ -16,21 +16,19 @@
       </div>
       <!-- 레스토랑 이미지 -->
       <div class="translate-x-[-.5rem]" :style="{ width: 'calc(100% + 1rem)' }">
-        <div
+        <!-- <div
           v-if="!restaurant.restaurantImageUrl"
           class="h-[40vw] max-h-[25rem] bg-yellow-100 flex justify-center items-center flex-col"
         >
           <FaIcon icon="cloud-arrow-down" size="3x" />
           <p>이미지가 없습니다.</p>
           <p>기본 이미지 추가하기</p>
-        </div>
-        <div class="overflow-hidden w-full h-full" v-else>
+        </div> -->
+        <div class="overflow-hidden w-full h-full">
           <img
             :src="
-              restaurant.restaurantImageUrl.replace(
-                /upload\//g,
-                '$&w_350,h_200/'
-              )
+              restaurant.restaurantImageUrl ||
+              nullRestaurant.replace(/upload\//g, '$&w_350,h_200/')
             "
             alt="레스토랑 이미지"
             class="w-full object-cover"
@@ -281,7 +279,7 @@ import { ref } from "vue";
 import FaIcon from "./fa-icon.vue";
 import StarDynamic from "./Star/star-dynamic.vue";
 import StarFill from "./Star/star-fill.vue";
-import { nullAvatar } from "@/common/imageUrl";
+import { nullAvatar, nullRestaurant } from "@/common/imageUrl";
 
 const props = defineProps({
   isSuperUser: Boolean,

@@ -157,9 +157,10 @@ const activeMarkerInfoWindow = ({
   const restaurant = restaurantList.value[+findIndex].restaurant;
 
   const infoContent = `
-          <p class="font-mono text-xs">레스토랑 id :${restaurant.id}</p>
-          <p class="font-mono text-sm">${restaurant.restaurantName}</p>
-          <p class="text-xs">${restaurant.resturantSuperUser.nickName} 님이 만들었습니다.</p>
+          <div class="p-4 text-center">
+            <p class="font-bold text-[1.2rem]">${restaurant.restaurantName}</p>
+            <p class="text-xs"><span class="font-bold">${restaurant.resturantSuperUser.nickName}</span>님이 만들었습니다.</p>
+          </div>
           `;
 
   markerInfoWindow.setContent(infoContent);
