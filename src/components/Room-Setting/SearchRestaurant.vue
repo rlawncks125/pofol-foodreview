@@ -7,8 +7,8 @@
           <FaIcon
             @click="onClose"
             class="close !mt-[.5rem]"
-            icon="ban"
-            size="2x"
+            icon="xmark"
+            size="3x"
           />
         </div>
         <!-- 서치바 -->
@@ -75,14 +75,16 @@
         <div
           v-for="restaurant in filterRestaurant"
           :key="restaurant.id"
-          class="border p-2 cursor-pointer flex flex-col gap-2 my-4 hover:scale-[1.02] transition"
+          class="search-wrap border p-2 cursor-pointer flex flex-col gap-2 my-4"
           @click="onSelectRestaurantByid(restaurant.id)"
         >
-          <img
-            :src="restaurant.restaurantImageUrl || nullRestaurant"
-            class="w-full h-[50vw] max-h-[490px]"
-            alt=""
-          />
+          <div class="image-wrap w-full h-[50vw] max-h-[490px]">
+            <img
+              :src="restaurant.restaurantImageUrl || nullRestaurant"
+              class="w-full h-full"
+              alt=""
+            />
+          </div>
           <p class="font-bold text-[1.3rem]">
             {{ restaurant.restaurantName }}
           </p>
@@ -112,9 +114,6 @@
             </div>
           </div>
         </div>
-        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
       </div>
     </div>
   </div>
@@ -183,5 +182,17 @@ const onClose = () => {
   background-position: right 1rem center;
   background-size: 1rem;
   @apply pr-[2rem];
+}
+
+.search-wrap {
+  &:hover {
+    @apply bg-gray-100;
+    .image-wrap {
+      @apply overflow-hidden;
+      img {
+        @apply scale-110 transition;
+      }
+    }
+  }
 }
 </style>

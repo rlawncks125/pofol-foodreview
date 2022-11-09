@@ -3,15 +3,15 @@
     <div class="content-wrap max-w-form md:!mx-auto">
       <div class="flex items-center bg-yellow-300 sticky top-0 z-[100]">
         <div
-          class="text-center flex-1 pl-[32px] font-bold text-[1.8rem] xs:py-4"
+          class="text-center flex-1 pl-[32px] font-bold text-[1.8rem] py-2 xs:py-4"
         >
           {{ restaurant.restaurantName }}
         </div>
         <FaIcon
           @click="onClose"
           class="cursor-pointer mr-[1rem] hover:text-red-600"
-          icon="ban"
-          size="2x"
+          icon="xmark"
+          size="3x"
         />
       </div>
       <!-- 레스토랑 이미지 -->
@@ -244,13 +244,10 @@
           id=""
           @input="textareaAutoHieght"
         ></textarea>
-        <button class="btn-type-add p-2" @click="onAddComment">
+        <button class="btn-type-add p-2 my-2" @click="onAddComment">
           답글 달기
         </button>
-
-        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+        <br /><br /><br />
       </div>
     </div>
   </div>

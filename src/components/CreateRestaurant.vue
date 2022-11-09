@@ -1,7 +1,7 @@
 <template>
   <div class="popup-style">
     <div class="content-wrap max-w-form md:!mx-auto">
-      <FaIcon @click="onClose" class="close" icon="ban" size="2x" />
+      <FaIcon @click="onClose" class="close" icon="xmark" size="3x" />
       <div class="content">
         <div class="flex items-center">
           <h2 class="flex-1 text-center text-[2rem]">레스토랑</h2>
@@ -14,7 +14,7 @@
         ></div>
         <SearchAddress
           @search-address="onMarkerAdress"
-          class="border block mx-auto my-2"
+          class="border block mx-auto my-2 p-2"
         >
           <div>주소 찾기</div>
         </SearchAddress>
@@ -131,8 +131,7 @@
           </div>
         </div>
         <button class="btn-type-0 my-2" @click="onCreate">만들기</button>
-        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+        <br /><br /><br />
       </div>
     </div>
   </div>
@@ -292,6 +291,10 @@ onMounted(() => {
     };
   });
   naverMaps.naverMapsInit();
+
+  scrollTo({
+    top: 0,
+  });
 });
 </script>
 

@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h2>chat</h2>
     <RouterView :key="route.fullPath" />
   </div>
 </template>

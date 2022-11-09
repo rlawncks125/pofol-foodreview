@@ -86,7 +86,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useDarkmode } from "@/common/darkmode";
-import FaIcon from "./fa-icon.vue";
+import FaIcon from "@/components/fa-icon.vue";
 import { useRouter } from "vue-router";
 import { useUser } from "@/store/user";
 import { testUser } from "@/api/auth";

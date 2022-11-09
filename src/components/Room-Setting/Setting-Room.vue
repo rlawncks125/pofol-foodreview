@@ -1,18 +1,20 @@
 <template>
   <div class="popup-style">
     <div class="content-wrap">
-      <FaIcon @click="onClose" class="close" icon="ban" size="2x" />
+      <FaIcon @click="onClose" class="close" icon="xmark" size="3x" />
       <div class="content">
         <h2 class="text-[2rem] text-center">방설정</h2>
         <div class="btn-list flex flex-col gap-2">
           <button @click="onSearRestaurant">음식점 찾기</button>
-          <button @click="onApprovalWaitList">대기 유저 목록</button>
+          <button
+            v-if="props.room?.superUser.id === userInfo?.id"
+            @click="onApprovalWaitList"
+          >
+            대기 유저 목록
+          </button>
           <button @click="onJoinUsers">참여중인 유저</button>
           <button @click="onRoomLeave">방 나가기</button>
         </div>
-        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
       </div>
     </div>
   </div>
@@ -21,6 +23,7 @@
 <script setup lang="ts">
 import { leaveRoom } from "@/api/Room";
 import { Room } from "@/assets/swagger";
+import { useUser } from "@/store/user";
 import { useRouter } from "vue-router";
 import FaIcon from "../fa-icon.vue";
 
@@ -37,6 +40,8 @@ const emits = defineEmits([
 ]);
 
 const router = useRouter();
+
+const { userInfo } = useUser();
 
 const onClose = () => {
   emits("close");

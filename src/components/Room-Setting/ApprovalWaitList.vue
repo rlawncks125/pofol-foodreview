@@ -1,7 +1,7 @@
 <template>
   <div class="popup-style">
     <div class="content-wrap">
-      <FaIcon @click="onClose" class="close" icon="ban" size="2x" />
+      <FaIcon @click="onClose" class="close" icon="xmark" size="3x" />
       <div class="content">
         <h2 class="text-[2rem] text-center">참여 대기 목록</h2>
         <div class="flex justify-end">
@@ -33,10 +33,6 @@
             </div>
           </div>
         </div>
-
-        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
       </div>
     </div>
   </div>

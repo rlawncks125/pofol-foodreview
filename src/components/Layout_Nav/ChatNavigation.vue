@@ -22,6 +22,9 @@
       <p class="mt-[60px]"></p>
       <ul class="menu-list p-2">
         <li>
+          <router-link to="/chat"> 메인 </router-link>
+        </li>
+        <li>
           <router-link to="/chat/list"> 방목록 </router-link>
         </li>
         <li>
@@ -30,9 +33,7 @@
         <li>
           <router-link to="/chat/mypage"> 내정보 </router-link>
         </li>
-        <li>
-          <router-link to="/#"> 친구관리 </router-link>
-        </li>
+
         <li @click="changeDarkmode" class="flex items-center">
           <p>야간모드</p>
           <div
@@ -84,7 +85,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useDarkmode } from "@/common/darkmode";
-import FaIcon from "./fa-icon.vue";
+import FaIcon from "@/components/fa-icon.vue";
 import { useRoute, useRouter } from "vue-router";
 import { useUser } from "@/store/user";
 

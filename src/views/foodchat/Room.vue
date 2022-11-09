@@ -35,12 +35,14 @@
     @select="triggerFocusRestaurantById"
     :restaurant-list="roomSetting.restaurantList"
   />
+
   <ApprovalWaitList
     v-show="roomSetting.isApprovalWait"
     @close="roomSetting.isApprovalWait = false"
     @update-room="updateRoom"
     :room="room"
   />
+
   <JoinUsers
     v-show="roomSetting.isJoinUsers"
     @close="roomSetting.isJoinUsers = false"

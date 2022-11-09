@@ -104,6 +104,14 @@ import { storeToRefs } from "pinia";
 import { onMounted, ref } from "vue";
 import { nullAvatar } from "@/common/imageUrl";
 
+interface Props {
+  pagination?: number;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  pagination: 5,
+});
+
 const { userInfo } = storeToRefs(useUser());
 
 const searRoomList = ref<roomInfoDto[]>();

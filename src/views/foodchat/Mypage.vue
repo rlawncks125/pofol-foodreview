@@ -12,7 +12,7 @@
     class="flex flex-col md:flex-row items-center justify-center gap-4 h-full center max-w-container mx-auto px-4"
   >
     <!-- 이미지 -->
-    <div class="flex flex-col items-center">
+    <div class="flex flex-col items-center md:self-start">
       <img
         class="border rounded-full w-[150px] h-[150px] object-cover object-center mb-4"
         :src="input.avatarUrl ? input.avatarUrl : nullAvatar"
@@ -50,9 +50,10 @@
           v-model="input.dsc"
         />
       </div>
+      <div class="my-2 flex justify-end">
+        <button class="btn-type-0" @click="onEdituser">저장</button>
+      </div>
     </div>
-
-    <button class="btn-type-0 self-end" @click="onEdituser">저장</button>
   </div>
 </template>
 
