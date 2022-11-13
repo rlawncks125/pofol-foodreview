@@ -42,7 +42,7 @@
   >
     <!-- 방목록 -->
     <div class="w-full md:w-[50%]">
-      <RoomList :pagination="2" />
+      <RoomList :row-per-page="1" :show-count="3" />
     </div>
     <!-- 방찾기 -->
     <div class="w-full md:w-[50%]">

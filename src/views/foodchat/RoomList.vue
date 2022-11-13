@@ -41,27 +41,14 @@
   </div>
 
   <!-- 페저네이션 -->
-  <div class="pagination-wrap">
-    <span class="pagination-start" @click="chnagePagination(1)">처음</span>
 
-    <!-- <span class="pagination">1</span>
-    <span class="pagination-active">2</span>
-    <span class="pagination">3</span> -->
-    <span
-      v-for="(page, index) in Array.from(
-        { length: roopRepeat },
-        (v, index) => index + startPagination
-      )"
-      :class="nowPagination === page ? 'pagination-active' : 'pagination'"
-      :key="index"
-      @click="chnagePagination(+page)"
-    >
-      {{ page }}
-    </span>
-    <span class="pagination-end" @click="chnagePagination(totalPagination)"
-      >끝</span
-    >
-  </div>
+  <Pagination
+    ref="compoPagination"
+    :length="myRoomsInfo?.length"
+    :rows-per-page="props.rowPerPage"
+    :show-count="props.showCount"
+    @trigger-pagination="updatePagintaion"
+  />
 </template>
 
 <script setup lang="ts">
@@ -71,13 +58,17 @@ import { getJoinRoomList, getRoomInfo, joinRoom } from "@/api/Room";
 import { MyRoomsinfoDto } from "@/assets/swagger";
 import { useRouter } from "vue-router";
 import { nullAvatar } from "@/common/imageUrl";
+import Pagination from "@/components/Pagination.vue";
 
 interface Props {
-  pagination?: number;
+  rowPerPage?: number;
+  showCount?: number;
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  pagination: 5,
+  // pagaination 초기값
+  rowPerPage: 5,
+  showCount: 3,
 });
 
 const router = useRouter();
@@ -87,13 +78,7 @@ const isLoadingUpdate = ref(false);
 
 const myRoomsInfo = ref<MyRoomsinfoDto[]>();
 
-// 페저네이션
-const showRoomList = ref<MyRoomsinfoDto[]>();
-const totalPagination = ref<number>(0);
-const repeatPagination = 4;
-const roopRepeat = ref<number>(0);
-const nowPagination = ref<number>(1);
-const startPagination = ref<number>(1);
+const compoPagination = ref<InstanceType<typeof Pagination>>();
 
 /**
  * 방 입장하기
@@ -108,36 +93,20 @@ const onRoomListUpdate = async () => {
   isLoadingUpdate.value = true;
   const { ok, myRooms } = await getJoinRoomList();
 
-  myRoomsInfo.value = myRooms;
+  // myRoomsInfo.value = myRooms;
+  myRoomsInfo.value = [...myRooms, ...myRooms, ...myRooms];
 
-  nowPagination.value = 1;
-  updateShowRoomList();
+  // 현재 페이지 번호 1로 초기화
+  compoPagination.value?.initPagintationNumber();
 
   isLoadingUpdate.value = false;
 };
 
-const chnagePagination = (v: number) => {
-  nowPagination.value = v;
+//  Pagination
+const showRoomList = ref<MyRoomsinfoDto[]>();
 
-  updateShowRoomList();
-};
-
-const updateShowRoomList = () => {
-  totalPagination.value = Math.ceil(
-    (myRoomsInfo.value?.length || 0) / props.pagination
-  );
-
-  roopRepeat.value = Math.min(totalPagination.value, repeatPagination);
-
-  const end = totalPagination.value - (roopRepeat.value - 1);
-
-  const start = Math.max(nowPagination.value - 1, 1);
-
-  end > start ? (startPagination.value = start) : (startPagination.value = end);
-
-  const min = props.pagination * (nowPagination.value - 1);
-  const max = min + props.pagination;
-
+const updatePagintaion = ({ min, max }: { min: number; max: number }) => {
+  // show Room list update
   showRoomList.value = myRoomsInfo.value?.filter((v, index) => {
     if (min <= index && index < max) {
       return true;
@@ -150,33 +119,8 @@ onMounted(async () => {
   const { ok, myRooms } = await getJoinRoomList();
   // console.log(myRooms);
   // myRoomsInfo.value = myRooms;
-  myRoomsInfo.value = [...myRooms, ...myRooms, ...myRooms];
-  // const { ok, users, roomInfo } = await getRoomInfo({
-  //   uuid: "08f15e67-3a2f-43da-bdcd-2f5bcf12e7f6",
-  // });
-  // console.log(users, roomInfo);
-
-  updateShowRoomList();
+  myRoomsInfo.value = [...myRooms, ...myRooms];
 });
 </script>
 
-<style scoped lang="scss">
-.pagination-wrap {
-  @apply flex -space-x-px mx-auto justify-center px-2;
-}
-
-.pagination-start {
-  @apply cursor-pointer py-2 px-3 ml-0 leading-tight text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white;
-}
-.pagination-end {
-  @apply cursor-pointer py-2 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white;
-}
-
-.pagination {
-  @apply cursor-pointer py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white;
-}
-
-.pagination-active {
-  @apply pointer-events-none py-2 px-3 text-blue-600 bg-blue-50 border border-gray-300 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white;
-}
-</style>
+<style scoped></style>
