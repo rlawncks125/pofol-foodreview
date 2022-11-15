@@ -25,6 +25,7 @@ import { useLayout } from "@/store/layout";
 import { useLoading } from "@/store/loading";
 import { storeToRefs } from "pinia";
 import ChatNavigation from "@/components/Layout_Nav/ChatNavigation.vue";
+import * as Socket from "@/api/Socket";
 
 import "@/api/auth";
 import Loading from "./components/loading.vue";
@@ -40,6 +41,10 @@ const { isLoading } = storeToRefs(useLoading());
 onMounted(() => {
   window.addEventListener("load", mobileHeightSize);
   window.addEventListener("resize", mobileHeightSize);
+
+  if (!Socket.isConneted()) {
+    Socket.init();
+  }
 });
 
 watch(

@@ -42,11 +42,11 @@
   >
     <!-- 방목록 -->
     <div class="w-full md:w-[50%]">
-      <RoomList :row-per-page="1" :show-count="3" />
+      <RoomList :row-per-page="2" :show-count="4" />
     </div>
     <!-- 방찾기 -->
     <div class="w-full md:w-[50%]">
-      <RoomSearch />
+      <RoomSearch :row-per-page="2" :show-count="4" />
     </div>
   </section>
 </template>
@@ -54,7 +54,7 @@
 <script setup lang="ts">
 import { useUser } from "@/store/user";
 import { storeToRefs } from "pinia";
-import { defineAsyncComponent, onMounted, ref } from "vue";
+import { defineAsyncComponent, onMounted, onUnmounted, ref } from "vue";
 
 // import RoomList from "@/views/foodchat/RoomList.vue";
 // import RoomSearch from "@/views/foodchat/RoomSearch.vue";
@@ -65,6 +65,7 @@ const RoomList = defineAsyncComponent(
     loader: () => import("@/views/foodchat/RoomList.vue"),
   }
 );
+
 const RoomSearch = defineAsyncComponent(
   () => import("@/views/foodchat/RoomSearch.vue")
 );

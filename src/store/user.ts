@@ -3,6 +3,7 @@ import { LoginOutPutDto, User, UserInfo } from "@/assets/swagger";
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import { token as authToken } from "@/api/auth";
+import { token as socketToken } from "@/api/Socket";
 
 export const useUser = defineStore(
   "token",
@@ -28,6 +29,7 @@ export const useUser = defineStore(
         console.log(res);
         token.value = res.token!;
         authToken.value = res.token!;
+        socketToken.value = res.token!;
         userInfo.value = res.user;
       }
       return res;
@@ -37,6 +39,7 @@ export const useUser = defineStore(
       token.value = null;
       userInfo.value = null;
       authToken.value = null;
+      socketToken.value = null;
       console.log("로그아웃");
     };
 

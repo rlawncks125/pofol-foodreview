@@ -49,6 +49,7 @@ import { ref, watch } from "vue";
 import { nullAvatar } from "@/common/imageUrl";
 import { useUser } from "@/store/user";
 import { storeToRefs } from "pinia";
+import * as Socket from "@/api/Socket";
 
 const props = defineProps({
   room: Object as () => Room,
@@ -73,6 +74,7 @@ const kickUsersById = async (id: number) => {
   });
   if (ok) {
     emits("updateUsers");
+    Socket.emitKickUser(id);
   }
   useLoading().off();
 };

@@ -4,15 +4,20 @@ import {
   userCreateOutPutDto,
   UserUpdateInputDto,
 } from "@/assets/swagger";
+import { useUser } from "@/store/user";
 
 import axios, { AxiosRequestConfig } from "axios";
 import { storeToRefs } from "pinia";
 
-import { computed, ref, watch } from "vue";
+import { ref, watch } from "vue";
 
 // main.ts에 import 안할시
 // 처음 호출되는곳에서 init
 // console.log("auth 로드");
+
+// pinia 를 createApp 전에 호출할수 없어
+// localStoreage로 값을 가져옴
+// 내보낸 token ref값으로 외부 에서 값을 갱신
 
 const parseToken =
   JSON.parse(localStorage.getItem("token") as string)?.token || null;

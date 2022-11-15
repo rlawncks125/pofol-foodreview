@@ -23,6 +23,7 @@
     v-show="roomSetting.isOpenSetting"
     @close="roomSetting.isOpenSetting = false"
     @search-restaurant="roomSetting.isSearchRestaurant = true"
+    @edit-room="roomSetting.isEditRoom = true"
     @approval-wait-list="roomSetting.isApprovalWait = true"
     @join-users="roomSetting.isJoinUsers = true"
     :room="room"
@@ -35,18 +36,23 @@
     @select="triggerFocusRestaurantById"
     :restaurant-list="roomSetting.restaurantList"
   />
+  <!-- <EditRoom
+    v-show="roomSetting.isEditRoom"
+    @close="roomSetting.isEditRoom = false"
+    :room="room"
+  /> -->
 
   <ApprovalWaitList
     v-show="roomSetting.isApprovalWait"
     @close="roomSetting.isApprovalWait = false"
-    @update-room="updateRoom"
+    @update-room="triggerUpdateRoom"
     :room="room"
   />
 
   <JoinUsers
     v-show="roomSetting.isJoinUsers"
     @close="roomSetting.isJoinUsers = false"
-    @update-users="updateRoom"
+    @update-users="triggerUpdateRoom"
     :room="room"
   />
 
@@ -87,7 +93,7 @@
 
 <script setup lang="ts">
 import { getRoomInfo } from "@/api/Room";
-import { Restaurant, Room, User } from "@/assets/swagger";
+import { Restaurant, RestaurantInfoDto, Room, User } from "@/assets/swagger";
 import { CustomNaverMaps } from "@/plugin/naverMaps";
 import { onMounted, onUnmounted, reactive, ref, watch } from "vue";
 import { useRoute } from "vue-router";
@@ -102,8 +108,12 @@ import SearchRestaurant from "@/components/Room-Setting/SearchRestaurant.vue";
 import ApprovalWaitList from "@/components/Room-Setting/ApprovalWaitList.vue";
 import JoinUsers from "@/components/Room-Setting/JoinUsers.vue";
 
+import * as Socket from "@/api/Socket";
+import EditRoom from "@/components/Room-Setting/EditRoom.vue";
+
 const route = useRoute();
 const { userInfo } = storeToRefs(useUser());
+const uuid = route.params.uuid + "";
 
 const endELRef = ref<HTMLElement>();
 
@@ -127,6 +137,7 @@ const roomSetting = reactive({
   isSearchRestaurant: false,
   restaurantList: [] as Restaurant[],
   isJoinUsers: false,
+  isEditRoom: false,
 });
 
 interface IRestaurantInfo {
@@ -188,6 +199,10 @@ const openViewRestaurant = () => {
 };
 
 const triggerCreateRestaurant = (restaurant: Restaurant) => {
+  Socket.createRestaurant({
+    uuid,
+    restaurantId: restaurant.id + "",
+  });
   drawRestaurantMarker(restaurant);
   isCreateRoom.value = false;
 };
@@ -233,20 +248,17 @@ const drawRestaurantMarker = (restaurant: Restaurant) => {
   restaurantMarkerEvent(restaurantInfo);
 };
 
-const updateRestaurantById = async (id: any) => {
-  useLoading().on();
-  const { ok, restaurant } = await getRestaurantById(+id);
-
+const updateRestaurant = (restaurant: RestaurantInfoDto | Restaurant) => {
   restaurantList.value = restaurantList.value.map((v) => {
-    if (v.restaurant.id === id) {
+    if (v.restaurant.id === restaurant.id) {
       const newItem = {
         marker: v.marker,
-        restaurant,
+        restaurant: { ...v.restaurant, ...restaurant },
       } as IRestaurantInfo;
 
       // 업데이트 된 레스토랑이
       // 보고 있는 레스토랑일경우 값 변경
-      if (selectResturant.value?.id === id) {
+      if (selectResturant.value?.id === restaurant.id) {
         viewResturantCompo.value?.setInfo(newItem.restaurant);
       }
 
@@ -254,17 +266,58 @@ const updateRestaurantById = async (id: any) => {
     }
     return v;
   });
+};
+
+const updateRestaurantById = async (id: any) => {
+  useLoading().on();
+  const { ok, restaurant } = await getRestaurantById(+id);
+
+  if (ok) {
+    updateRestaurant(restaurant);
+    Socket.updateRestaurant({
+      uuid,
+      restaurantId: restaurant.id,
+    });
+  }
+
+  // restaurantList.value = restaurantList.value.map((v) => {
+  //   if (v.restaurant.id === id) {
+  //     const newItem = {
+  //       marker: v.marker,
+  //       restaurant,
+  //     } as IRestaurantInfo;
+
+  //     // 업데이트 된 레스토랑이
+  //     // 보고 있는 레스토랑일경우 값 변경
+  //     if (selectResturant.value?.id === id) {
+  //       viewResturantCompo.value?.setInfo(newItem.restaurant);
+  //     }
+
+  //     return newItem;
+  //   }
+  //   return v;
+  // });
 
   useLoading().off();
 };
 
-const updateRoom = async () => {
+const updateRoom = (_room: Room) => {
+  room.value = { ...room.value, ..._room };
+
+  // 중심 마커
+  naverMaps.renderMainMarker(room.value.lating);
+  naverMaps.mapCenterZoom(room.value.lating, {
+    number: 16,
+  });
+};
+
+const triggerUpdateRoom = async () => {
   useLoading().on();
   const { ok, room: _room } = await getRoomInfo({
     uuid: route.params.uuid + "",
   });
   if (ok) {
-    room.value = _room;
+    updateRoom(_room);
   }
   useLoading().off();
 };
@@ -302,9 +355,31 @@ onMounted(async () => {
   }, 1000);
 
   window.addEventListener("resize", mapFullFunc);
+
+  // 소켓
+  Socket.joinRoom(uuid);
+
+  // 방 정보 변경 catch
+  Socket.catchUpdateRoom((room) => {
+    updateRoom(room);
+  });
+
+  // 레스토랑 변경 catch
+  Socket.catchUpdateRestaurant(({ restaurant, uuid: _uuid }) => {
+    if (uuid === _uuid) {
+      updateRestaurant(restaurant);
+    }
+  });
+
+  // 레스토랑 생성 catch
+  Socket.catchCreateRestaurant((restaurant) => {
+    drawRestaurantMarker(restaurant);
+  });
 });
 onUnmounted(() => {
   window.removeEventListener("resize", mapFullFunc);
+
+  Socket.leaveRoom(uuid);
 });
 </script>
 

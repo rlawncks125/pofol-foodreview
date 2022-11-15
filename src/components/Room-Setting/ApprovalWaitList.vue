@@ -44,6 +44,7 @@ import { postJoinAccept, postJoinReject } from "@/api/Room";
 import FaIcon from "../fa-icon.vue";
 import { useLoading } from "@/store/loading";
 import { nullAvatar } from "@/common/imageUrl";
+import * as Socket from "@/api/Socket";
 
 const props = defineProps({
   room: Object as () => Room,
@@ -65,6 +66,7 @@ const onAccept = async (id: number) => {
   });
   if (ok) {
     emits("updateRoom");
+    Socket.updateApprovaWait(id);
   }
   useLoading().off();
 };

@@ -6,12 +6,19 @@
         <h2 class="text-[2rem] text-center">방설정</h2>
         <div class="btn-list flex flex-col gap-2">
           <button @click="onSearRestaurant">음식점 찾기</button>
+          <!-- <button
+            v-if="props.room?.superUser.id === userInfo?.id"
+            @click="onChangeRoomSetting"
+          >
+            방 설정 변경
+          </button> -->
           <button
             v-if="props.room?.superUser.id === userInfo?.id"
             @click="onApprovalWaitList"
           >
             대기 유저 목록
           </button>
+
           <button @click="onJoinUsers">참여중인 유저</button>
           <button @click="onRoomLeave">방 나가기</button>
         </div>
@@ -37,6 +44,7 @@ const emits = defineEmits([
   "approvalWaitList",
   "roomLeave",
   "joinUsers",
+  "editRoom",
 ]);
 
 const router = useRouter();
@@ -45,6 +53,11 @@ const { userInfo } = useUser();
 
 const onClose = () => {
   emits("close");
+};
+
+const onChangeRoomSetting = () => {
+  emits("close");
+  emits("editRoom");
 };
 
 const onSearRestaurant = () => {

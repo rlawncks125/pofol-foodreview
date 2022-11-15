@@ -4,7 +4,7 @@
     <span
       class="pagination"
       @click="chnagePagination(current - 1)"
-      :class="current === 1 ? '!bg-gray-200' : ''"
+      :class="current === 1 ? '!bg-gray-200 !cursor-default' : ''"
     >
       &lt;
     </span>
@@ -22,7 +22,7 @@
     <span
       class="pagination"
       @click="chnagePagination(current + 1)"
-      :class="current === totalPage ? '!bg-gray-200' : ''"
+      :class="current === totalPage ? '!bg-gray-200 !cursor-default' : ''"
       >&gt;</span
     >
     <span class="pagination-end" @click="chnagePagination(totalPage)">끝</span>

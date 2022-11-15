@@ -1,12 +1,12 @@
 import { computed, ref } from "vue";
 
 import { io, Socket } from "socket.io-client";
-import { Restaurant, RestaurantInfoDto } from "@/assets/swagger";
+import { Restaurant, RestaurantInfoDto, Room } from "@/assets/swagger";
 import { storeToRefs } from "pinia";
 
 const wsUrl =
   process.env.NODE_ENV === "production"
-    ? "wss://pofol-backend.herokuapp.com"
+    ? "wss://juchan-back-server.herokuapp.com/"
     : "wss://myapi.kimjuchan97.xyz";
 const nameSpace = "foodMapChat";
 
@@ -55,6 +55,7 @@ export const catchJoinRoom = (catchWs: (uuid: string) => void) => {
 };
 
 export const leaveRoom = (uuid: string) => {
+  console.log(uuid);
   socket.emit("leaveRoom", uuid);
 };
 
@@ -62,35 +63,43 @@ export const updateRoom = (uuid: string) => {
   socket.emit("updateRoom", uuid);
 };
 
-type FuncUpdateData = (uuid: string) => void;
+type FuncUpdateData = (room: Room) => void;
 export const catchUpdateRoom = (catchWs: FuncUpdateData) => {
   socket.off("updateRoom");
-  socket.on("updateRoom", (uuid: string) => {
-    catchWs(uuid);
+  socket.on("updateRoom", (room: Room) => {
+    catchWs(room);
   });
 };
 
-// 방 마커
-export const createMaker = (data: { uuid: string; restaurantId: number }) => {
-  socket.emit("createMaker", data);
+// 레스토랑 생성시
+export const createRestaurant = (data: {
+  uuid: string;
+  restaurantId: string;
+}) => {
+  socket.emit("createRestaurant", data);
 };
 
-export const catchCreateMaker = (
-  catchWs: (restaurant: RestaurantInfoDto) => void
+export const catchCreateRestaurant = (
+  catchWs: (restaurant: Restaurant) => void
 ) => {
-  socket.off("createMaker");
-  socket.on("createMaker", (restaurant: RestaurantInfoDto) => {
+  socket.off("createRestaurant");
+  socket.on("createRestaurant", (restaurant: Restaurant) => {
     catchWs(restaurant);
   });
 };
 
-export const removeMaker = (data: { uuid: string; restaurantId: number }) => {
+export const removeRestaurant = (data: {
+  uuid: string;
+  restaurantId: number;
+}) => {
   socket.emit("removeMaker", data);
 };
 
-export const catchRemoveMaker = (catchWs: (restaurantId: number) => void) => {
-  socket.off("removeMaker");
-  socket.on("removeMaker", (restaurantId: number) => {
+export const catchRemoveRestaurant = (
+  catchWs: (restaurantId: number) => void
+) => {
+  socket.off("removeRestaurant");
+  socket.on("removeRestaurant", (restaurantId: number) => {
     catchWs(restaurantId);
   });
 };
@@ -103,50 +112,50 @@ export const updateRestaurant = (data: {
   socket.emit("updateRestaurant", data);
 };
 
-type FuncUpdateRestaurant = (data: {
+interface IUpdateRestaruant {
   uuid: string;
   restaurant: Restaurant;
-}) => void;
+}
+type FuncUpdateRestaurant = (data: IUpdateRestaruant) => void;
 export const catchUpdateRestaurant = (catchWs: FuncUpdateRestaurant) => {
   socket.off("updateRestaurant");
-  socket.on(
-    "updateRestaurant",
-    (data: { uuid: string; restaurant: Restaurant }) => {
-      catchWs(data);
-    }
-  );
+  socket.on("updateRestaurant", (data: IUpdateRestaruant) => {
+    catchWs(data);
+  });
 };
 
 // 댓글 업데이트
-export const updateRestaurantComment = (data: {
-  uuid: string;
-  restaurantId: number;
-  commentId: number;
-}) => {
-  socket.emit("updateRestaurant", data);
-};
+// export const updateRestaurantComment = (data: {
+//   uuid: string;
+//   restaurantId: number;
+//   commentId: number;
+// }) => {
+//   socket.emit("updateRestaurant", data);
+// };
 
-type FuncUpdateRestaurantComment = (data: {
-  uuid: string;
-  restaurantId: number;
-  comment: Comment;
-}) => void;
-export const catchUpdateRestaurantComment = (
-  catchWs: FuncUpdateRestaurantComment
-) => {
-  socket.off("updateRestaurantComment");
-  socket.on(
-    "updateRestaurantComment",
-    (data: { uuid: string; restaurantId: number; comment: Comment }) => {
-      catchWs(data);
-    }
-  );
-};
+// type FuncUpdateRestaurantComment = (data: {
+//   uuid: string;
+//   restaurantId: number;
+//   comment: Comment;
+// }) => void;
+// export const catchUpdateRestaurantComment = (
+//   catchWs: FuncUpdateRestaurantComment
+// ) => {
+//   socket.off("updateRestaurantComment");
+//   socket.on(
+//     "updateRestaurantComment",
+//     (data: { uuid: string; restaurantId: number; comment: Comment }) => {
+//       catchWs(data);
+//     }
+//   );
+// };
 
+/** 대기 목록 유저 승인 emit */
 export const updateApprovaWait = (userId: number) => {
   socket.emit("ApprovaWait", userId);
 };
 
+/** 대기 목록 유저 승인 catch */
 export const catchApprovaWait = (catchWs: () => void) => {
   socket.off("updateApprovaWait");
   socket.on("updateApprovaWait", () => {
@@ -154,13 +163,28 @@ export const catchApprovaWait = (catchWs: () => void) => {
   });
 };
 
-export const updateReqApprovaWait = (uuid: string) => {
-  socket.emit("reqApprovaWait", uuid);
+// /** 방참가 신청 emit */
+// export const updateReqApprovaWait = (uuid: string) => {
+//   socket.emit("reqApprovaWait", uuid);
+// };
+
+// /** 유저 신청 들어옴 catch */
+// export const catchReqApprovaWait = (catchWs: () => void) => {
+//   socket.off("updateReqApprovaWait");
+//   socket.on("updateReqApprovaWait", () => {
+//     catchWs();
+//   });
+// };
+
+/** 강제 퇴장 */
+export const emitKickUser = (userId: number) => {
+  socket.emit("kickUser", userId);
 };
 
-export const catchReqApprovaWait = (catchWs: () => void) => {
-  socket.off("updateReqApprovaWait");
-  socket.on("updateReqApprovaWait", () => {
+/** 강제 퇴장 catch */
+export const catchKickUser = (catchWs: () => void) => {
+  socket.off("kickUser");
+  socket.on("kickUser", () => {
     catchWs();
   });
 };
@@ -177,4 +201,8 @@ const socketBaseRead = () => {
   socket.on("error", (err) => {
     console.log("에러 발생 : ", err);
   });
+};
+
+export const isConneted = () => {
+  return socket?.connected;
 };

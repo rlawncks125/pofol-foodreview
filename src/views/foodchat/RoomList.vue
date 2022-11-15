@@ -59,6 +59,7 @@ import { MyRoomsinfoDto } from "@/assets/swagger";
 import { useRouter } from "vue-router";
 import { nullAvatar } from "@/common/imageUrl";
 import Pagination from "@/components/Pagination.vue";
+import * as Socket from "@/api/Socket";
 
 interface Props {
   rowPerPage?: number;
@@ -68,17 +69,17 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   // pagaination 초기값
   rowPerPage: 5,
-  showCount: 3,
+  showCount: 5,
 });
 
 const router = useRouter();
+
+const compoPagination = ref<InstanceType<typeof Pagination>>();
 
 const isShowCreateRoom = ref(false);
 const isLoadingUpdate = ref(false);
 
 const myRoomsInfo = ref<MyRoomsinfoDto[]>();
-
-const compoPagination = ref<InstanceType<typeof Pagination>>();
 
 /**
  * 방 입장하기
@@ -93,8 +94,8 @@ const onRoomListUpdate = async () => {
   isLoadingUpdate.value = true;
   const { ok, myRooms } = await getJoinRoomList();
 
-  // myRoomsInfo.value = myRooms;
-  myRoomsInfo.value = [...myRooms, ...myRooms, ...myRooms];
+  myRoomsInfo.value = myRooms;
+  // myRoomsInfo.value = [...myRooms, ...myRooms, ...myRooms];
 
   // 현재 페이지 번호 1로 초기화
   compoPagination.value?.initPagintationNumber();
@@ -118,8 +119,15 @@ const updatePagintaion = ({ min, max }: { min: number; max: number }) => {
 onMounted(async () => {
   const { ok, myRooms } = await getJoinRoomList();
   // console.log(myRooms);
-  // myRoomsInfo.value = myRooms;
-  myRoomsInfo.value = [...myRooms, ...myRooms];
+  myRoomsInfo.value = myRooms;
+  // myRoomsInfo.value = [...myRooms, ...myRooms];
+
+  Socket.catchApprovaWait(() => {
+    onRoomListUpdate();
+  });
+  Socket.catchKickUser(() => {
+    onRoomListUpdate();
+  });
 });
 </script>
 
