@@ -31,6 +31,7 @@ import "@/api/auth";
 import Loading from "./components/loading.vue";
 import { onMounted, ref, watch } from "vue";
 import { mobileHeightSize } from "./common/mobileSize";
+import axios from "axios";
 
 const route = useRoute();
 const isShowFooter = ref<boolean>(true);
@@ -38,7 +39,7 @@ const isShowFooter = ref<boolean>(true);
 const { layout } = storeToRefs(useLayout());
 const { isLoading } = storeToRefs(useLoading());
 
-onMounted(() => {
+onMounted(async () => {
   window.addEventListener("load", mobileHeightSize);
   window.addEventListener("resize", mobileHeightSize);
 

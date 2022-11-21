@@ -14,8 +14,9 @@
       v-show="isViewRestaurant"
       @close="isViewRestaurant = false"
       @delete="triggerDeleteRestaurant"
-      @upate-comment="updateRestaurantById"
+      @upate-comment="triggerUpdateRestaurantById"
       :is-super-user="userInfo?.id === room?.superUser.id"
+      :join-users="room?.joinUsers"
     />
   </transition>
 
@@ -56,7 +57,7 @@
     :room="room"
   />
 
-  <div ref="endELRef" class="bg-yellow-600">
+  <div ref="endELRef" class="bg-blue-400">
     <div v-if="room">
       <p class="text-white text-[2rem] text-center">
         {{ room.roomName }}
@@ -143,6 +144,8 @@ const roomSetting = reactive({
 interface IRestaurantInfo {
   marker: naver.maps.Marker;
   restaurant: Restaurant;
+  newRestaurant?: Restaurant;
+  newCount?: number;
 }
 const restaurantList = ref<IRestaurantInfo[]>([]);
 
@@ -268,7 +271,7 @@ const updateRestaurant = (restaurant: RestaurantInfoDto | Restaurant) => {
   });
 };
 
-const updateRestaurantById = async (id: any) => {
+const triggerUpdateRestaurantById = async (id: any) => {
   useLoading().on();
   const { ok, restaurant } = await getRestaurantById(+id);
 
@@ -279,24 +282,6 @@ const updateRestaurantById = async (id: any) => {
       restaurantId: restaurant.id,
     });
   }
-
-  // restaurantList.value = restaurantList.value.map((v) => {
-  //   if (v.restaurant.id === id) {
-  //     const newItem = {
-  //       marker: v.marker,
-  //       restaurant,
-  //     } as IRestaurantInfo;
-
-  //     // 업데이트 된 레스토랑이
-  //     // 보고 있는 레스토랑일경우 값 변경
-  //     if (selectResturant.value?.id === id) {
-  //       viewResturantCompo.value?.setInfo(newItem.restaurant);
-  //     }
-
-  //     return newItem;
-  //   }
-  //   return v;
-  // });
 
   useLoading().off();
 };
@@ -360,9 +345,9 @@ onMounted(async () => {
   Socket.joinRoom(uuid);
 
   // 방 정보 변경 catch
-  Socket.catchUpdateRoom((room) => {
-    updateRoom(room);
-  });
+  // Socket.catchUpdateRoom((room) => {
+  //   updateRoom(room);
+  // });
 
   // 레스토랑 변경 catch
   Socket.catchUpdateRestaurant(({ restaurant, uuid: _uuid }) => {

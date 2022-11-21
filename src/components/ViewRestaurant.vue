@@ -64,12 +64,7 @@
                   <div class="flex gap-2">
                     <!-- 아바타 추가 -->
                     <img
-                      :src="
-                        // @ts-ignore
-                        comment.message.userInfo.avata // @ts-ignore
-                          ? comment.message.userInfo.avata
-                          : nullAvatar
-                      "
+                      :src="getUserAvatar(comment.message.userInfo.nickName)"
                       alt=""
                       class="w-[30px] h-[30px] object-cover object-center border rounded-full"
                     />
@@ -152,12 +147,7 @@
                   <div class="flex gap-2">
                     <!-- 아바타 추가 -->
                     <img
-                      :src="
-                        // @ts-ignore
-                        comment.message.userInfo.avata // @ts-ignore
-                          ? comment.message.userInfo.avata
-                          : nullAvatar
-                      "
+                      :src="getUserAvatar(childComment.userInfo.nickName)"
                       alt=""
                       class="w-[30px] h-[30px] object-cover object-center border rounded-full"
                     />
@@ -268,6 +258,7 @@ import {
   EnumAddMessageByCommentIdInPutDtoRole,
   EnumAddRestaurantCommentByIdIdInputDtoRole,
   Restaurant,
+  User,
 } from "@/assets/swagger";
 import { useLoading } from "@/store/loading";
 import { useUser } from "@/store/user";
@@ -280,12 +271,19 @@ import { nullAvatar, nullRestaurant } from "@/common/imageUrl";
 
 const props = defineProps({
   isSuperUser: Boolean,
+  joinUsers: Object as () => User[],
 });
 
 const { userInfo } = storeToRefs(useUser());
 const emits = defineEmits(["close", "delete", "upateComment"]);
 
 const restaurant = ref<Restaurant>();
+
+const getUserAvatar = (nick: string) => {
+  const avatarUrl =
+    props.joinUsers?.filter((v) => v.username === nick)[0].avatar || nullAvatar;
+  return avatarUrl;
+};
 
 // 댓글 추가
 const coomentStar = ref(5);

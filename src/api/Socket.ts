@@ -6,7 +6,7 @@ import { storeToRefs } from "pinia";
 
 const wsUrl =
   process.env.NODE_ENV === "production"
-    ? "wss://juchan-back-server.herokuapp.com/"
+    ? "wss://api.kimjuchan97.xyz"
     : "wss://myapi.kimjuchan97.xyz";
 const nameSpace = "foodMapChat";
 
