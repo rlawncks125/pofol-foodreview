@@ -18,6 +18,7 @@ module.exports = {
     "no-undef": "off",
     "@typescript-eslint/ban-ts-comment": "off",
     "vue/multi-word-component-names": "off",
+    "@typescript-eslint/no-empty-function": "off",
   },
   globals: {
     naver: true,
