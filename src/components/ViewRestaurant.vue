@@ -1,7 +1,10 @@
 <template>
   <div v-if="restaurant" class="popup-style-view">
     <div class="content-wrap max-w-form md:!mx-auto">
-      <div class="flex items-center bg-yellow-300 sticky top-0 z-[100]">
+      <div
+        class="flex items-center sticky top-0 z-[100]"
+        :style="{ backgroundColor: userInfo?.theme || 'rgb(96,165,250)' }"
+      >
         <div
           class="text-center flex-1 pl-[32px] font-bold text-[1.8rem] py-2 xs:py-4"
         >

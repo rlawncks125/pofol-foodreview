@@ -57,7 +57,11 @@
     :room="room"
   />
 
-  <div ref="endELRef" class="bg-blue-400">
+  <div
+    ref="endELRef"
+    class="bg-blue-400"
+    :style="{ backgroundColor: userInfo?.theme || 'rgb(96,165,250)' }"
+  >
     <div v-if="room">
       <p class="text-white text-[2rem] text-center">
         {{ room.roomName }}

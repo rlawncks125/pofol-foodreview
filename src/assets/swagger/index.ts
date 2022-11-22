@@ -1222,6 +1222,9 @@ export interface User {
   /** 아바타 */
   avatar: string;
 
+  /** 테마 */
+  theme: string;
+
   /** 권한 있는 방들 */
   superRooms: string[];
 }
@@ -1257,6 +1260,9 @@ export interface UserUpdateInputDto {
 
   /** 아바타 */
   avatar?: string;
+
+  /** 테마 */
+  theme?: string;
 }
 
 export interface Lating {

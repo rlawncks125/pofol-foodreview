@@ -16,9 +16,16 @@
     </label>
 
     <div
-      class="md:hidden z-[1100] w-full absolute top-0 left-0 sm:w-[35vw] h-[100vh] bg-gray-300 transition-all duration-150"
+      class="md:hidden z-[1100] w-full absolute top-0 bottom-0 left-0 sm:w-[35vw] bg-blue-300 transition-all duration-150 shadow-2xl"
       :class="isChecked ? 'translate-x-0' : 'translate-x-[-100%]'"
     >
+      <h2 v-if="userInfo" class="float-right p-4 font-bold">
+        <span class="text-white">
+          {{ userInfo.username }}
+        </span>
+        님 환영합니다.
+      </h2>
+
       <p class="mt-[60px]"></p>
       <ul class="menu-list p-2">
         <li v-show="!token">
@@ -95,7 +102,7 @@ import { storeToRefs } from "pinia";
 const isChecked = ref(false);
 const router = useRouter();
 
-const { token } = storeToRefs(useUser());
+const { token, userInfo } = storeToRefs(useUser());
 const { userLogOut } = useUser();
 
 const { isDarkMode, changeDarkmode } = useDarkmode();

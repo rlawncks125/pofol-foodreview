@@ -24,6 +24,10 @@
           >이미지 변경</label
         >
       </div>
+      <div class="flex gap-2 my-2">
+        <label for="theme" class="label-type-0">테마</label>
+        <input type="color" name="" id="theme" v-model="input.theme" />
+      </div>
     </div>
     <!-- 내용 -->
     <div class="pt-4 w-[100%] md:w-[50%]">
@@ -73,6 +77,7 @@ const input = reactive({
   avatarUrl: userInfo.value?.avatar,
   username: userInfo.value?.username || "",
   dsc: userInfo.value?.dsc || "",
+  theme: userInfo.value?.theme || "",
 });
 
 const fileData = ref<File>();
@@ -117,6 +122,7 @@ const onEdituser = async () => {
   const { ok, user } = await editUser({
     avatar,
     dsc: input.dsc,
+    theme: input.theme,
   });
 
   if (ok) {
