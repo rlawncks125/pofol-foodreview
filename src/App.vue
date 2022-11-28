@@ -1,12 +1,12 @@
 <template>
   <loading :is-show="isLoading" />
-  <div>
+  <header>
     <navigation v-if="layout.nav === 'home'" />
     <chat-navigation v-else-if="layout.nav === 'chat'" />
-  </div>
-  <div class="min-h-[80vh]">
+  </header>
+  <main class="min-h-[80vh]">
     <router-view :key="route.fullPath" />
-  </div>
+  </main>
   <footer
     v-show="isShowFooter"
     class="mt-[2rem] bg-slate-700 text-white p-2 font-bold text-[1.2rem]"
@@ -31,7 +31,8 @@ import "@/api/auth";
 import Loading from "./components/loading.vue";
 import { onMounted, ref, watch } from "vue";
 import { mobileHeightSize } from "./common/mobileSize";
-import axios from "axios";
+
+import { useNotification } from "@/store/notification";
 
 const route = useRoute();
 const isShowFooter = ref<boolean>(true);
@@ -46,6 +47,7 @@ onMounted(async () => {
   if (!Socket.isConneted()) {
     Socket.init();
   }
+  useNotification().init();
 });
 
 watch(

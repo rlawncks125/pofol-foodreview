@@ -4,6 +4,7 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 import { token as authToken } from "@/api/auth";
 import { token as socketToken } from "@/api/Socket";
+import { Worker } from "@/registerServiceWorker";
 
 export const useUser = defineStore(
   "token",
@@ -31,15 +32,20 @@ export const useUser = defineStore(
         authToken.value = res.token!;
         socketToken.value = res.token!;
         userInfo.value = res.user;
+
+        await Worker.insatce.registerByUser(res.user.id);
       }
       return res;
     };
 
-    const userLogOut = () => {
+    const userLogOut = async () => {
       token.value = null;
       userInfo.value = null;
       authToken.value = null;
       socketToken.value = null;
+
+      await Worker.insatce.removeRegisterByUser();
+
       console.log("로그아웃");
     };
 

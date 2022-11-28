@@ -57,6 +57,9 @@
             <fa-icon v-else icon="moon" size="2xs" class="text-yellow-300" />
           </div>
         </li>
+        <li>
+          <SubNotifi />
+        </li>
       </ul>
     </div>
     <!-- <div class="h-[5rem] text-center text-[2rem]"> -->
@@ -84,6 +87,9 @@
             />
             <fa-icon v-else icon="moon" size="1x" class="text-yellow-300" />
           </li>
+          <li>
+            <SubNotifi />
+          </li>
         </ul>
       </div>
     </div>
@@ -98,6 +104,7 @@ import { useRouter } from "vue-router";
 import { useUser } from "@/store/user";
 import { testUser } from "@/api/auth";
 import { storeToRefs } from "pinia";
+import SubNotifi from "@/components/subscription-notification.vue";
 
 const isChecked = ref(false);
 const router = useRouter();

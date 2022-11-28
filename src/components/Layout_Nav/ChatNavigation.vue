@@ -54,6 +54,9 @@
             <fa-icon v-else icon="moon" size="2xs" class="text-yellow-300" />
           </div>
         </li>
+        <li>
+          <SubNotifi />
+        </li>
       </ul>
     </div>
     <!-- <div class="h-[5rem] text-center text-[2rem]"> -->
@@ -95,6 +98,7 @@ import FaIcon from "@/components/fa-icon.vue";
 import { useRoute, useRouter } from "vue-router";
 import { useUser } from "@/store/user";
 import { storeToRefs } from "pinia";
+import SubNotifi from "@/components/subscription-notification.vue";
 
 const isChecked = ref(false);
 const router = useRouter();

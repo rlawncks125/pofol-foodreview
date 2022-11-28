@@ -431,6 +431,180 @@ export class RoomService {
   }
 }
 
+export class NotificationService {
+  /**
+   *
+   */
+  static notificationControllerPushNotification(options: IRequestOptions = {}): Promise<any> {
+    return new Promise((resolve, reject) => {
+      let url = basePath + '/notification/push';
+
+      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
+
+      let data = null;
+
+      configs.data = data;
+
+      axios(configs, resolve, reject);
+    });
+  }
+  /**
+   *
+   */
+  static notificationControllerPushNotificationByUserId(options: IRequestOptions = {}): Promise<any> {
+    return new Promise((resolve, reject) => {
+      let url = basePath + '/notification/push/user';
+
+      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
+
+      let data = null;
+
+      configs.data = data;
+
+      axios(configs, resolve, reject);
+    });
+  }
+  /**
+   *
+   */
+  static notificationControllerGetPublickey(options: IRequestOptions = {}): Promise<any> {
+    return new Promise((resolve, reject) => {
+      let url = basePath + '/notification/publicKey';
+
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
+
+      /** 适配ios13，get请求不允许带body */
+
+      axios(configs, resolve, reject);
+    });
+  }
+  /**
+   *
+   */
+  static notificationControllerGetIsPush(options: IRequestOptions = {}): Promise<any> {
+    return new Promise((resolve, reject) => {
+      let url = basePath + '/notification/ispush/{auth}';
+
+      const configs: IRequestConfig = getConfigs('get', 'application/json', url, options);
+
+      /** 适配ios13，get请求不允许带body */
+
+      axios(configs, resolve, reject);
+    });
+  }
+  /**
+   *
+   */
+  static notificationControllerRegisterSubscription(
+    params: {
+      /** requestBody */
+      body?: RegistersubscriptionInputDto;
+    } = {} as any,
+    options: IRequestOptions = {}
+  ): Promise<RegistersubscriptionOutPutDto> {
+    return new Promise((resolve, reject) => {
+      let url = basePath + '/notification/register';
+
+      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
+
+      let data = params.body;
+
+      configs.data = data;
+
+      axios(configs, resolve, reject);
+    });
+  }
+  /**
+   *
+   */
+  static notificationControllerRegisterSubscriptionUser(
+    params: {
+      /** requestBody */
+      body?: RegistersubscriptionUserInputDto;
+    } = {} as any,
+    options: IRequestOptions = {}
+  ): Promise<RegistersubscriptionUserOutPutDto> {
+    return new Promise((resolve, reject) => {
+      let url = basePath + '/notification/register-user';
+
+      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
+
+      let data = params.body;
+
+      configs.data = data;
+
+      axios(configs, resolve, reject);
+    });
+  }
+  /**
+   *
+   */
+  static notificationControllerRemoveRegisterSubscriptionUser(
+    params: {
+      /** requestBody */
+      body?: ClearRegisterUserInputDto;
+    } = {} as any,
+    options: IRequestOptions = {}
+  ): Promise<ClearRegisterUserOutPutDto> {
+    return new Promise((resolve, reject) => {
+      let url = basePath + '/notification/register-user-remove';
+
+      const configs: IRequestConfig = getConfigs('post', 'application/json', url, options);
+
+      let data = params.body;
+
+      configs.data = data;
+
+      axios(configs, resolve, reject);
+    });
+  }
+  /**
+   *
+   */
+  static notificationControllerPatchListerNotification(
+    params: {
+      /** requestBody */
+      body?: PatchListerNotificationInputDto;
+    } = {} as any,
+    options: IRequestOptions = {}
+  ): Promise<PatchListerNotificationOutPutDto> {
+    return new Promise((resolve, reject) => {
+      let url = basePath + '/notification';
+
+      const configs: IRequestConfig = getConfigs('patch', 'application/json', url, options);
+
+      let data = params.body;
+
+      configs.data = data;
+
+      axios(configs, resolve, reject);
+    });
+  }
+  /**
+   *
+   */
+  static notificationControllerDeletesubscription(
+    params: {
+      /** subscription 의 auth값 입니다. */
+      auth: string;
+    } = {} as any,
+    options: IRequestOptions = {}
+  ): Promise<ClearRegisterOutPutDto> {
+    return new Promise((resolve, reject) => {
+      let url = basePath + '/notification/{auth}';
+      url = url.replace('{auth}', params['auth'] + '');
+
+      const configs: IRequestConfig = getConfigs('delete', 'application/json', url, options);
+
+      let data = null;
+
+      configs.data = data;
+
+      axios(configs, resolve, reject);
+    });
+  }
+}
+
 export class RestaurantService {
   /**
    * 레스토랑 정보 조회 ( getRestaurantById )
@@ -1652,6 +1826,72 @@ export interface LeaveRoomInputDto {
 }
 
 export interface LeaveRoomOutPutDto {
+  /** 성공 여부입니다. */
+  ok: boolean;
+
+  /** 에러 메세지입니다. */
+  err?: string;
+}
+
+export interface RegistersubscriptionInputDto {
+  /** Subscription */
+  subscription: object;
+}
+
+export interface RegistersubscriptionOutPutDto {
+  /** 성공 여부입니다. */
+  ok: boolean;
+
+  /** 에러 메세지입니다. */
+  err?: string;
+}
+
+export interface RegistersubscriptionUserInputDto {
+  /** userId */
+  userId: number;
+
+  /** auth */
+  auth: string;
+}
+
+export interface RegistersubscriptionUserOutPutDto {
+  /** 성공 여부입니다. */
+  ok: boolean;
+
+  /** 에러 메세지입니다. */
+  err?: string;
+}
+
+export interface ClearRegisterUserInputDto {
+  /** subscription 의 auth값 입니다. */
+  auth: string;
+}
+
+export interface ClearRegisterUserOutPutDto {
+  /** 성공 여부입니다. */
+  ok: boolean;
+
+  /** 에러 메세지입니다. */
+  err?: string;
+}
+
+export interface PatchListerNotificationInputDto {
+  /** subscription 의 auth값 입니다. */
+  auth: string;
+}
+
+export interface PatchListerNotificationOutPutDto {
+  /** 성공 여부입니다. */
+  ok: boolean;
+
+  /** 에러 메세지입니다. */
+  err?: string;
+
+  /** 알림 설정 여부 */
+  isPusb?: boolean;
+}
+
+export interface ClearRegisterOutPutDto {
   /** 성공 여부입니다. */
   ok: boolean;
 

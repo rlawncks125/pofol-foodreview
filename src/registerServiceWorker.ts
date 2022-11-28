@@ -1,7 +1,9 @@
 /* eslint-disable no-console */
 
-import axios from "axios";
 import { register } from "register-service-worker";
+import { ref } from "vue";
+
+import * as Notification from "@/api/notification";
 
 // if (process.env.NODE_ENV === "production") {
 register(`${process.env.BASE_URL}sw.js`, {
@@ -46,14 +48,25 @@ export class Worker {
 
   static insatce = new Worker();
 
+  #isSubscribe = ref<boolean>();
   constructor() {}
 
   get register() {
     return this.#regist;
   }
 
-  setRegist(regist: ServiceWorkerRegistration) {
+  get getterIsSubscribe() {
+    return this.#isSubscribe.value;
+  }
+
+  async setRegist(regist: ServiceWorkerRegistration) {
     this.#regist = regist;
+    await this.isSubscribe();
+
+    // 알람 권한 변경으로 기존 구독이 삭제안됐을시 삭제
+    if (!this.getterIsSubscribe) {
+      Notification.deleteRegisterLocalStorege();
+    }
   }
 
   installing() {
@@ -62,7 +75,9 @@ export class Worker {
 
   /** 구독 상태 여부 */
   async isSubscribe() {
-    return (await this.#regist.pushManager.getSubscription()) !== null;
+    const status = (await this.#regist.pushManager.getSubscription()) !== null;
+    this.#isSubscribe.value = status;
+    return status;
   }
 
   /** 구독 하기 */
@@ -71,15 +86,17 @@ export class Worker {
       .subscribe({
         userVisibleOnly: true,
         // 백엔드에서 키받아오기
-        applicationServerKey: await getPublickey(),
+        applicationServerKey: await Notification.getPublickey(),
       })
-      .then(async (subscriptuon) => {
-        console.log(JSON.stringify(subscriptuon));
+      .then(async (subscription) => {
+        // console.log(JSON.stringify(subscription));
         // 백엔드 구독 등록
 
-        const id = await registerNotification(subscriptuon);
+        const ok = await Notification.registerNotification({ subscription });
+        // 알림 차단을 했을시 이전 구독 정보를 저장하기위한 용도
+        localStorage.setItem("subscription", JSON.stringify(subscription));
 
-        console.log(id);
+        console.log(ok);
 
         return this.isSubscribe();
       })
@@ -95,7 +112,7 @@ export class Worker {
       .getSubscription()
       .then(async (subscription) => {
         // 백엔드 구독 삭제
-        await deleteRegister();
+        await Notification.deleteRegister();
 
         await subscription?.unsubscribe();
 
@@ -123,12 +140,10 @@ export class Worker {
 
     if (!auth) return;
 
-    return await axios
-      .post("https://myapi.kimjuchan97.xyz/notification/register-user", {
-        auth,
-        userId,
-      })
-      .then((res) => res.data as number);
+    return Notification.registerUser({
+      auth,
+      userId,
+    });
   }
 
   /** 유저 아이디 제거 */
@@ -137,44 +152,6 @@ export class Worker {
 
     if (!auth) return;
 
-    return await axios
-      .post("https://myapi.kimjuchan97.xyz/notification/register-user-remove", {
-        auth,
-      })
-      .then((res) => res.data as number);
+    return Notification.delteRegisterUser({ auth });
   }
-}
-
-/** 공개키 받아오기 */
-async function getPublickey() {
-  return await axios
-    .get("https://myapi.kimjuchan97.xyz/notification/publicKey")
-    .then((res) => res.data.key as string);
-}
-
-/** 알람 등록 */
-async function registerNotification(subscription: any) {
-  return await axios
-    .post("https://myapi.kimjuchan97.xyz/notification/register", {
-      subscription,
-    })
-    .then((res) => res.data.id as number);
-}
-
-/** 알람 삭제 */
-async function deleteRegister() {
-  // const {
-  //   keys: { auth },
-  // } = JSON.parse(JSON.stringify(subscription));
-
-  const auth = await Worker.insatce.getSubcribeAuth();
-
-  if (!auth) return;
-
-  // return await fetch(`${ApiServer.url}/notification/${auth}`, {
-  //   method: "DELETE",
-  // });
-  return await axios.delete(
-    `https://myapi.kimjuchan97.xyz/notification/${auth}`
-  );
 }
