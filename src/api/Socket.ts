@@ -37,9 +37,9 @@ export const connect = () => {
   socket.connect();
 };
 
-export const close = () => {
-  socket.close();
-};
+// export const close = () => {
+//   socket.close();
+// };
 
 // 방
 export const joinRoom = (uuid: string) => {
