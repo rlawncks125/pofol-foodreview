@@ -201,6 +201,17 @@ const socketBaseRead = () => {
   socket.on("error", (err) => {
     console.log("에러 발생 : ", err);
   });
+
+  /** transport close 에러 문제
+   * 이유 : 특정 소켓에 액티비티가 없는 경우 socket.io는
+   * 자동으로 소켓을닫음
+   * 해결 : 특정 시간마다 데이터(하트비트 연결됬다는 데이터 같음)를
+   * 연결받아 타임 아웃 상태를 막음
+   */
+  socket.on("ping", (data) => {
+    socket.emit("pong", { beat: 1 });
+    console.log(data);
+  });
 };
 
 export const isConneted = () => {
