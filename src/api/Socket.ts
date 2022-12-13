@@ -195,8 +195,8 @@ const socketBaseRead = () => {
     socket.emit("registration");
   });
 
-  socket.on("disconnect", () => {
-    console.log("연결이 끊겼습니다.");
+  socket.on("disconnect", (socket: any) => {
+    console.log("연결이 끊겼습니다.", socket);
   });
   socket.on("error", (err) => {
     console.log("에러 발생 : ", err);

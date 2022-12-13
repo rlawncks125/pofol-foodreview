@@ -1,4 +1,4 @@
-const cacheName = "v1.0.0.2";
+const cacheName = "v1.0.0.3";
 // 캐시할 파일
 const cacheList = [];
 
@@ -34,7 +34,7 @@ self.addEventListener("activate", (event) => {
 });
 
 self.addEventListener("fetch", (event) => {
-  console.log("fetch", event.request.url);
+  // console.log("fetch", event.request.url);
 
   // 캐싱된 데이터 fetch하기
   event.respondWith(

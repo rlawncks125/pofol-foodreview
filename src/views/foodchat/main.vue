@@ -5,7 +5,7 @@
     <div class="flex flex-col items-center md:self-start">
       <img
         class="border rounded-full w-[150px] h-[150px] object-cover object-center mb-4"
-        :src="userInfo?.avatar"
+        :src="userInfo?.avatar || nullAvatar"
         alt=""
       />
       <!-- 내용 -->
@@ -54,7 +54,8 @@
 <script setup lang="ts">
 import { useUser } from "@/store/user";
 import { storeToRefs } from "pinia";
-import { defineAsyncComponent, onMounted, onUnmounted, ref } from "vue";
+import { defineAsyncComponent, onMounted, ref } from "vue";
+import { nullAvatar } from "@/common/imageUrl";
 
 // import RoomList from "@/views/foodchat/RoomList.vue";
 // import RoomSearch from "@/views/foodchat/RoomSearch.vue";
