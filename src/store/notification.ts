@@ -13,6 +13,7 @@ export const useNotification = defineStore("notification", () => {
    *  */
   const status = ref<NotificationPermission>(Notification.permission);
 
+  /** 알람 설정 여부 */
   const isPush = ref<boolean>(false);
 
   const init = async () => {
