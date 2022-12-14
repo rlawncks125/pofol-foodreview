@@ -22,7 +22,7 @@ export const token = ref<string | null>(parseToken);
 let socket: Socket;
 
 export const init = () => {
-  socket = io(`https://myapi.kimjuchan97.xyz/${nameSpace}`, {
+  socket = io(`${wsUrl}/${nameSpace}`, {
     autoConnect: false,
     transports: ["websocket"],
     auth: {
