@@ -115,6 +115,7 @@ import JoinUsers from "@/components/Room-Setting/JoinUsers.vue";
 
 import * as Socket from "@/api/Socket";
 import EditRoom from "@/components/Room-Setting/EditRoom.vue";
+import { useRoomState } from "@/store/room";
 
 const route = useRoute();
 const { userInfo } = storeToRefs(useUser());
@@ -345,6 +346,8 @@ onMounted(async () => {
 
   window.addEventListener("resize", mapFullFunc);
 
+  useRoomState().joinRoom(uuid);
+
   // 소켓
   Socket.joinRoom(uuid);
 
@@ -369,6 +372,8 @@ onUnmounted(() => {
   window.removeEventListener("resize", mapFullFunc);
 
   Socket.leaveRoom(uuid);
+
+  useRoomState().leaveRoom();
 });
 </script>
 

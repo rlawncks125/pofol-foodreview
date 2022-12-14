@@ -2,12 +2,13 @@ import { computed, ref } from "vue";
 
 import { io, Socket } from "socket.io-client";
 import { Restaurant, RestaurantInfoDto, Room } from "@/assets/swagger";
+import { useRoomState } from "@/store/room";
 import { storeToRefs } from "pinia";
 
 const wsUrl =
   process.env.NODE_ENV === "production"
-    ? "wss://api.kimjuchan97.xyz"
-    : "wss://myapi.kimjuchan97.xyz";
+    ? "https://api.kimjuchan97.xyz"
+    : "https://myapi.kimjuchan97.xyz";
 const nameSpace = "foodMapChat";
 
 // const { token: sToken } = storeToRefs(useToken());
@@ -21,7 +22,7 @@ export const token = ref<string | null>(parseToken);
 let socket: Socket;
 
 export const init = () => {
-  socket = io(`${wsUrl}/${nameSpace}`, {
+  socket = io(`https://myapi.kimjuchan97.xyz/${nameSpace}`, {
     autoConnect: false,
     transports: ["websocket"],
     auth: {
@@ -55,7 +56,7 @@ export const catchJoinRoom = (catchWs: (uuid: string) => void) => {
 };
 
 export const leaveRoom = (uuid: string) => {
-  console.log(uuid);
+  console.log("방을 떠남", uuid);
   socket.emit("leaveRoom", uuid);
 };
 
@@ -191,8 +192,15 @@ export const catchKickUser = (catchWs: () => void) => {
 
 const socketBaseRead = () => {
   socket.on("connect", () => {
+    const { room: roomState } = storeToRefs(useRoomState());
     console.log("연결 되었습니다.");
     socket.emit("registration");
+
+    console.log(roomState.value);
+    if (roomState.value) {
+      console.log("방유지됨", roomState.value);
+      joinRoom(roomState.value);
+    }
   });
 
   socket.on("disconnect", (socket: any) => {
@@ -208,10 +216,10 @@ const socketBaseRead = () => {
    * 해결 : 특정 시간마다 데이터(하트비트 연결됬다는 데이터 같음)를
    * 연결받아 타임 아웃 상태를 막음
    */
-  socket.on("ping", (data) => {
-    socket.emit("pong", { beat: 1 });
-    console.log(data);
-  });
+  // socket.on("ping", (data) => {
+  //   socket.emit("pong", { beat: 1 });
+  //   console.log(data);
+  // });
 };
 
 export const isConneted = () => {
