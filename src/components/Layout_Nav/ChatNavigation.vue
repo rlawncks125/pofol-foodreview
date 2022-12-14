@@ -16,11 +16,11 @@
     </label>
 
     <div
-      class="md:hidden z-[1100] w-full absolute top-0 bottom-0 left-0 sm:w-[35vw] bg-blue-300 transition-all duration-150 shadow-2xl"
+      class="md:hidden z-[1100] w-full absolute top-0 bottom-0 left-0 sm:w-[35vw] bg-blue-300 dark:bg-blue-900 transition-all duration-150 shadow-2xl"
       :class="isChecked ? 'translate-x-0' : 'translate-x-[-100%]'"
     >
       <h2 v-if="userInfo" class="float-right p-4 font-bold">
-        <span class="text-white">
+        <span class="text-white dark:text-blue-300">
           {{ userInfo.username }}
         </span>
         님 환영합니다.
@@ -43,7 +43,7 @@
         <li @click="changeDarkmode" class="flex items-center">
           <p>야간모드</p>
           <div
-            class="!h-[5rem] !w-[4rem] !flex !items-center pointer-events-none"
+            class="!h-[3.5rem] !w-[4rem] !flex !items-center pointer-events-none"
           >
             <fa-icon
               v-if="isDarkMode"
@@ -85,6 +85,9 @@
             />
             <fa-icon v-else icon="moon" size="1x" class="text-yellow-300" />
           </li>
+          <li>
+            <SubNotifi />
+          </li>
         </ul>
       </div>
     </div>
@@ -119,13 +122,11 @@ const onLogOut = () => {
     cursor: pointer;
     border-bottom: 1px solid black;
 
+    @apply text-gray-900 hover:text-white dark:hover:text-blue-300 dark:text-white;
+
     // router-link
     * {
       @apply block py-[1rem] w-full h-full;
-    }
-
-    &:hover {
-      color: white;
     }
   }
 }

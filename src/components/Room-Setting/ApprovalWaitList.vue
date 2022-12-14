@@ -5,13 +5,15 @@
       <div class="content">
         <h2 class="text-[2rem] text-center">참여 대기 목록</h2>
         <div class="flex justify-end">
-          <button @click="emits('updateRoom')">새로고침</button>
+          <button class="btn-type-0" @click="emits('updateRoom')">
+            새로고침
+          </button>
         </div>
         <div v-if="props.room">
           <div
             v-for="user in props.room.approvalWaitUsers"
             :key="user.id"
-            class="flex flex-col gap-2 my-4"
+            class="flex gap-2 my-2 items-center pb-2 border-b"
           >
             <div class="flex gap-2 items-center">
               <img

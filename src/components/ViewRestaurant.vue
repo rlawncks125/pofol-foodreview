@@ -494,11 +494,16 @@ defineExpose({
 </script>
 
 <style scoped lang="scss">
+input,
+textarea {
+  @apply text-black;
+}
+
 .popup-style-view {
   @apply absolute inset-0 bg-black bg-opacity-60 z-[1000];
 
   .content-wrap {
-    @apply m-4 bg-white overflow-auto rounded-2xl overflow-x-hidden;
+    @apply m-4 bg-white dark:bg-blue-900 overflow-auto rounded-2xl overflow-x-hidden;
 
     max-height: calc(var(--mobile--full) - 2rem);
 

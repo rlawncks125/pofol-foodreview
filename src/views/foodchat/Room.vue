@@ -63,7 +63,7 @@
     :style="{ backgroundColor: userInfo?.theme || 'rgb(96,165,250)' }"
   >
     <div v-if="room">
-      <p class="text-white text-[2rem] text-center">
+      <p class="text-white text-[2rem] text-center dark:text-black">
         {{ room.roomName }}
       </p>
       <div class="flex justify-between">
@@ -178,7 +178,7 @@ const activeMarkerInfoWindow = ({
   const restaurant = restaurantList.value[+findIndex].restaurant;
 
   const infoContent = `
-          <div class="p-4 text-center">
+          <div class="p-4 text-center !text-black">
             <p class="font-bold text-[1.2rem]">${restaurant.restaurantName}</p>
             <p class="text-xs"><span class="font-bold">${restaurant.resturantSuperUser.nickName}</span>님이 만들었습니다.</p>
           </div>

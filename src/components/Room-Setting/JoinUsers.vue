@@ -5,13 +5,15 @@
       <div class="content">
         <h2 class="text-[2rem] text-center">참여 중인 유저</h2>
         <div class="flex justify-end">
-          <button @click="emits('updateUsers')">새로고침</button>
+          <button class="btn-type-0" @click="emits('updateUsers')">
+            새로고침
+          </button>
         </div>
         <div v-if="props.room">
           <div
             v-for="user in props.room.joinUsers"
             :key="user.id"
-            class="flex gap-2 my-2 items-center"
+            class="flex gap-2 my-2 items-center pb-2 border-b"
           >
             <img
               :src="user.avatar || nullAvatar"

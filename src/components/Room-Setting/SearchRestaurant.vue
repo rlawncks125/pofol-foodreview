@@ -1,7 +1,7 @@
 <template>
   <div class="popup-style">
     <div class="content-wrap max-w-container lg:!mx-auto !p-0 relative">
-      <div class="p-4 sticky top-0 bg-white z-[100] shadow">
+      <div class="p-4 sticky top-0 bg-white dark:bg-blue-900 z-[100] shadow">
         <div class="flex justify-between">
           <h2 class="flex-1 text-[2rem] text-center mb-2">레스토랑 찾기</h2>
           <FaIcon
@@ -186,7 +186,7 @@ const onClose = () => {
 
 .search-wrap {
   &:hover {
-    @apply bg-gray-100;
+    @apply bg-gray-100 dark:bg-blue-800;
     .image-wrap {
       @apply overflow-hidden;
       img {

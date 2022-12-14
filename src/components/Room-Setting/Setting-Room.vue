@@ -93,7 +93,7 @@ const onJoinUsers = () => {
 <style scoped lang="scss">
 .btn-list {
   button {
-    @apply border p-2 hover:bg-gray-200;
+    @apply border p-2 hover:bg-gray-200 dark:hover:bg-blue-400;
   }
 }
 </style>

@@ -45,15 +45,15 @@
 }
 
 .btn-type-add {
-  @apply bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded;
+  @apply bg-transparent hover:bg-blue-500 text-blue-700 dark:text-blue-200 dark:hover:bg-blue-100 dark:hover:text-black font-semibold hover:text-white py-2 px-4 border border-blue-500  hover:border-transparent rounded;
 }
 
 .btn-type-remove {
-  @apply bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded;
+  @apply bg-transparent hover:bg-red-500 text-red-700 dark:text-red-200 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded;
 }
 
 .btn-type-edit {
-  @apply bg-transparent hover:bg-emerald-500 text-emerald-700 font-semibold hover:text-white py-2 px-4 border border-emerald-500 hover:border-transparent rounded;
+  @apply bg-transparent hover:bg-emerald-500 text-emerald-700 dark:text-emerald-200 font-semibold hover:text-white py-2 px-4 border border-emerald-500 hover:border-transparent rounded;
 }
 
 .label-type-0 {
@@ -68,7 +68,7 @@
   @apply absolute inset-0 bg-black bg-opacity-60 z-[1000];
 
   .content-wrap {
-    @apply m-4 bg-white px-2 py-4 overflow-auto rounded-2xl overflow-x-hidden h-[100vh];
+    @apply m-4 bg-white dark:bg-blue-900 px-2 py-4 overflow-auto rounded-2xl overflow-x-hidden h-[100vh];
     // max-height: calc(100vh - 2rem);
     max-height: calc(var(--mobile--full) - 2rem);
     .close {

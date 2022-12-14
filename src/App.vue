@@ -68,6 +68,6 @@ watch(
 <style>
 body {
   /* @apply bg-blue-400; */
-  @apply text-[.8rem] relative;
+  @apply bg-white dark:bg-gray-700 text-[.8rem] relative dark:text-white;
 }
 </style>
