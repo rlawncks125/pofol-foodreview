@@ -1,6 +1,5 @@
 <template>
   <div>
-    <p>home</p>
     <!-- 메인소개  -->
     <section
       class="relative bg-graident-animation w-full h-[50vw] min-h-[20rem] max-h-[70vh] my-2 overflow-hidden"
@@ -9,7 +8,8 @@
       <p
         class="absolute text-white text-[1.5rem] font-bold top-[2rem] left-[1rem] z-[100]"
       >
-        아녕하ㅔ용<br />텟트입니다
+        <span v-if="userInfo"> {{ userInfo.username }} 님 환영합니다. </span>
+        <span v-else> 아녕하ㅔ용<br />텟트입니다 </span>
       </p>
 
       <!-- 이미지 -->
@@ -32,9 +32,11 @@
 </template>
 
 <script setup lang="ts">
+import { useUser } from "@/store/user";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
+const { userInfo } = useUser();
 
 const moveFoodChat = () => {
   router.push("chat");

@@ -77,7 +77,6 @@
           <li v-show="!token" @click="router.push('login')">로그인</li>
           <li v-show="!token" @click="router.push('join')">회원가입</li>
           <li v-show="token" @click="onLogOut">로그아웃</li>
-          <li @click="testUser">test</li>
           <li @click="changeDarkmode" class="!px-[1rem]">
             <fa-icon
               v-if="isDarkMode"

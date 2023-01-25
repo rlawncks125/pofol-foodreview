@@ -20,7 +20,8 @@
       "node",
       "navermaps",
       "lottie-web",
-      "pinia-plugin-persistedstate"
+      "pinia-plugin-persistedstate",
+      "cypress"
     ],
     "paths": {
       "@/*": ["src/*"]

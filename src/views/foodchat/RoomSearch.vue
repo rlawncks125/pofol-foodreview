@@ -9,11 +9,7 @@
         id="search-type"
         v-model="searchType"
       >
-        <option
-          :value="etype"
-          :key="index"
-          v-for="(etype, index) in EnumRoomListInputDtoSearchType"
-        >
+        <option :value="key" :key="key" v-for="(etype, key) in searchOptions">
           {{ etype }}
         </option>
       </select>
@@ -138,7 +134,14 @@ const searchRoomList = ref<roomInfoDto[]>();
 const showSearchList = ref<roomInfoDto[]>();
 const approvalwaitList = ref<number[]>([]);
 
-const searchType = ref<keyof typeof EnumRoomListInputDtoSearchType>("All");
+const searchType = ref<keyof typeof EnumRoomListInputDtoSearchType>(
+  EnumRoomListInputDtoSearchType.All
+);
+const searchOptions = ref({
+  [EnumRoomListInputDtoSearchType.All]: "All",
+  [EnumRoomListInputDtoSearchType.RoomName]: "방이름",
+  [EnumRoomListInputDtoSearchType.SuperUser]: "방장",
+});
 const findText = ref("");
 
 let _roomList: roomInfoDto[] = [];
