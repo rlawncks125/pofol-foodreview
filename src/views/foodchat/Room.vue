@@ -79,7 +79,7 @@
       </div>
     </div>
   </div>
-  <div ref="mapRef" class="w-full h-[100vh]"></div>
+  <div ref="mapRef" class="w-full h-[100vh]" id="map-render"></div>
 
   <!-- 선택 레스토랑 정보 창 -->
   <div

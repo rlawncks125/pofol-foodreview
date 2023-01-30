@@ -24,6 +24,7 @@
           {{ userInfo.username }}
         </span>
         님 환영합니다.
+        <button class="btn-type-0 !p-1" @click="onLogOut">로그아웃</button>
       </h2>
       <p class="mt-[60px]"></p>
       <ul class="menu-list p-2">

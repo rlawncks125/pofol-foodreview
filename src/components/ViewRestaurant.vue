@@ -57,7 +57,7 @@
         <p class="mb-2">지역 :{{ restaurant.location }}</p>
         <!-- 댓글 -->
         <div v-for="comment in restaurant.comments" :key="comment.id">
-          <div class="border p-1">
+          <div class="border p-1" data-cypress="restaurant-comment">
             <div>
               <div class="flex justify-between px-2 flex-wrap">
                 <div
@@ -284,7 +284,9 @@ const restaurant = ref<Restaurant>();
 
 const getUserAvatar = (nick: string) => {
   const avatarUrl =
-    props.joinUsers?.filter((v) => v.username === nick)[0].avatar || nullAvatar;
+    props.joinUsers?.filter((v) => v.username === nick)[0]?.avatar ||
+    nullAvatar;
+  console.log(avatarUrl);
   return avatarUrl;
 };
 
