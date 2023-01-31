@@ -47,12 +47,11 @@ self.addEventListener("fetch", (event) => {
 // 사이트에서 push 보내기 https://web-push-codelab.glitch.me/
 // push 알람 처리
 self.addEventListener("push", (event) => {
-  console.log("push", event.data.text());
-
   // ex ) 받은 데이터 형식
   // {
   //  "title":"pwa 알람 테스트입니다",
   //  "body":"바디 ㅋㅋㅋ"
+  //  "uuid" : "uuid"
   // }
 
   const data = JSON.parse(event.data.text());
@@ -62,6 +61,7 @@ self.addEventListener("push", (event) => {
   const options = {
     body: data.body,
     icon: "https://res.cloudinary.com/dhdq4v4ar/image/upload/v1659106597/lakun_lx50mu.jpg",
+    data,
   };
 
   event.waitUntil(self.registration.showNotification(title, options));
@@ -69,6 +69,12 @@ self.addEventListener("push", (event) => {
 
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
-  console.log(event.data);
-  event.waitUntil(self.clients.openWindow("https://study.kimjuchan97.xyz"));
+  console.log(event);
+
+  const roomUUID = event.notification.data.uuid;
+  event.waitUntil(
+    self.clients.openWindow(
+      `https://foodreview.kimjuchan97.xyz/chat/room/${roomUUID}`
+    )
+  );
 });

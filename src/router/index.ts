@@ -27,12 +27,6 @@ const routes: Array<RouteRecordRaw> = [
       import(/* webpackChunkName: "about" */ "../views/testView.vue"),
   },
   {
-    path: "/popup/address",
-    name: "naverMapsAdress",
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/popup/naverAddress.vue"),
-  },
-  {
     path: "/chat",
     name: "chat",
     component: () =>

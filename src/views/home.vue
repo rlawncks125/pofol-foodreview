@@ -9,7 +9,7 @@
         class="absolute text-white text-[1.5rem] font-bold top-[2rem] left-[1rem] z-[100]"
       >
         <span v-if="userInfo"> {{ userInfo.username }} 님 환영합니다. </span>
-        <span v-else> 아녕하ㅔ용<br />텟트입니다 </span>
+        <span v-else> 안녕하세요<br />테스트입니다 </span>
       </p>
 
       <!-- 이미지 -->
@@ -34,9 +34,10 @@
 <script setup lang="ts">
 import { useUser } from "@/store/user";
 import { useRouter } from "vue-router";
+import { storeToRefs } from "pinia";
 
 const router = useRouter();
-const { userInfo } = useUser();
+const { userInfo } = storeToRefs(useUser());
 
 const moveFoodChat = () => {
   router.push("chat");
