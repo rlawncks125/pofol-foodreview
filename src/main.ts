@@ -7,6 +7,7 @@ import { createPinia } from "pinia";
 import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
 // import "@/plugin/naverMaps";
 
+import "tw-elements";
 import "@/assets/transition.scss";
 
 import fontawesome from "@/plugin/fontawesome";

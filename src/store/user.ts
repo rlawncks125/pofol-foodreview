@@ -1,10 +1,11 @@
-import { logIn } from "@/api/auth";
+import { deleteUser, logIn } from "@/api/auth";
 import { LoginOutPutDto, User, UserInfo } from "@/assets/swagger";
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import { token as authToken } from "@/api/auth";
 import { token as socketToken } from "@/api/Socket";
 import { Worker } from "@/registerServiceWorker";
+import { useRouter } from "vue-router";
 
 export const useUser = defineStore(
   "token",
@@ -49,11 +50,18 @@ export const useUser = defineStore(
       console.log("로그아웃");
     };
 
+    const userDelete = async () => {
+      // 유저 삭제
+      const sucees = await deleteUser();
+      console.log(sucees);
+      await userLogOut();
+    };
+
     const updateInfo = (user: User) => {
       userInfo.value = user;
     };
 
-    return { token, userInfo, userLogin, userLogOut, updateInfo };
+    return { token, userInfo, userLogin, userLogOut, updateInfo, userDelete };
   },
   {
     persist: {

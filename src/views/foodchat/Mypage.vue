@@ -8,6 +8,7 @@
     @change.prevent="onChangeFile"
   />
   <h2 class="text-center text-[2rem] mb-[1rem]">내정보</h2>
+
   <div
     class="flex flex-col md:flex-row items-center justify-center gap-4 h-full center max-w-container mx-auto px-4"
   >
@@ -54,8 +55,83 @@
           v-model="input.dsc"
         />
       </div>
-      <div class="my-2 flex justify-end">
+      <div class="my-2 flex justify-between gap-1">
         <button class="btn-type-0" @click="onEdituser">저장</button>
+        <!-- 아이디 삭제 Modal 버튼 -->
+        <button
+          type="button"
+          class="px-6 py-2.5 bg-red-700 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-red-600 hover:shadow-lg focus:bg-red-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-red-800 active:shadow-lg transition duration-150 ease-in-out"
+          data-bs-toggle="modal"
+          data-bs-target="#userDeleteModal"
+          @click="input.deleteUser = ''"
+        >
+          아이디 삭제하기
+        </button>
+      </div>
+
+      <!-- 아이디 삭제 Modal -->
+      <div
+        class="modal fade fixed top-0 left-0 hidden w-full h-full outline-none overflow-x-hidden overflow-y-auto"
+        id="userDeleteModal"
+        tabindex="-1"
+        aria-labelledby="userDeleteModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog relative w-auto pointer-events-none">
+          <div
+            class="modal-content border-none shadow-lg relative flex flex-col w-full pointer-events-auto bg-white bg-clip-padding rounded-md outline-none text-current"
+          >
+            <div
+              class="modal-header flex flex-shrink-0 items-center justify-between p-4 border-b border-gray-200 rounded-t-md"
+            >
+              <h5
+                class="text-xl font-medium leading-normal text-gray-800"
+                id="userDeleteModalLabel"
+              >
+                정말로 아이디를 삭제하실겠습니까??
+              </h5>
+              <button
+                type="button"
+                class="btn-close box-content w-4 h-4 p-1 text-black border-none rounded-none opacity-50 focus:shadow-none focus:outline-none focus:opacity-100 hover:text-black hover:opacity-75 hover:no-underline"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body flex flex-col relative p-4">
+              <p>
+                삭제하실 거라면
+                <span class="text-red-500">{{ userInfo?.username }}</span
+                >를 입력하세요
+              </p>
+              <input
+                class="border"
+                type="text"
+                name=""
+                id=""
+                v-model="input.deleteUser"
+              />
+            </div>
+            <div
+              class="modal-footer gap-1 flex flex-shrink-0 flex-wrap items-center justify-end p-4 border-t border-gray-200 rounded-b-md"
+            >
+              <button
+                type="button"
+                class="px-6 py-2.5 bg-red-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-red-700 hover:shadow-lg focus:bg-red-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-red-800 active:shadow-lg transition duration-150 ease-in-out ml-1 disabled:bg-gray-400"
+                @click="deleteUser"
+                :disabled="input.deleteUser !== userInfo?.username"
+              >
+                삭제하기
+              </button>
+              <button
+                type="button"
+                class="px-6 py-2.5 bg-purple-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-purple-700 hover:shadow-lg focus:bg-purple-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-purple-800 active:shadow-lg transition duration-150 ease-in-out"
+                data-bs-dismiss="modal"
+              >
+                닫기
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -69,15 +145,17 @@ import { nullAvatar } from "@/common/imageUrl";
 import { useLoading } from "@/store/loading";
 import { getImageURLByFormData } from "@/api/file";
 import { editUser } from "@/api/auth";
-import { User } from "@/assets/swagger";
+import { useRouter } from "vue-router";
 
 const { userInfo } = storeToRefs(useUser());
+const router = useRouter();
 
 const input = reactive({
   avatarUrl: userInfo.value?.avatar,
   username: userInfo.value?.username || "",
   dsc: userInfo.value?.dsc || "",
-  theme: userInfo.value?.theme || "",
+  theme: userInfo.value?.theme || "#93C5FD",
+  deleteUser: "",
 });
 
 const fileData = ref<File>();
@@ -130,6 +208,22 @@ const onEdituser = async () => {
   }
 
   useLoading().off();
+};
+
+const deleteUser = async (e: any) => {
+  if (input.deleteUser !== userInfo.value?.username) return;
+
+  useLoading().on();
+  const closeBtn = (e.target as HTMLElement).parentNode
+    ?.childNodes[1] as HTMLButtonElement;
+
+  closeBtn?.click();
+
+  await useUser().userDelete();
+
+  useLoading().off();
+
+  router.push("/");
 };
 
 function fileRender(file: any) {

@@ -111,4 +111,11 @@ export const editUser = async (input: UserUpdateInputDto): Promise<any> => {
     });
 };
 
+export const deleteUser = async () => {
+  return await axios
+    .delete("/api/user", AuthHeaders)
+    .then((res) => res.data)
+    .catch((e) => console.log(e));
+};
+
 // const triger = EnumEventTriggerTypes.LEAVEROOM;
