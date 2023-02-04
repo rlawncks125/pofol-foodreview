@@ -30,10 +30,10 @@
       <h2 class="text-center font-bold text-[2rem]">포트폴리오 소개</h2>
       <!-- 비디오 -->
       <div
-        class="flex flex-col-reverse md:flex-row md:justify-between px-2 gap-2"
+        class="flex flex-col-reverse md:flex-row md:justify-between gap-2 px-2"
       >
         <!-- 타임라인 -->
-        <div class="w-[100vw] md:w-[35vw] flex-initial">
+        <div class="w-full md:w-[35vw] flex-initial px-2">
           <h2 class="text-center text-[1.5rem] font-bold">타임라인</h2>
 
           <ol class="border-l border-gray-300">
@@ -65,7 +65,7 @@
           </ol>
         </div>
         <div class="flex-1">
-          <video class="w-full" ref="videoRef" controls>
+          <video class="w-full px-2" ref="videoRef" controls>
             <source
               src="https://res.cloudinary.com/dhdq4v4ar/video/upload/v1675411794/foodreview_u2ifwz.mp4"
               type="video/mp4"
