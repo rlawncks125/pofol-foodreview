@@ -1,6 +1,7 @@
-const cacheName = "v1.0.0.3";
+const cacheName = "v1.0.0.1";
 // 캐시할 파일
-const cacheList = [];
+// const cacheList = [];
+const cacheList = /\.(js|mjs|css|vue)$/;
 
 self.addEventListener("install", () => {
   // 대기상태에 머무르지 않고 활성화
@@ -8,10 +9,10 @@ self.addEventListener("install", () => {
   console.log("install");
 
   // 캐시 저장
-  caches.open(cacheName).then((cache) => {
-    console.log("캐시 저장");
-    return cache.addAll(cacheList);
-  });
+  // caches.open(cacheName).then((cache) => {
+  //   console.log("캐시 저장");
+  //   return cache.addAll(cacheList);
+  // });
 });
 
 self.addEventListener("activate", (event) => {
@@ -36,12 +37,23 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   // console.log("fetch", event.request.url);
 
+  const requestURL = new URL(event.request.url);
+
+  console.log("fetch", requestURL.pathname);
+
   // 캐싱된 데이터 fetch하기
-  event.respondWith(
-    caches.match(event.request).then((response) => {
-      return response || fetch(event.request);
-    })
-  );
+  // event.respondWith(
+  //   caches.match(event.request).then((response) => {
+  //     return response || fetch(event.request);
+  //   })
+  // );
+
+  if (cacheList.test(requestURL.pathname)) {
+    // 캐시 저장
+    caches.open(cacheName).then((cache) => {
+      cache.add(event.request);
+    });
+  }
 });
 
 // 사이트에서 push 보내기 https://web-push-codelab.glitch.me/
