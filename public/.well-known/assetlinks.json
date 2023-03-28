@@ -1,9 +1,22 @@
-[{
-      "relation": ["delegate_permission/common.handle_all_urls"],
-      "target" : { 
-       "namespace": "android_app", 
-       "package_name": "xyz.kimjuchan97.food.twa",
-       "sha256_cert_fingerprints": ["6D:E3:77:8E:E2:A1:D1:DD:03:E6:F4:C2:5C:C5:82:12:FD:F7:24:1D:E8:24:80:90:71:78:59:EE:39:6D:97:FB"] 
-      }
-}
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "xyz.kimjuchan97.food.twa",
+      "sha256_cert_fingerprints": [
+        "6D:E3:77:8E:E2:A1:D1:DD:03:E6:F4:C2:5C:C5:82:12:FD:F7:24:1D:E8:24:80:90:71:78:59:EE:39:6D:97:FB"
+      ]
+    }
+  },
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "xyz.kimjuchan97.food.twa",
+      "sha256_cert_fingerprints": [
+        "A3:99:5F:02:69:8A:5F:7F:B2:90:F7:42:5D:B5:23:38:E6:16:DD:E7:64:BF:DF:A3:17:1D:52:E0:51:6B:06:26"
+      ]
+    }
+  }
 ]
