@@ -1,0 +1,9 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target" : { 
+       "namespace": "android_app", 
+       "package_name": "xyz.kimjuchan97.food.twa",
+       "sha256_cert_fingerprints": ["6D:E3:77:8E:E2:A1:D1:DD:03:E6:F4:C2:5C:C5:82:12:FD:F7:24:1D:E8:24:80:90:71:78:59:EE:39:6D:97:FB"] 
+      }
+}
+]
