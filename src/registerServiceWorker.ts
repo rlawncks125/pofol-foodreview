@@ -154,4 +154,40 @@ export class Worker {
 
     return Notification.delteRegisterUser({ auth });
   }
+
+  // ##############
+  // 알람 스케쥴 기능(실험기능) 아직 추가안됨
+  // chrome://flags , edge://flags , whale://flags 에서
+  // enable-experimental-web-platform-features 옵션 활성화후 사용가능
+  // https://developer.chrome.com/docs/web-platform/notification-triggers/
+  // ##############
+  async createScheduleNotification(tag: string, title: string, time: number) {
+    this.#regist.showNotification(title, {
+      // tag 로 스케쥴 식별
+      tag: tag,
+      // 지금 시간 + 파라미터 시간후 호출
+      // @ts-ignore
+      showTrigger: new TimestampTrigger(Date.now() + time),
+    });
+  }
+
+  async getScheduleNotification(tag: string | undefined = undefined) {
+    const notifications = await this.#regist.getNotifications({
+      tag,
+      // 예약된 목록 알림 추가
+      // @ts-ignore
+      includeTriggered: true,
+    });
+
+    return notifications;
+  }
+
+  async deleteSchedulNotificationByTag(tag: string) {
+    const notifications = await this.getScheduleNotification(tag);
+    notifications.forEach((notification) => notification.close());
+  }
+  async cleanSchedulNotification() {
+    const notifications = await this.getScheduleNotification();
+    notifications.forEach((notification) => notification.close());
+  }
 }

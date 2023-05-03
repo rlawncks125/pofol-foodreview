@@ -6,6 +6,7 @@
     </div>
     <div :style="isPush ? { color: 'green' } : { color: 'red' }">상태</div>
   </div> -->
+  <!-- <button @click="onScheduleTest">알람 스케쥴 테스트</button> -->
   <div
     class="!flex h-4 gap-2 items-center justify-between text-gray-900 hover:text-white dark:hover:text-blue-300 dark:text-white"
     @click="onClick"
@@ -28,6 +29,7 @@
 </template>
 
 <script setup lang="ts">
+import { Worker } from "@/registerServiceWorker";
 import { useNotification } from "@/store/notification";
 import { storeToRefs } from "pinia";
 
@@ -44,6 +46,27 @@ const requestPermission = () => {
 
 const onChnageIsNotification = async () => {
   await useNotification().changeIsPush();
+};
+
+const onScheduleTest = () => {
+  // 스케쥴 추가
+  // Worker.insatce.createScheduleNotification(
+  //   "2초후",
+  //   "2초후 알람이 울립니다.",
+  //   2000
+  // );
+  // Worker.insatce.createScheduleNotification(
+  //   "3초후",
+  //   "3초후 알람이 울립니다.",
+  //   3000
+  // );
+  // Worker.insatce.getScheduleNotification().then(console.log);
+  // 지정된 알림 삭제 tag로 식별
+  // Worker.insatce.deleteSchedulNotificationByTag("2초후");
+  // Worker.insatce.getScheduleNotification().then(console.log);
+  // 등록된 알람 삭제
+  // Worker.insatce.cleanSchedulNotification();
+  // Worker.insatce.getScheduleNotification().then(console.log);
 };
 </script>
 
