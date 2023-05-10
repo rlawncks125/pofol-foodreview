@@ -1,8 +1,7 @@
 <template>
   <loading :is-show="isLoading" />
   <header>
-    <navigation v-if="layout.nav === 'home'" />
-    <chat-navigation v-else-if="layout.nav === 'chat'" />
+    <component :is="$route.meta.nav || 'div'" />
   </header>
   <main class="min-h-[80vh]">
     <router-view :key="route.fullPath" />
@@ -11,20 +10,17 @@
     v-show="isShowFooter"
     class="mt-[2rem] bg-slate-700 text-white p-2 font-bold text-[1.2rem]"
   >
-    <div>푸터</div>
+    <div>푸터2</div>
     <div>email : rlawncks125@naver.com</div>
     <div>tel : 010-7115-9176</div>
   </footer>
 </template>
 
 <script setup lang="ts">
-import Navigation from "@/components/Layout_Nav/navigation.vue";
 import { useRoute } from "vue-router";
-
-import { useLayout } from "@/store/layout";
 import { useLoading } from "@/store/loading";
 import { storeToRefs } from "pinia";
-import ChatNavigation from "@/components/Layout_Nav/ChatNavigation.vue";
+
 import * as Socket from "@/api/Socket";
 
 import "@/api/auth";
@@ -37,7 +33,6 @@ import { useNotification } from "@/store/notification";
 const route = useRoute();
 const isShowFooter = ref<boolean>(true);
 
-const { layout } = storeToRefs(useLayout());
 const { isLoading } = storeToRefs(useLoading());
 
 onMounted(async () => {

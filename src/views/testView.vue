@@ -8,10 +8,6 @@
 import { CustomNaverMaps } from "@/plugin/naverMaps";
 import { onMounted, onUnmounted, ref } from "vue";
 
-import { useLayout } from "@/store/layout";
-
-useLayout().setNav("chat");
-
 const endELRef = ref<HTMLElement>();
 
 const mapRef = ref();

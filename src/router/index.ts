@@ -1,34 +1,40 @@
-import { useLayout } from "@/store/layout";
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
+import chatNav from "@/components/Layout_Nav/ChatNavigation.vue";
+import mainNav from "@/components/Layout_Nav/navigation.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
     name: "home",
+    meta: { nav: mainNav },
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/home.vue"),
   },
   {
     path: "/login",
     name: "login",
+    meta: { nav: mainNav },
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/login.vue"),
   },
   {
     path: "/join",
     name: "join",
+    meta: { nav: mainNav },
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/join.vue"),
   },
   {
     path: "/test",
     name: "test",
+    meta: { nav: mainNav },
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/testView.vue"),
   },
   {
     path: "/chat",
     name: "chat",
+    meta: { nav: chatNav },
     component: () =>
       import(/* webpackChunkName: "chat" */ "../views/foodchat/index.vue"),
     children: [
@@ -73,10 +79,6 @@ const routes: Array<RouteRecordRaw> = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
-});
-
-router.beforeEach((to, from) => {
-  useLayout().setNav("home");
 });
 
 export default router;
