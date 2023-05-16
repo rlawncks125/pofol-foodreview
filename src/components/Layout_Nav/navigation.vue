@@ -60,6 +60,17 @@
         <li>
           <SubNotifi />
         </li>
+        <li>
+          <a
+            :href="
+              isMobile()
+                ? 'market://launch?id=xyz.kimjuchan97.food.twa'
+                : 'https://play.google.com/store/apps/details?id=xyz.kimjuchan97.food.twa'
+            "
+          >
+            구글 앱
+          </a>
+        </li>
       </ul>
     </div>
     <!-- <div class="h-[5rem] text-center text-[2rem]"> -->
@@ -74,6 +85,19 @@
       </router-link>
       <div class="hidden md:block">
         <ul class="item-list flex gap-1">
+          <li>
+            <a
+              :href="
+                isMobile()
+                  ? 'market://launch?id=xyz.kimjuchan97.food.twa'
+                  : 'https://play.google.com/store/apps/details?id=xyz.kimjuchan97.food.twa'
+              "
+              target="_blank"
+            >
+              구글앱
+            </a>
+          </li>
+
           <li v-show="!token" @click="router.push('login')">로그인</li>
           <li v-show="!token" @click="router.push('join')">회원가입</li>
           <li v-show="token" @click="onLogOut">로그아웃</li>
@@ -104,6 +128,7 @@ import { useUser } from "@/store/user";
 import { testUser } from "@/api/auth";
 import { storeToRefs } from "pinia";
 import SubNotifi from "@/components/subscription-notification.vue";
+import { isMobile } from "@/utils/device";
 
 const isChecked = ref(false);
 const router = useRouter();
