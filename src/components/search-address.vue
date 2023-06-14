@@ -1,5 +1,5 @@
 <template>
-  <button @click="onFinedAddress"><slot /></button>
+  <button @click="onSearchAddress"><slot /></button>
 </template>
 
 <script setup lang="ts">
@@ -7,7 +7,7 @@ const emtis = defineEmits<{
   (e: "searchAddress", adress: any): any;
 }>();
 
-const onFinedAddress = async () => {
+const onSearchAddress = async () => {
   // @ts-ignore
   new daum.Postcode({
     oncomplete: async function (data: any) {

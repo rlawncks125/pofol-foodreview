@@ -42,11 +42,11 @@
   >
     <!-- 방목록 -->
     <div class="w-full md:w-[50%]">
-      <RoomList :row-per-page="2" :show-count="4" />
+      <RoomList :row-per-page="2" :show-count="3" />
     </div>
     <!-- 방찾기 -->
     <div class="w-full md:w-[50%]">
-      <RoomSearch :row-per-page="2" :show-count="4" />
+      <RoomSearch :row-per-page="2" :show-count="3" />
     </div>
   </section>
 </template>

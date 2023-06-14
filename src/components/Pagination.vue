@@ -33,8 +33,7 @@
 import { ref, watch } from "vue";
 
 interface Props {
-  // 페이지당 행수
-  rowsPerPage?: number;
+  rowsPerPage?: number; // 페이지당 행수
   length?: number;
   showCount?: number;
 }

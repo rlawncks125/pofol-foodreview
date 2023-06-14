@@ -69,7 +69,7 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   // pagaination 초기값
   rowPerPage: 5,
-  showCount: 5,
+  showCount: 3,
 });
 
 const router = useRouter();
@@ -117,17 +117,9 @@ const updatePagintaion = ({ min, max }: { min: number; max: number }) => {
 };
 
 onMounted(async () => {
-  // @ts-ignore
-  const dummyRoomInfo = {
-    roomName: "방이름",
-    superUser: { avatar: null, username: "방장닉네임" },
-  } as MyRoomsinfoDto;
-  myRoomsInfo.value = Array.from({ length: 5 }, () => dummyRoomInfo);
-
   const { ok, myRooms } = await getJoinRoomList();
-  // console.log(myRooms);
+
   myRoomsInfo.value = myRooms;
-  // myRoomsInfo.value = [dummyRoomInfo, ...myRooms];
 
   Socket.catchApprovaWait(() => {
     onRoomListUpdate();
