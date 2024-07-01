@@ -1,18 +1,28 @@
-const cacheName = "v1.0.0.1";
+const cacheName = "v1.0.0.6";
 // 캐시할 파일
+const cacheList = [
+  "/manifest.json",
+  "/img/icons/icon_x512.png",
+  "https://res.cloudinary.com/dhdq4v4ar/image/upload/v1664520185/dsdw_qmzwrd.png",
+  "https://res.cloudinary.com/dhdq4v4ar/image/upload/v1654624758/%ED%8F%AC%ED%94%841_isxw3h.jpg",
+  "https://res.cloudinary.com/dhdq4v4ar/video/upload/v1675411794/foodreview_u2ifwz.mp4",
+];
 // const cacheList = [];
-const cacheList = /\.(js|mjs|css|vue)$/;
 
-self.addEventListener("install", () => {
+self.addEventListener("install", (event) => {
   // 대기상태에 머무르지 않고 활성화
-  self.skipWaiting();
+  // self.skipWaiting();
   console.log("install");
 
-  // 캐시 저장
-  // caches.open(cacheName).then((cache) => {
-  //   console.log("캐시 저장");
-  //   return cache.addAll(cacheList);
-  // });
+  // // 캐시 저장
+  event.waitUntil(
+    caches
+      .open(cacheName)
+      .then((cache) => cache.addAll(cacheList))
+      .then(() => {
+        self.skipWaiting();
+      })
+  );
 });
 
 self.addEventListener("activate", (event) => {
@@ -21,39 +31,63 @@ self.addEventListener("activate", (event) => {
   // 작업이 마무리될떄가지 설치단계를 연장
   event.waitUntil(
     // 불필요한 캐시 지우기
-    caches.keys().then((keylist) => {
-      return Promise.all(
-        keylist.map((key) => {
-          if (key !== cacheName) {
-            console.log("지움", key);
-            return caches.delete(key);
-          }
-        })
-      );
-    })
+    caches
+      .keys()
+      .then((keylist) => {
+        return Promise.all(
+          keylist.map((key) => {
+            if (key !== cacheName) {
+              console.log("지움", key);
+              return caches.delete(key);
+            }
+          })
+        );
+      })
+      .then(() => {
+        self.clients.claim();
+      })
   );
 });
 
 self.addEventListener("fetch", (event) => {
-  // console.log("fetch", event.request.url);
+  console.log("fetch", event.request.url);
 
   const requestURL = new URL(event.request.url);
 
-  console.log("fetch", requestURL.pathname);
+  // console.log("fetch", requestURL.pathname);
 
-  // 캐싱된 데이터 fetch하기
-  // event.respondWith(
-  //   caches.match(event.request).then((response) => {
-  //     return response || fetch(event.request);
-  //   })
-  // );
+  event.respondWith(
+    caches.match(event.request).then((response) => {
+      // 캐시된 응답이 있다면 제공
+      if (response) {
+        return response;
+      }
 
-  if (cacheList.test(requestURL.pathname)) {
-    // 캐시 저장
-    caches.open(cacheName).then((cache) => {
-      cache.add(event.request);
-    });
-  }
+      // 캐시된 응답이 없으면 네트워크 요청
+      return fetch(event.request).then((networkResponse) => {
+        console.log(event.request, networkResponse);
+        // 네트워크 응답이 유효한 경우에만 캐시에 저장
+        if (
+          networkResponse &&
+          networkResponse.status === 200 &&
+          networkResponse.headers.get("Content-Length") !== "0"
+        ) {
+          return caches.open(cacheName).then((cache) => {
+            cache.put(event.request, networkResponse.clone());
+            return networkResponse;
+          });
+        } else {
+          return networkResponse;
+        }
+      });
+      // .catch(() => {
+      //   // 네트워크 요청이 실패하면 대체 콘텐츠 제공 (옵션)
+      //   if (event.request.destination === "document") {
+      //     return caches.match("/offline.html");
+      //   }
+      // });
+    })
+  );
 });
 
 // 사이트에서 push 보내기 https://web-push-codelab.glitch.me/

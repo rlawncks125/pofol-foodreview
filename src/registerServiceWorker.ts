@@ -6,44 +6,64 @@ import { ref } from "vue";
 import * as Notification from "@/api/notification";
 
 // if (process.env.NODE_ENV === "production") {
-register(`${process.env.BASE_URL}sw.js`, {
-  ready() {
-    console.log("준비됨");
-  },
-  registered(regist) {
-    Worker.insatce.setRegist(regist);
-    // console.log("Service worker has been registered.");
-    console.log("Service worker 준비 완료");
-  },
-  cached() {
-    console.log("Content has been cached for offline use.");
-  },
-  updatefound() {
-    // console.log("New content is downloading.");
 
+// register(`${process.env.BASE_URL}sw.js`, {
+//   ready() {
+//     console.log("준비됨");
+//   },
+//   registered(regist) {
+//     Worker.insatce.setRegist(regist);
+//     // console.log("Service worker has been registered.");
+//     console.log("Service worker 준비 완료");
+//   },
+//   cached() {
+//     console.log("Content has been cached for offline use.");
+//   },
+//   updatefound() {
+//     // console.log("New content is downloading.");
+
+//     const newWorker = Worker.insatce.installing();
+//     console.log("Service worker 업데이트 발견");
+
+//     newWorker?.addEventListener("statechange", function () {
+//       console.log("Service worker 상태 변경", this.state);
+//     });
+//   },
+//   updated() {
+//     console.log("New content is available; please refresh.");
+//   },
+//   offline() {
+//     console.log(
+//       "No internet connection found. App is running in offline mode."
+//     );
+//   },
+//   error(error) {
+//     console.error("Error during service worker registration:", error);
+//   },
+// });
+// }
+console.log(navigator.serviceWorker);
+// localhost 또는 https 프로토콜을 사용할 때만 navigator serviceWorker에 접근할수 있다.
+navigator?.serviceWorker?.register(`/sw.js`).then((regist) => {
+  console.log("서비스 워커 준비완료");
+
+  Worker.insatce.setRegist(regist);
+
+  regist.addEventListener("updatefound", () => {
     const newWorker = Worker.insatce.installing();
-    console.log("Service worker 업데이트 발견");
+    console.log("서비스 워커 업데이트 발견");
 
     newWorker?.addEventListener("statechange", function () {
-      console.log("Service worker 상태 변경", this.state);
+      console.log("서비스 워커 상태 변경", this.state);
     });
-  },
-  updated() {
-    console.log("New content is available; please refresh.");
-  },
-  offline() {
-    console.log(
-      "No internet connection found. App is running in offline mode."
-    );
-  },
-  error(error) {
-    console.error("Error during service worker registration:", error);
-  },
+  });
 });
-// }
+
+navigator?.serviceWorker?.addEventListener("controllerchange", () => {
+  console.log("서비스워커 컨트롤러 변경");
+});
 
 export class Worker {
-  // @ts-ignore
   #regist: ServiceWorkerRegistration;
 
   static insatce = new Worker();
