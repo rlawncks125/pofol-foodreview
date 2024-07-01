@@ -7,8 +7,8 @@ import { storeToRefs } from "pinia";
 
 const wsUrl =
   process.env.NODE_ENV === "production"
-    ? "https://api.juchandev.xyz"
-    : "https://myapi.juchandev.xyz";
+    ? "https://server.juchandev.store"
+    : "http://localhost:8080";
 const nameSpace = "foodMapChat";
 
 // const { token: sToken } = storeToRefs(useToken());
