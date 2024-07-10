@@ -6,7 +6,9 @@ import {
 } from "@/assets/swagger";
 import { useUser } from "@/store/user";
 
-import axios, { AxiosRequestConfig } from "axios";
+// import axios, { AxiosRequestConfig } from "axios";
+import axios from "@/utils/custoemAxios";
+import { AxiosRequestConfig } from "axios";
 import { storeToRefs } from "pinia";
 
 import { ref, watch } from "vue";
@@ -55,7 +57,7 @@ export const logIn = async ({
   const base64 = window.btoa(unescape(encodeURIComponent(username)));
   console.log(base64);
   return axios
-    .get(`https://server.juchandev.store/user`, {
+    .get(`/user`, {
       auth: {
         username: base64,
         password,
@@ -71,7 +73,7 @@ export const logIn = async ({
 
 export const testUser = async (): Promise<boolean> => {
   return axios
-    .get(`/api/user/test`, AuthHeaders)
+    .get(`/user/test`, AuthHeaders)
     .then((res) => true)
     .catch((e) => false);
 };
@@ -89,7 +91,7 @@ export const createUser = async ({
 
   return axios
     .post(
-      `/api/user`,
+      `/user`,
       {},
       {
         auth: {
@@ -105,7 +107,7 @@ export const createUser = async ({
 
 export const editUser = async (input: UserUpdateInputDto): Promise<any> => {
   return await axios
-    .patch(`/api/user`, { ...input }, AuthHeaders)
+    .patch(`/user`, { ...input }, AuthHeaders)
     .then((res: any) => {
       return res.data as Promise<{ ok: boolean; user: User }>;
     });
@@ -113,7 +115,7 @@ export const editUser = async (input: UserUpdateInputDto): Promise<any> => {
 
 export const deleteUser = async () => {
   return await axios
-    .delete("/api/user", AuthHeaders)
+    .delete("/user", AuthHeaders)
     .then((res) => res.data)
     .catch((e) => console.log(e));
 };

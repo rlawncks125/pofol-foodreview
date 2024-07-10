@@ -1,4 +1,5 @@
-import axios from "axios";
+// import axios from "axios";
+import axios from "@/utils/custoemAxios";
 
 export const deleteFile = async (fileName: string) => {
   // 삭제할 파일 이름 만 추출하는 작업
@@ -7,7 +8,7 @@ export const deleteFile = async (fileName: string) => {
   let isDeleted = false;
 
   const deleteResult = await axios
-    .delete(`/api/file/${imageURL}`)
+    .delete(`/file/${imageURL}`)
     .then((res: any) => res.data.deleted);
 
   if (Object.values(deleteResult).length > 0) {
@@ -18,7 +19,7 @@ export const deleteFile = async (fileName: string) => {
 
 export const getImageURLByFormData = async (form: FormData) => {
   return await axios
-    .post(`/api/file`, form, {
+    .post(`/file`, form, {
       headers: {
         "Content-Type": "multipart/form-data",
       },

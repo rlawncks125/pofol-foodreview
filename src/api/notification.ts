@@ -8,12 +8,13 @@ import {
   PatchListerNotificationOutPutDto,
 } from "@/assets/swagger";
 import { Worker } from "@/registerServiceWorker";
-import axios from "axios";
+// import axios from "axios";
+import axios from "@/utils/custoemAxios";
 
 /** 공개키 받아오기 */
 export async function getPublickey() {
   return await axios
-    .get("/api/notification/publicKey")
+    .get("/notification/publicKey")
     .then((res) => res.data.key as string);
 }
 
@@ -23,7 +24,7 @@ export async function isPush() {
   if (!auth) return false;
 
   return await axios
-    .get(`/api/notification/ispush/${auth}`)
+    .get(`/notification/ispush/${auth}`)
     .then((res) => res.data as boolean);
 }
 
@@ -41,14 +42,14 @@ export async function pathIsPush(): Promise<PatchListerNotificationOutPutDto> {
   };
 
   return await axios
-    .patch(`/api/notification`, data)
+    .patch(`/notification`, data)
     .then((res) => res.data as PatchListerNotificationOutPutDto);
 }
 
 /** 알람 등록 */
 export async function registerNotification(data: RegistersubscriptionInputDto) {
   return await axios
-    .post("/api/notification/register", data)
+    .post("/notification/register", data)
     .then((res) => res.data as RegistersubscriptionOutPutDto);
 }
 
@@ -65,20 +66,20 @@ export async function deleteRegister() {
   // return await fetch(`${ApiServer.url}/notification/${auth}`, {
   //   method: "DELETE",
   // });
-  return await axios.delete(`/api/notification/${auth}`);
+  return await axios.delete(`/notification/${auth}`);
 }
 
 /** 유저 아이디 등록 */
 export async function registerUser(data: RegistersubscriptionUserInputDto) {
   return await axios
-    .post("/api/notification/register-user", data)
+    .post("/notification/register-user", data)
     .then((res) => res.data as RegistersubscriptionUserOutPutDto);
 }
 
 /** 유저 아이디 제거 */
 export async function delteRegisterUser({ auth }: ClearRegisterUserInputDto) {
   return await axios
-    .post("/api/notification/register-user-remove", {
+    .post("/notification/register-user-remove", {
       auth,
     })
     .then((res) => res.data as number);
@@ -96,7 +97,7 @@ export async function deleteRegisterLocalStorege() {
 
   if (!auth) return;
 
-  const ok = await axios.delete(`/api/notification/${auth}`);
+  const ok = await axios.delete(`/notification/${auth}`);
 
   localStorage.removeItem("subscription");
   return ok;
