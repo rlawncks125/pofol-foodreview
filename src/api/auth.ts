@@ -55,7 +55,7 @@ export const logIn = async ({
   const base64 = window.btoa(unescape(encodeURIComponent(username)));
   console.log(base64);
   return axios
-    .get(`/api/user`, {
+    .get(`https://server.juchandev.store/user`, {
       auth: {
         username: base64,
         password,
