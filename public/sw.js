@@ -56,10 +56,16 @@ self.addEventListener("fetch", (event) => {
 
   // console.log("fetch", requestURL.pathname);
 
+  // 서버로의 요청은 캐시 하지 않도록
+  // GET 메소드 요청이 아닐시 캐시 하지 않도록
+  if (event.request.url.includes("server") || event.request.method !== "GET") {
+    return fetch(event.request);
+  }
+
   event.respondWith(
     caches.match(event.request).then((response) => {
       // 캐시된 응답이 있다면 제공
-      if (response || event.request.url.include("server")) {
+      if (response) {
         return response;
       }
 
