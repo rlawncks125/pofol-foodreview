@@ -59,7 +59,7 @@ self.addEventListener("fetch", (event) => {
   event.respondWith(
     caches.match(event.request).then((response) => {
       // 캐시된 응답이 있다면 제공
-      if (response) {
+      if (response || event.request.url.include("server")) {
         return response;
       }
 
