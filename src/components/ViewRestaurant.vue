@@ -50,10 +50,31 @@
       <StarFill :fill="restaurant.avgStar" :star-size="2" :star-num="5" />
       <!-- 콘텐츠 -->
       <div class="content px-2">
-        <p v-if="restaurant.hashTags.length > 0">{{ restaurant.hashTags }}</p>
-        <p v-if="restaurant.specialization.length > 0">
-          {{ restaurant.specialization }}
-        </p>
+        <!-- 전문 분야 -->
+        <div
+          v-if="restaurant.specialization.length > 0"
+          class="flex items-center my-2 gap-2"
+        >
+          <p class="">전문 :</p>
+          <div
+            v-for="(special, index) in restaurant.specialization"
+            :key="index"
+            class=""
+          >
+            {{ special }}
+          </div>
+        </div>
+        <!-- 태그 -->
+        <div v-if="restaurant.hashTags.length > 0" class="flex my-2">
+          <div
+            v-for="(tag, index) in restaurant.hashTags"
+            :key="index"
+            class="flex relative bg-blue-300 border rounded-full py-2 px-4"
+          >
+            #{{ tag }}
+          </div>
+        </div>
+
         <p class="mb-2">지역 :{{ restaurant.location }}</p>
         <!-- 댓글 -->
         <div v-for="comment in restaurant.comments" :key="comment.id">

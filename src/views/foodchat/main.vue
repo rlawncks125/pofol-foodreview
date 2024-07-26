@@ -1,5 +1,4 @@
 <template>
-  <div>chat main</div>
   <!-- 내정보 -->
   <section class="my-8">
     <div class="flex flex-col items-center md:self-start">
