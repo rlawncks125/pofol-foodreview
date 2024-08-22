@@ -30,3 +30,13 @@
 
 - 실시간 댓글 작성, 수정 ,대댓글 작업
 - 방 허락 알람
+
+# CloudeFlare 배포 문제
+
+## Proxy시 외부 도메인 안됌
+
+https://developers.cloudflare.com/pages/configuration/redirects/#proxying
+
+### 해결
+
+프록시 -> Axios baseURL 설정

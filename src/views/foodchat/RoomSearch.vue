@@ -22,7 +22,7 @@
           required
           v-model="findText"
           @keydown="
-            (e) => {
+            (e : KeyboardEvent) => {
               if (e.key === 'Enter') onSearch();
 
               return;

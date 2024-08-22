@@ -57,7 +57,7 @@
               v-model="input.specialization"
               required
               @keydown="
-                (e) => {
+                (e:KeyboardEvent) => {
                   if (e.key === 'Enter') onAddSpecializtion();
                   return;
                 }
@@ -101,7 +101,7 @@
               v-model="input.hashTag"
               required
               @keydown="
-                (e) => {
+                (e:KeyboardEvent) => {
                   if (e.key === 'Enter') onAddHashTag();
                   return;
                 }

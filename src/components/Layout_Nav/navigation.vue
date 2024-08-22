@@ -60,7 +60,7 @@
         <li>
           <SubNotifi />
         </li>
-        <li>
+        <!-- <li>
           <a
             :href="
               isMobile()
@@ -70,7 +70,7 @@
           >
             구글 앱
           </a>
-        </li>
+        </li> -->
       </ul>
     </div>
     <!-- <div class="h-[5rem] text-center text-[2rem]"> -->
@@ -85,7 +85,7 @@
       </router-link>
       <div class="hidden md:block">
         <ul class="item-list flex gap-1">
-          <li>
+          <!-- <li>
             <a
               :href="
                 isMobile()
@@ -96,7 +96,7 @@
             >
               구글앱
             </a>
-          </li>
+          </li> -->
 
           <li v-show="!token" @click="router.push('login')">로그인</li>
           <li v-show="!token" @click="router.push('join')">회원가입</li>
@@ -110,7 +110,7 @@
             />
             <fa-icon v-else icon="moon" size="1x" class="text-yellow-300" />
           </li>
-          <li>
+          <li class="!rounded-full">
             <SubNotifi />
           </li>
         </ul>
@@ -130,13 +130,13 @@ import { storeToRefs } from "pinia";
 import SubNotifi from "@/components/subscription-notification.vue";
 import { isMobile } from "@/utils/device";
 
-const isChecked = ref(false);
 const router = useRouter();
+const { isDarkMode, changeDarkmode } = useDarkmode();
 
 const { token, userInfo } = storeToRefs(useUser());
 const { userLogOut } = useUser();
 
-const { isDarkMode, changeDarkmode } = useDarkmode();
+const isChecked = ref(false);
 
 const onLogOut = () => {
   userLogOut();
@@ -161,10 +161,11 @@ const onLogOut = () => {
 
 .item-list {
   li {
-    @apply border p-2 rounded-full bg-blue-400 dark:bg-blue-700 text-white cursor-pointer;
+    @apply border p-2 rounded-xl bg-blue-400 dark:bg-blue-700 text-white cursor-pointer;
+    @apply text-white font-bold;
 
     &:hover {
-      @apply scale-110;
+      @apply scale-105 bg-blue-500;
       transition: transform 0.1s;
     }
   }

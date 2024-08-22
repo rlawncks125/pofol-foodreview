@@ -1,6 +1,6 @@
 <template>
-  <div class="popup-style">
-    <div class="content-wrap max-w-container lg:!mx-auto !p-0 relative">
+  <div class="popup-style px-4">
+    <div class="content-wrap max-w-small-container !mx-auto !p-0 relative">
       <div class="p-4 sticky top-0 bg-white dark:bg-blue-900 z-[100] shadow">
         <div class="flex justify-between">
           <h2 class="flex-1 text-[2rem] text-center mb-2">레스토랑 찾기</h2>
@@ -85,10 +85,19 @@
               alt=""
             />
           </div>
-          <p class="font-bold text-[1.3rem]">
-            {{ restaurant.restaurantName }}
+          <p class="font-bold text-[1.3rem] flex justify-between items-center">
+            <span>
+              {{ restaurant.restaurantName }}
+            </span>
+            <span>
+              <StarFill
+                :fill="restaurant.avgStar"
+                :star-size="2"
+                :star-num="5"
+              />
+            </span>
           </p>
-          <p>지역 : {{ restaurant.location }}</p>
+          <!-- <p>지역 : {{ restaurant.location }}</p> -->
           <div v-if="restaurant.specialization.length > 0">
             <h1 class="font-bold text-[1.2rem]">분야</h1>
             <div class="flex gap-2">
@@ -121,10 +130,17 @@
 
 <script setup lang="ts">
 import { Restaurant } from "@/assets/swagger";
-import { ref } from "vue";
+import {
+  onMounted,
+  onRenderTracked,
+  onRenderTriggered,
+  onUpdated,
+  ref,
+} from "vue";
 import { nullRestaurant } from "@/common/imageUrl";
 
 import FaIcon from "../fa-icon.vue";
+import StarFill from "../Star/star-fill.vue";
 
 const props = defineProps({
   restaurantList: Object as () => Restaurant[],

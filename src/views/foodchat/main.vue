@@ -36,17 +36,18 @@
     </div>
   </section>
   <!-- 방목록 & 방찾기 -->
+
   <section
     class="max-w-container mx-auto flex flex-col gap-8 md:gap-4 md:flex-row justify-between px-2"
   >
     <!-- 방목록 -->
-    <div class="w-full md:w-[50%]">
+    <div class="w-full">
       <RoomList :row-per-page="2" :show-count="3" />
     </div>
-    <!-- 방찾기 -->
+    <!-- 방찾기
     <div class="w-full md:w-[50%]">
       <RoomSearch :row-per-page="2" :show-count="3" />
-    </div>
+    </div> -->
   </section>
 </template>
 

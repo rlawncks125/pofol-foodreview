@@ -40,7 +40,10 @@
       </div>
       <!-- 음식점 삭제하기 버튼 -->
       <button
-        v-if="props?.isSuperUser"
+        v-if="
+          props?.isSuperUser ||
+          userInfo?.id === restaurant.resturantSuperUser.id
+        "
         class="btn-type-remove my-2 mx-2"
         @click="onDeleteRestaurant"
       >
@@ -51,192 +54,198 @@
       <!-- 콘텐츠 -->
       <div class="content px-2">
         <!-- 전문 분야 -->
-        <div
-          v-if="restaurant.specialization.length > 0"
-          class="flex items-center my-2 gap-2"
-        >
-          <p class="">전문 :</p>
-          <div
-            v-for="(special, index) in restaurant.specialization"
-            :key="index"
-            class=""
-          >
-            {{ special }}
+        <div v-if="restaurant.specialization.length > 0">
+          <h1 class="font-bold text-[1.2rem]">분야</h1>
+          <div class="flex gap-2">
+            <div
+              v-for="(specialization, index) in restaurant.specialization"
+              :key="index"
+              class="rounded-full p-2 px-4 bg-yellow-500 text-white font-bold"
+            >
+              {{ specialization }}
+            </div>
           </div>
         </div>
-        <!-- 태그 -->
-        <div v-if="restaurant.hashTags.length > 0" class="flex my-2">
-          <div
-            v-for="(tag, index) in restaurant.hashTags"
-            :key="index"
-            class="flex relative bg-blue-300 border rounded-full py-2 px-4"
-          >
-            #{{ tag }}
+        <!-- 해시 태그 -->
+        <div v-if="restaurant.hashTags.length > 0">
+          <h1 class="font-bold text-[1.2rem]">해시태그</h1>
+          <div class="flex gap-2">
+            <div
+              v-for="(hashtag, index) in restaurant.hashTags"
+              :key="index"
+              class="rounded-full p-2 px-4 bg-blue-400 text-white font-bold"
+            >
+              #{{ hashtag }}
+            </div>
           </div>
         </div>
 
-        <p class="mb-2">지역 :{{ restaurant.location }}</p>
+        <!-- <p class="mb-2">지역 :{{ restaurant.location }}</p> -->
+        <br />
         <!-- 댓글 -->
-        <div v-for="comment in restaurant.comments" :key="comment.id">
-          <div class="border p-1" data-cypress="restaurant-comment">
-            <div>
-              <div class="flex justify-between px-2 flex-wrap">
-                <div
-                  class="cursor-pointer flex-0 w-full md:flex-1 md:w-auto"
-                  @click="openAdditionalComment(comment.id)"
-                >
-                  <div class="flex gap-2">
-                    <!-- 아바타 추가 -->
-                    <img
-                      :src="getUserAvatar(comment.message.userInfo.nickName)"
-                      alt=""
-                      class="w-[30px] h-[30px] object-cover object-center border rounded-full"
-                    />
-                    <span>
-                      {{ comment.message.userInfo.nickName }}
-                    </span>
-
-                    <span>
-                      {{
-                        new Date(comment.message.CreateTime).toLocaleString()
-                      }}
-                    </span>
-                  </div>
-                  <div>
-                    {{ comment.message.message }}
-                  </div>
-                </div>
-                <!-- 댓글 수정 & 삭제 버튼  -->
-                <div
-                  v-if="
-                    comment.message.userInfo.nickName === userInfo?.username
-                  "
-                >
-                  <button
-                    @click="openEditCommnet(comment.id)"
-                    class="btn-type-edit p-2"
+        <div class="flex flex-col gap-2">
+          <div v-for="comment in restaurant.comments" :key="comment.id">
+            <div class="border p-1" data-cypress="restaurant-comment">
+              <div>
+                <div class="flex justify-between px-2 flex-wrap">
+                  <div
+                    class="cursor-pointer flex-0 w-full md:flex-1 md:w-auto"
+                    @click="openAdditionalComment(comment.id)"
                   >
-                    수정하기
-                  </button>
-                  <button
-                    @click="onDeleteCommnet(comment.id)"
-                    class="btn-type-remove p-2"
-                  >
-                    삭제 하기
-                  </button>
-                </div>
-              </div>
+                    <div class="flex gap-2">
+                      <!-- 아바타 추가 -->
+                      <img
+                        :src="getUserAvatar(comment.message.userInfo.nickName)"
+                        alt=""
+                        class="w-[30px] h-[30px] object-cover object-center border rounded-full"
+                      />
+                      <span>
+                        {{ comment.message.userInfo.nickName }}
+                      </span>
 
-              <!-- 추가 댓글 달기 -->
-              <div
-                v-show="openAddCommentId === comment.id"
-                class="border mx-4 p-2"
-              >
-                <label for="additional-comments">추가 댓글</label>
-                <input
-                  class="border"
-                  type="text"
-                  name=""
-                  id="additional-comments"
-                  v-model="additionalComment"
-                />
-                <button
-                  class="mx-2 btn-type-add p-2"
-                  @click="onAddAdditionalComment"
-                >
-                  추가 댓글 달기
-                </button>
-              </div>
-              <!-- 댓글 수정  -->
-              <div v-show="openEditCommnetId === comment.id">
-                <label for="edit-commnet">수정할 내용 :</label>
-                <input
-                  class="border"
-                  type="text"
-                  name=""
-                  id="edit-commnet"
-                  v-model="editCommnetText"
-                />
-                <button class="btn-type-edit p-2" @click="onEditCommnet">
-                  수정하기
-                </button>
-              </div>
-              <!-- 추가 댓글 랜더 -->
-              <div
-                class="border mx-4 p-2"
-                v-for="childComment in comment.childMessages"
-                :key="childComment.CreateTime + ''"
-              >
-                <div>
-                  <div class="flex gap-2">
-                    <!-- 아바타 추가 -->
-                    <img
-                      :src="getUserAvatar(childComment.userInfo.nickName)"
-                      alt=""
-                      class="w-[30px] h-[30px] object-cover object-center border rounded-full"
-                    />
-                    <span>
-                      {{ childComment.userInfo.nickName }}
-                    </span>
-                    <span>
-                      {{ new Date(childComment.CreateTime).toLocaleString() }}
-                    </span>
+                      <span>
+                        {{
+                          new Date(comment.message.CreateTime).toLocaleString()
+                        }}
+                      </span>
+                    </div>
+                    <div>
+                      {{ comment.message.message }}
+                    </div>
                   </div>
-
-                  <p>
-                    {{ childComment.message }}
-                  </p>
+                  <!-- 댓글 수정 & 삭제 버튼  -->
+                  <div
+                    class="my-1"
+                    v-if="
+                      comment.message.userInfo.nickName === userInfo?.username
+                    "
+                  >
+                    <button
+                      @click="openEditCommnet(comment.id)"
+                      class="btn-type-edit p-2"
+                    >
+                      수정하기
+                    </button>
+                    <button
+                      @click="onDeleteCommnet(comment.id)"
+                      class="btn-type-remove p-2"
+                    >
+                      삭제 하기
+                    </button>
+                  </div>
                 </div>
-                <!-- 추가댓글 수정 -->
+
+                <!-- 추가 댓글 달기 -->
                 <div
-                  class="border"
-                  v-show="
-                    editAdditionalCommentByCommentId === comment.id &&
-                    editAdditionalCommentByCreateTime ===
-                      childComment.CreateTime
-                  "
+                  v-show="openAddCommentId === comment.id"
+                  class="border mx-4 p-2"
                 >
-                  <label for="edit-additional-commnet">수정할 텍스트 :</label>
+                  <label for="additional-comments">추가 댓글</label>
                   <input
                     class="border"
                     type="text"
                     name=""
-                    id="edit-additional-commnet"
-                    v-model="editAdditionalCommnetText"
+                    id="additional-comments"
+                    v-model="additionalComment"
                   />
                   <button
-                    @click="onEditAdditionalComment"
-                    class="btn-type-edit p-2"
+                    class="mx-2 btn-type-add p-2"
+                    @click="onAddAdditionalComment"
                   >
+                    추가 댓글 달기
+                  </button>
+                </div>
+                <!-- 댓글 수정  -->
+                <div v-show="openEditCommnetId === comment.id">
+                  <label for="edit-commnet">수정할 내용 :</label>
+                  <input
+                    class="border"
+                    type="text"
+                    name=""
+                    id="edit-commnet"
+                    v-model="editCommnetText"
+                  />
+                  <button class="btn-type-edit p-2" @click="onEditCommnet">
                     수정하기
                   </button>
                 </div>
-                <!-- 추가댓글 수정 & 삭제 버튼 -->
+                <!-- 추가 댓글 랜더 -->
                 <div
-                  v-if="userInfo?.username === childComment.userInfo.nickName"
+                  class="border mx-4 p-2"
+                  v-for="childComment in comment.childMessages"
+                  :key="childComment.CreateTime + ''"
                 >
-                  <button
-                    @click="
-                      openEditAdditionalComment(
-                        comment.id,
+                  <div>
+                    <div class="flex gap-2">
+                      <!-- 아바타 추가 -->
+                      <img
+                        :src="getUserAvatar(childComment.userInfo.nickName)"
+                        alt=""
+                        class="w-[30px] h-[30px] object-cover object-center border rounded-full"
+                      />
+                      <span>
+                        {{ childComment.userInfo.nickName }}
+                      </span>
+                      <span>
+                        {{ new Date(childComment.CreateTime).toLocaleString() }}
+                      </span>
+                    </div>
+
+                    <p>
+                      {{ childComment.message }}
+                    </p>
+                  </div>
+                  <!-- 추가댓글 수정 -->
+                  <div
+                    class="border"
+                    v-show="
+                      editAdditionalCommentByCommentId === comment.id &&
+                      editAdditionalCommentByCreateTime ===
                         childComment.CreateTime
-                      )
                     "
-                    class="p-2 btn-type-edit"
                   >
-                    수정 버튼
-                  </button>
-                  <button
-                    @click="
-                      onDelteAdditionalComment(
-                        comment.id,
-                        childComment.CreateTime
-                      )
-                    "
-                    class="p-2 btn-type-remove"
+                    <label for="edit-additional-commnet">수정할 텍스트 :</label>
+                    <input
+                      class="border"
+                      type="text"
+                      name=""
+                      id="edit-additional-commnet"
+                      v-model="editAdditionalCommnetText"
+                    />
+                    <button
+                      @click="onEditAdditionalComment"
+                      class="btn-type-edit p-2"
+                    >
+                      수정하기
+                    </button>
+                  </div>
+                  <!-- 추가댓글 수정 & 삭제 버튼 -->
+                  <div
+                    v-if="userInfo?.username === childComment.userInfo.nickName"
                   >
-                    삭제 버튼
-                  </button>
+                    <button
+                      @click="
+                        openEditAdditionalComment(
+                          comment.id,
+                          childComment.CreateTime
+                        )
+                      "
+                      class="p-2 btn-type-edit"
+                    >
+                      수정 버튼
+                    </button>
+                    <button
+                      @click="
+                        onDelteAdditionalComment(
+                          comment.id,
+                          childComment.CreateTime
+                        )
+                      "
+                      class="p-2 btn-type-remove"
+                    >
+                      삭제 버튼
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

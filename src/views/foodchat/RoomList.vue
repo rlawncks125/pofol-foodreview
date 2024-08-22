@@ -1,5 +1,5 @@
 <template>
-  <div class="text-center text-[2rem] font-bold">방목록</div>
+  <div class="text-center text-[2rem] font-bold">참여 중인 방</div>
   <div class="flex justify-between">
     <button @click="isShowCreateRoom = true" class="btn-type-0 my-2 mx-2">
       방만들기

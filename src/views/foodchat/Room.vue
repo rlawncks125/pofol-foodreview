@@ -70,12 +70,34 @@
         <button class="btn-type-0 m-2" @click="isCreateRoom = true">
           음식점 등록하기
         </button>
-        <button
-          class="btn-type-0 m-2"
-          @click="roomSetting.isOpenSetting = true"
-        >
-          설정
-        </button>
+        <div class="flex">
+          <button
+            class="btn-type-0 m-2"
+            @click="roomSetting.isSearchRestaurant = true"
+          >
+            <svg
+              aria-hidden="true"
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              ></path>
+            </svg>
+          </button>
+          <button
+            class="btn-type-0 m-2"
+            @click="roomSetting.isOpenSetting = true"
+          >
+            설정
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -89,9 +111,47 @@
     class="absolute bottom-10 w-full flex justify-center dark:text-black"
   >
     <div
-      class="bg-slate-100 w-4/6 max-w-3xl h-32 text-center rounded-xl flex flex-col justify-center cursor-pointer shadow-lg shadow-black/40 hover:scale-110"
+      class="bg-slate-100 w-[40rem] max-w-3xl p-2 mx-4 rounded-xl flex flex-col cursor-pointer shadow-lg shadow-black/40 hover:scale-105"
     >
-      {{ selectResturant.restaurantName }}
+      <p class="font-bold text-[1.3rem] fle flex-col items-center">
+        <span>
+          {{ selectResturant.restaurantName }}
+        </span>
+        <span>
+          <StarFill
+            :fill="selectResturant.avgStar"
+            :star-size="2"
+            :star-num="5"
+          />
+        </span>
+      </p>
+      <!-- <p>지역 : {{ selectResturant.location }}</p> -->
+      <div class="flex justify-between flex-wrap gap-2">
+        <div v-if="selectResturant.specialization.length > 0">
+          <h1 class="font-bold text-[1.2rem]">분야</h1>
+          <div class="flex gap-2">
+            <div
+              v-for="(specialization, index) in selectResturant.specialization"
+              :key="index"
+              class="rounded-full p-2 px-4 bg-yellow-500 text-white font-bold"
+            >
+              {{ specialization }}
+            </div>
+          </div>
+        </div>
+        <div v-if="selectResturant.hashTags.length > 0">
+          <h1 class="font-bold text-[1.2rem]">해시태그</h1>
+          <div class="flex gap-2">
+            <div
+              v-for="(hashtag, index) in selectResturant.hashTags"
+              :key="index"
+              class="rounded-full p-2 px-4 bg-blue-400 text-white font-bold"
+            >
+              #{{ hashtag }}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -116,6 +176,7 @@ import JoinUsers from "@/components/Room-Setting/JoinUsers.vue";
 import * as Socket from "@/api/Socket";
 import EditRoom from "@/components/Room-Setting/EditRoom.vue";
 import { useRoomState } from "@/store/room";
+import StarFill from "@/components/Star/star-fill.vue";
 
 const route = useRoute();
 const { userInfo } = storeToRefs(useUser());
@@ -177,9 +238,15 @@ const activeMarkerInfoWindow = ({
   );
   const restaurant = restaurantList.value[+findIndex].restaurant;
 
+  // const infoContent = `
+  // <div class="bg-gray-200 shadow-xl p-8">
+  //   <h2 class="text-2xl font-bold text-center">${restaurant.restaurantName}</h2>
+  //   <p class="text-gray-600">${restaurant.resturantSuperUser.nickName}</span>님이 만들었습니다.</p>
+  // </div>
+  //           `;
   const infoContent = `
           <div class="p-4 text-center !text-black">
-            <p class="font-bold text-[1.2rem]">${restaurant.restaurantName}</p>
+            <h3 class="font-bold text-[1.2rem]">${restaurant.restaurantName}</h3>
             <p class="text-xs"><span class="font-bold">${restaurant.resturantSuperUser.nickName}</span>님이 만들었습니다.</p>
           </div>
           `;

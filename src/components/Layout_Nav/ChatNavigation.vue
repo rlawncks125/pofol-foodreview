@@ -31,9 +31,9 @@
         <li>
           <router-link to="/chat"> 메인 </router-link>
         </li>
-        <li>
-          <router-link to="/chat/list"> 방목록 </router-link>
-        </li>
+        <!-- <li>
+          <router-link to="/chat/list"> 참여 중인 방 </router-link>
+        </li> -->
         <li>
           <router-link to="/chat/search"> 방찾기 </router-link>
         </li>
@@ -73,8 +73,27 @@
       <div class="hidden md:block">
         <ul class="item-list flex gap-1">
           <router-link to="/chat"> 메인 </router-link>
-          <router-link to="/chat/list"> 방목록 </router-link>
-          <router-link to="/chat/search"> 방찾기 </router-link>
+          <!-- <router-link to="/chat/list"> 참여 중인 방 </router-link> -->
+          <router-link to="/chat/search">
+            <div class="flex gap-2">
+              <svg
+                aria-hidden="true"
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                ></path>
+              </svg>
+              <span> 방찾기 </span>
+            </div>
+          </router-link>
           <router-link to="/chat/mypage"> 내정보 </router-link>
           <li class="!bg-red-500" @click="onLogOut">로그아웃</li>
           <li @click="changeDarkmode" class="!px-[1rem]">
@@ -86,7 +105,7 @@
             />
             <fa-icon v-else icon="moon" size="1x" class="text-yellow-300" />
           </li>
-          <li>
+          <li class="!rounded-full">
             <SubNotifi />
           </li>
         </ul>
@@ -135,10 +154,11 @@ const onLogOut = () => {
 .item-list {
   a,
   li {
-    @apply border p-2 rounded-full bg-blue-400 dark:bg-blue-700 text-white cursor-pointer;
+    @apply border p-2 rounded-xl bg-blue-400 dark:bg-blue-700 text-white cursor-pointer;
+    @apply text-white font-bold;
 
     &:hover {
-      @apply scale-110;
+      @apply scale-105 bg-blue-500;
       transition: transform 0.1s;
     }
   }

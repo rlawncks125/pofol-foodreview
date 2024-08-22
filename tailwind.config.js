@@ -6,6 +6,7 @@ module.exports = {
   theme: {
     maxWidth: {
       container: "980px",
+      "small-container": "780px",
       form: "768px",
     },
     extend: {

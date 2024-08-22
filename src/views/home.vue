@@ -5,12 +5,23 @@
       class="relative bg-graident-animation w-full h-[50vw] min-h-[20rem] max-h-[70vh] my-2 overflow-hidden"
     >
       <!-- 텍스트 -->
-      <p
-        class="absolute text-white text-[1.5rem] font-bold top-[2rem] left-[1rem] z-[100]"
+      <div
+        class="absolute sm:max-w-[calc(100vw-28rem)] text-white text-[1.5rem] font-bold top-[2rem] left-[1rem] z-[100]"
       >
-        <span v-if="userInfo"> {{ userInfo.username }} 님 환영합니다. </span>
-        <span v-else> 안녕하세요<br />테스트입니다 </span>
-      </p>
+        <div v-if="userInfo">
+          <p>{{ userInfo.username }} 님 환영합니다.</p>
+          <p><span>입장 버튼</span>을 눌러 비밀스럽게 정보를 공유하세요.</p>
+        </div>
+        <div v-else>
+          <p>안녕하세요</p>
+
+          <p>FoodReview 페이지 입니다.</p>
+          <br />
+          <p>테스트용 아이디입니다.</p>
+          <p>id : <span class="underline">guest</span></p>
+          <p>pw : <span class="underline">guest</span></p>
+        </div>
+      </div>
 
       <!-- 이미지 -->
       <img
@@ -18,12 +29,34 @@
         class="absolute hidden sm:block right-4 top-4 w-[90vw] max-w-[24rem]"
       />
 
+      <!-- 화살표 -->
+      <div
+        v-if="userInfo"
+        class="!absolute left-4 bottom-[5rem] text-[1rem] ml-1 animate-bounce flex flex-col items-center"
+      >
+        <p class="text-gray-100">클릭</p>
+        <svg
+          class="fill-gray-100 scale-[1.5]"
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          fill="none"
+        >
+          <path
+            d="m12 17.586-7.293-7.293-1.414 1.414L12 20.414l8.707-8.707-1.414-1.414L12 17.586z"
+          />
+          <path
+            d="m20.707 5.707-1.414-1.414L12 11.586 4.707 4.293 3.293 5.707 12 14.414l8.707-8.707z"
+          />
+        </svg>
+      </div>
+
       <!-- 입장 버튼 -->
       <div
         class="btn-type-arrow !absolute left-4 bottom-4 text-[1rem] ml-1 !bg-blue-400"
         @click="moveFoodChat"
       >
-        푸드 채팅 입장
+        <p>푸드 채팅 입장</p>
       </div>
     </section>
     <section>
@@ -73,7 +106,7 @@
           </video>
         </div>
       </div>
-      <div>설명 불라 불라</div>
+      <!-- <div>설명 불라 불라</div> -->
     </section>
   </div>
 </template>
