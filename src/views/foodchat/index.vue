@@ -7,7 +7,7 @@
 <script setup lang="ts">
 import { useUser } from "@/store/user";
 import { storeToRefs } from "pinia";
-import { onBeforeMount, onMounted } from "vue";
+import { onBeforeMount } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 const route = useRoute();
@@ -17,7 +17,7 @@ const { token } = storeToRefs(useUser());
 onBeforeMount(() => {
   if (!token.value) {
     alert("로그인을 하세요.");
-    router.push("/");
+    router.push("/login");
   }
 });
 </script>

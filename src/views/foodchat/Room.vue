@@ -1,159 +1,85 @@
 <template>
-  <transition name="ani-fade">
-    <CreateRestaurant
-      v-if="isCreateRoom"
-      @close="isCreateRoom = false"
-      @create="triggerCreateRestaurant"
-      :uuid="room && room.uuid"
-      :room-lating="room?.lating"
-    />
-  </transition>
-  <transition name="ani-fade">
-    <ViewRestaurant
-      ref="viewResturantCompo"
-      v-show="isViewRestaurant"
-      @close="isViewRestaurant = false"
-      @delete="triggerDeleteRestaurant"
-      @upate-comment="triggerUpdateRestaurantById"
-      :is-super-user="userInfo?.id === room?.superUser.id"
-      :join-users="room?.joinUsers"
-    />
-  </transition>
-
-  <SettingRoom
-    v-show="roomSetting.isOpenSetting"
-    @close="roomSetting.isOpenSetting = false"
-    @search-restaurant="roomSetting.isSearchRestaurant = true"
-    @edit-room="roomSetting.isEditRoom = true"
-    @approval-wait-list="roomSetting.isApprovalWait = true"
-    @join-users="roomSetting.isJoinUsers = true"
+  <HeaderContent
+    ref="CompoHeaderContent"
+    @click:open-create-room="(isOpen) => (isCreateRoom = isOpen)"
+    @click:open-search-restaurant="
+      (isOpen) => (roomSetting.isSearchRestaurant = isOpen)
+    "
+    @click:open-setting="(isOpen) => (roomSetting.isOpenSetting = isOpen)"
     :room="room"
+    :user-theme="userInfo?.theme"
   />
 
-  <!-- 방설정 -->
-  <SearchRestaurant
-    v-show="roomSetting.isSearchRestaurant"
-    @close="roomSetting.isSearchRestaurant = false"
-    @select="triggerFocusRestaurantById"
-    :restaurant-list="roomSetting.restaurantList"
+  <div ref="mapRef" class="w-full h-[100vh]" id="map-render"></div>
+
+  <!-- 선택 레스토랑 정보 창 -->
+  <SelectResturantInfo
+    v-show="isSelectedRestaurant"
+    :select-resturant="selectResturant"
+    @click:open-restarunt="openViewRestaurant"
   />
-  <!-- <EditRoom
+
+  <!-- 모달 처리 -->
+  <Teleport to="body">
+    <transition name="ani-fade">
+      <CreateRestaurant
+        v-if="isCreateRoom"
+        @close="isCreateRoom = false"
+        @create="triggerCreateRestaurant"
+        :uuid="room && room.uuid"
+        :room-lating="room?.lating"
+      />
+    </transition>
+
+    <transition name="ani-fade">
+      <ViewRestaurant
+        ref="viewResturantCompo"
+        v-show="isViewRestaurant"
+        @close="isViewRestaurant = false"
+        @delete="triggerDeleteRestaurant"
+        @upate-comment="triggerUpdateRestaurantById"
+        :is-super-user="userInfo?.id === room?.superUser.id"
+        :join-users="room?.joinUsers"
+      />
+    </transition>
+
+    <SettingRoom
+      v-show="roomSetting.isOpenSetting"
+      @close="roomSetting.isOpenSetting = false"
+      @search-restaurant="roomSetting.isSearchRestaurant = true"
+      @edit-room="roomSetting.isEditRoom = true"
+      @approval-wait-list="roomSetting.isApprovalWait = true"
+      @join-users="roomSetting.isJoinUsers = true"
+      :room="room"
+    />
+
+    <!-- 레스토랑 탐색 -->
+    <SearchRestaurant
+      v-show="roomSetting.isSearchRestaurant"
+      @close="roomSetting.isSearchRestaurant = false"
+      @select="triggerFocusRestaurantById"
+      :restaurant-list="roomSetting.restaurantList"
+    />
+    <!-- <EditRoom
     v-show="roomSetting.isEditRoom"
     @close="roomSetting.isEditRoom = false"
     :room="room"
   /> -->
 
-  <ApprovalWaitList
-    v-show="roomSetting.isApprovalWait"
-    @close="roomSetting.isApprovalWait = false"
-    @update-room="triggerUpdateRoom"
-    :room="room"
-  />
+    <ApprovalWaitList
+      v-show="roomSetting.isApprovalWait"
+      @close="roomSetting.isApprovalWait = false"
+      @update-room="triggerUpdateRoom"
+      :room="room"
+    />
 
-  <JoinUsers
-    v-show="roomSetting.isJoinUsers"
-    @close="roomSetting.isJoinUsers = false"
-    @update-users="triggerUpdateRoom"
-    :room="room"
-  />
-
-  <div
-    ref="endELRef"
-    class="bg-blue-400"
-    :style="{ backgroundColor: userInfo?.theme || 'rgb(96,165,250)' }"
-  >
-    <div v-if="room">
-      <p class="text-white text-[2rem] text-center dark:text-black">
-        {{ room.roomName }}
-      </p>
-      <div class="flex justify-between">
-        <button class="btn-type-0 m-2" @click="isCreateRoom = true">
-          음식점 등록하기
-        </button>
-        <div class="flex">
-          <button
-            class="btn-type-0 m-2"
-            @click="roomSetting.isSearchRestaurant = true"
-          >
-            <svg
-              aria-hidden="true"
-              class="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              ></path>
-            </svg>
-          </button>
-          <button
-            class="btn-type-0 m-2"
-            @click="roomSetting.isOpenSetting = true"
-          >
-            설정
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div ref="mapRef" class="w-full h-[100vh]" id="map-render"></div>
-
-  <!-- 선택 레스토랑 정보 창 -->
-  <div
-    v-show="isSelectedRestaurant"
-    v-if="selectResturant"
-    @click="openViewRestaurant"
-    class="absolute bottom-10 w-full flex justify-center dark:text-black"
-  >
-    <div
-      class="bg-slate-100 w-[40rem] max-w-3xl p-2 mx-4 rounded-xl flex flex-col cursor-pointer shadow-lg shadow-black/40 hover:scale-105"
-    >
-      <p class="font-bold text-[1.3rem] fle flex-col items-center">
-        <span>
-          {{ selectResturant.restaurantName }}
-        </span>
-        <span>
-          <StarFill
-            :fill="selectResturant.avgStar"
-            :star-size="2"
-            :star-num="5"
-          />
-        </span>
-      </p>
-      <!-- <p>지역 : {{ selectResturant.location }}</p> -->
-      <div class="flex justify-between flex-wrap gap-2">
-        <div v-if="selectResturant.specialization.length > 0">
-          <h1 class="font-bold text-[1.2rem]">분야</h1>
-          <div class="flex gap-2">
-            <div
-              v-for="(specialization, index) in selectResturant.specialization"
-              :key="index"
-              class="rounded-full p-2 px-4 bg-yellow-500 text-white font-bold"
-            >
-              {{ specialization }}
-            </div>
-          </div>
-        </div>
-        <div v-if="selectResturant.hashTags.length > 0">
-          <h1 class="font-bold text-[1.2rem]">해시태그</h1>
-          <div class="flex gap-2">
-            <div
-              v-for="(hashtag, index) in selectResturant.hashTags"
-              :key="index"
-              class="rounded-full p-2 px-4 bg-blue-400 text-white font-bold"
-            >
-              #{{ hashtag }}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+    <JoinUsers
+      v-show="roomSetting.isJoinUsers"
+      @close="roomSetting.isJoinUsers = false"
+      @update-users="triggerUpdateRoom"
+      :room="room"
+    />
+  </Teleport>
 </template>
 
 <script setup lang="ts">
@@ -174,15 +100,17 @@ import ApprovalWaitList from "@/components/Room-Setting/ApprovalWaitList.vue";
 import JoinUsers from "@/components/Room-Setting/JoinUsers.vue";
 
 import * as Socket from "@/api/Socket";
-import EditRoom from "@/components/Room-Setting/EditRoom.vue";
+
 import { useRoomState } from "@/store/room";
-import StarFill from "@/components/Star/star-fill.vue";
+
+import SelectResturantInfo from "@/components/room/SelectResturantInfo.vue";
+import HeaderContent from "@/components/room/HeaderContent.vue";
 
 const route = useRoute();
 const { userInfo } = storeToRefs(useUser());
 const uuid = route.params.uuid + "";
 
-const endELRef = ref<HTMLElement>();
+const CompoHeaderContent = ref<InstanceType<typeof HeaderContent>>();
 
 const mapRef = ref();
 let naverMaps: CustomNaverMaps;
@@ -238,12 +166,6 @@ const activeMarkerInfoWindow = ({
   );
   const restaurant = restaurantList.value[+findIndex].restaurant;
 
-  // const infoContent = `
-  // <div class="bg-gray-200 shadow-xl p-8">
-  //   <h2 class="text-2xl font-bold text-center">${restaurant.restaurantName}</h2>
-  //   <p class="text-gray-600">${restaurant.resturantSuperUser.nickName}</span>님이 만들었습니다.</p>
-  // </div>
-  //           `;
   const infoContent = `
           <div class="p-4 text-center !text-black">
             <h3 class="font-bold text-[1.2rem]">${restaurant.restaurantName}</h3>
@@ -405,7 +327,10 @@ onMounted(async () => {
   console.log(restaurantList.value);
 
   // 지도 높이 조절
-  mapFullFunc = () => naverMaps.HeigthFullByEndEl(endELRef.value!);
+  mapFullFunc = () =>
+    naverMaps.HeigthFullByEndEl(
+      CompoHeaderContent.value?.endELRef as HTMLElement
+    );
 
   setTimeout(() => {
     mapFullFunc();
