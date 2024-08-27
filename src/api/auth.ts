@@ -4,14 +4,9 @@ import {
   userCreateOutPutDto,
   UserUpdateInputDto,
 } from "@/assets/swagger";
-import { useUser } from "@/store/user";
 
 // import axios, { AxiosRequestConfig } from "axios";
 import axios from "@/utils/custoemAxios";
-import { AxiosRequestConfig } from "axios";
-import { storeToRefs } from "pinia";
-
-import { ref, watch } from "vue";
 
 // main.ts에 import 안할시
 // 처음 호출되는곳에서 init
@@ -20,24 +15,6 @@ import { ref, watch } from "vue";
 // pinia 를 createApp 전에 호출할수 없어
 // localStoreage로 값을 가져옴
 // 내보낸 token ref값으로 외부 에서 값을 갱신
-
-const parseToken =
-  JSON.parse(localStorage.getItem("token") as string)?.token || null;
-
-export const token = ref<string | null>(parseToken);
-
-export const AuthHeaders: AxiosRequestConfig = {
-  headers: {
-    "acces-token": token.value,
-    "Content-Type": "application/json;charset=utf-8",
-    "Access-Control-Allow-Origin": "*",
-  },
-};
-
-watch(token, () => {
-  console.log("wacth", AuthHeaders);
-  AuthHeaders.headers!["acces-token"] = token.value;
-});
 
 interface IBasicAuth {
   username: string;
@@ -56,6 +33,8 @@ export const logIn = async ({
   // const base64 = Buffer.from(username).toString("base64");
   const base64 = window.btoa(unescape(encodeURIComponent(username)));
   console.log(base64);
+  console.log(process.env.VUE_APP_BACK_URL);
+
   return axios
     .get(`/user`, {
       auth: {
@@ -73,7 +52,7 @@ export const logIn = async ({
 
 export const testUser = async (): Promise<boolean> => {
   return axios
-    .get(`/user/test`, AuthHeaders)
+    .get(`/user/test`)
     .then((res) => true)
     .catch((e) => false);
 };
@@ -106,16 +85,14 @@ export const createUser = async ({
 };
 
 export const editUser = async (input: UserUpdateInputDto): Promise<any> => {
-  return await axios
-    .patch(`/user`, { ...input }, AuthHeaders)
-    .then((res: any) => {
-      return res.data as Promise<{ ok: boolean; user: User }>;
-    });
+  return await axios.patch(`/user`, { ...input }).then((res: any) => {
+    return res.data as Promise<{ ok: boolean; user: User }>;
+  });
 };
 
 export const deleteUser = async () => {
   return await axios
-    .delete("/user", AuthHeaders)
+    .delete("/user")
     .then((res) => res.data)
     .catch((e) => console.log(e));
 };

@@ -2,16 +2,17 @@ import { deleteUser, logIn } from "@/api/auth";
 import { LoginOutPutDto, User, UserInfo } from "@/assets/swagger";
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import { token as authToken } from "@/api/auth";
-import { token as socketToken } from "@/api/Socket";
+// import { token as authToken } from "@/api/auth";
+// import { token as socketToken } from "@/api/Socket";
 import { Worker } from "@/registerServiceWorker";
-import { useRouter } from "vue-router";
+import { useAuthHeaders } from "@/composables/useAuthHeaders";
 
 export const useUser = defineStore(
   "token",
   () => {
     const token = ref<string | null>(null);
     const userInfo = ref<User | null>();
+    const { setToken: setAuthToken } = useAuthHeaders();
 
     const userLogin = async ({
       username,
@@ -30,8 +31,8 @@ export const useUser = defineStore(
       if (res.ok) {
         console.log(res);
         token.value = res.token!;
-        authToken.value = res.token!;
-        socketToken.value = res.token!;
+        res.token && setAuthToken(res.token);
+        // socketToken.value = res.token!;
         userInfo.value = res.user;
 
         await Worker.insatce.registerByUser(res.user.id);
@@ -42,8 +43,8 @@ export const useUser = defineStore(
     const userLogOut = async () => {
       token.value = null;
       userInfo.value = null;
-      authToken.value = null;
-      socketToken.value = null;
+      setAuthToken(null);
+      // socketToken.value = null;
 
       await Worker.insatce.removeRegisterByUser();
 

@@ -4,6 +4,7 @@ import { io, Socket } from "socket.io-client";
 import { Restaurant, RestaurantInfoDto, Room } from "@/assets/swagger";
 import { useRoomState } from "@/store/room";
 import { storeToRefs } from "pinia";
+import { useAuthHeaders } from "@/composables/useAuthHeaders";
 
 const wsUrl =
   process.env.NODE_ENV === "production"
@@ -11,14 +12,7 @@ const wsUrl =
     : "http://localhost:8080";
 const nameSpace = "foodMapChat";
 
-// const { token: sToken } = storeToRefs(useToken());
-// const token = sToken;
-
-const parseToken =
-  JSON.parse(localStorage.getItem("token") as string)?.token || null;
-
-export const token = ref<string | null>(parseToken);
-
+const { readToken } = useAuthHeaders();
 let socket: Socket;
 
 export const init = () => {
@@ -26,7 +20,7 @@ export const init = () => {
     autoConnect: false,
     transports: ["websocket"],
     auth: {
-      "acces-token": token.value,
+      "acces-token": readToken(),
     },
   });
 
