@@ -1,4 +1,4 @@
-const cacheName = "v1.0.0.6";
+const cacheName = "v1.0.0.7";
 // 캐시할 파일
 const cacheList = [
   "/manifest.json",
@@ -59,7 +59,7 @@ self.addEventListener("fetch", (event) => {
   // 서버로의 요청은 캐시 하지 않도록
   // GET 메소드 요청이 아닐시 캐시 하지 않도록
   if (event.request.url.includes("server") || event.request.method !== "GET") {
-    return fetch(event.request);
+    return;
   }
 
   event.respondWith(
