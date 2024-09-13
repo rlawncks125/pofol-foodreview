@@ -8,5 +8,15 @@
         "46:33:DF:65:47:12:C9:13:0D:C0:B8:B3:33:3D:65:3C:2A:BC:D4:11:60:BA:12:6E:E0:31:BA:BA:CA:78:47:B2"
       ]
     }
+  },
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "store.juchandev.food.twa",
+      "sha256_cert_fingerprints": [
+        "D7:AA:9D:31:A9:EA:91:AE:B0:03:15:95:80:4B:10:F2:5D:D9:78:C3:A3:21:13:19:0A:51:64:1D:C5:E7:87:86"
+      ]
+    }
   }
 ]
